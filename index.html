@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WebGame Plus — Free Online Arcade Games</title>
+<meta name="description" content="Play free online arcade games instantly in your browser. No download, no login. Bullet Storm, Snake, and more classic games!">
+<meta name="keywords" content="free online games, arcade games, browser games, play free games, bullet storm, snake game">
+<link rel="canonical" href="https://webgameplus.github.io/webgamelplus/">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+
+<!-- Google AdSense — paste your code here when approved -->
+<!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+
+<style>
+:root {
+  --bg:       #060610;
+  --surface:  #0d0d1f;
+  --border:   #1a1a3a;
+  --cyan:     #00e5ff;
+  --yellow:   #ffe600;
+  --red:      #ff2255;
+  --green:    #00ff88;
+  --text:     #dde4ff;
+  --muted:    #4a4a7a;
+  --glow-c:   #00e5ff33;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+html{scroll-behavior:smooth;}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Exo 2', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── SCANLINE OVERLAY ── */
+body::after {
+  content:'';
+  position:fixed;
+  inset:0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.07) 2px,
+    rgba(0,0,0,0.07) 4px
+  );
+  pointer-events:none;
+  z-index:1000;
+}
+
+/* ── AMBIENT BG ── */
+.ambient {
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 15% 10%, #00e5ff0d 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 85% 80%, #ff22550d 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 50% 50%, #ffe6000a 0%, transparent 70%);
+}
+
+/* ── CANVAS STARS ── */
+#stars { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+/* ── NAV ── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 32px;
+  background: rgba(6,6,16,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-family: 'Orbitron', monospace;
+  font-weight: 900;
+  font-size: clamp(14px, 2.5vw, 20px);
+  color: var(--cyan);
+  text-shadow: 0 0 15px var(--cyan);
+  letter-spacing: 2px;
+  text-decoration: none;
+}
+
+.nav-logo span { color: var(--yellow); }
+
+.nav-links {
+  display: flex;
+  gap: 24px;
+  list-style: none;
+}
+
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--cyan); }
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: clamp(60px, 10vw, 120px) 20px clamp(40px, 6vw, 80px);
+}
+
+.hero-eyebrow {
+  font-size: 11px;
+  letter-spacing: 5px;
+  color: var(--cyan);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  opacity: 0;
+  animation: fadeUp 0.6s 0.1s forwards;
+}
+
+.hero-title {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(32px, 8vw, 80px);
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: fadeUp 0.6s 0.25s forwards;
+}
+
+.hero-title .line1 { color: var(--text); }
+.hero-title .line2 {
+  color: var(--cyan);
+  text-shadow: 0 0 30px var(--cyan), 0 0 60px var(--cyan);
+}
+
+.hero-sub {
+  font-size: clamp(14px, 2vw, 18px);
+  color: var(--muted);
+  max-width: 500px;
+  margin: 0 auto 36px;
+  line-height: 1.7;
+  font-weight: 300;
+  opacity: 0;
+  animation: fadeUp 0.6s 0.4s forwards;
+}
+
+.hero-badges {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.6s 0.55s forwards;
+}
+
+.badge {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+/* ── AD BANNER ── */
+.ad-banner {
+  position: relative;
+  z-index: 1;
+  max-width: 728px;
+  margin: 0 auto 40px;
+  padding: 0 20px;
+}
+
+.ad-slot {
+  width: 100%;
+  min-height: 90px;
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 3px;
+  opacity: 0.5;
+}
+
+/* ── SECTION ── */
+section {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.section-title {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(16px, 3vw, 22px);
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 2px;
+}
+
+.section-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border), transparent);
+}
+
+.section-count {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 2px;
+}
+
+/* ── GAME GRID ── */
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* ── GAME CARD ── */
+.game-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+
+.game-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--card-accent, var(--cyan));
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px var(--card-glow, var(--glow-c));
+}
+
+.game-card.cyan  { --card-accent: var(--cyan);   --card-glow: #00e5ff22; }
+.game-card.red   { --card-accent: var(--red);    --card-glow: #ff225522; }
+.game-card.green { --card-accent: var(--green);  --card-glow: #00ff8822; }
+.game-card.yellow{ --card-accent: var(--yellow); --card-glow: #ffe60022; }
+
+.card-thumb {
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 72px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-thumb::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--thumb-bg, linear-gradient(135deg, #0d0d2a, #0a0a1a));
+}
+
+.game-card.cyan   .card-thumb { --thumb-bg: linear-gradient(135deg, #001a2e, #00090f); }
+.game-card.red    .card-thumb { --thumb-bg: linear-gradient(135deg, #2e0010, #0f0005); }
+.game-card.green  .card-thumb { --thumb-bg: linear-gradient(135deg, #002e15, #000f07); }
+.game-card.yellow .card-thumb { --thumb-bg: linear-gradient(135deg, #2e2a00, #0f0e00); }
+
+.card-thumb span { position: relative; z-index: 1; filter: drop-shadow(0 0 20px currentColor); }
+
+.card-tag {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  z-index: 2;
+}
+
+.tag-hot  { background: var(--red);    color: #000; }
+.tag-new  { background: var(--cyan);   color: #000; }
+.tag-soon { background: var(--muted);  color: var(--bg); }
+
+.card-body {
+  padding: 18px 20px 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--text);
+}
+
+.card-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+  font-weight: 300;
+  flex: 1;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.card-genre {
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+
+.card-play {
+  font-family: 'Orbitron', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--card-accent, var(--cyan));
+  text-transform: uppercase;
+}
+
+.game-card:hover .card-play::after { content: ' →'; }
+
+/* Coming soon card */
+.game-card.coming-soon {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* ── STATS BAR ── */
+.stats-strip {
+  position: relative;
+  z-index: 1;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 28px 20px;
+  margin-bottom: 60px;
+}
+
+.stats-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-num {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 900;
+  color: var(--cyan);
+  text-shadow: 0 0 15px var(--cyan);
+  display: block;
+}
+
+.stat-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* ── FOOTER ── */
+footer {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--border);
+  padding: 32px 20px;
+  text-align: center;
+}
+
+.footer-logo {
+  font-family: 'Orbitron', monospace;
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--cyan);
+  margin-bottom: 10px;
+}
+
+.footer-text {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  line-height: 2;
+}
+
+.footer-text a { color: var(--muted); text-decoration: none; }
+.footer-text a:hover { color: var(--cyan); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity:0; transform: translateY(20px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s, transform 0.6s;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width: 600px) {
+  nav { padding: 12px 16px; }
+  .nav-links { display: none; }
+  .game-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .card-thumb { height: 110px; font-size: 48px; }
+}
+</style>
+</head>
+<body>
+
+<div class="ambient"></div>
+<canvas id="stars"></canvas>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">WEB<span>GAME</span>+</a>
+  <ul class="nav-links">
+    <li><a href="#games">Games</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <p class="hero-eyebrow">⚡ Free · Instant · No Download</p>
+  <h1 class="hero-title">
+    <div class="line1">PLAY FREE</div>
+    <div class="line2">ARCADE GAMES</div>
+  </h1>
+  <p class="hero-sub">Browser-based arcade games you can play instantly. No login, no download — just click and play.</p>
+  <div class="hero-badges">
+    <span class="badge">🎮 Browser Games</span>
+    <span class="badge">📱 Mobile Friendly</span>
+    <span class="badge">🆓 Always Free</span>
+    <span class="badge">⚡ Instant Play</span>
+  </div>
+</div>
+
+<!-- AD BANNER TOP -->
+<div class="ad-banner">
+  <!-- Replace this div with your Google AdSense leaderboard (728x90) code -->
+  <div class="ad-slot">ADVERTISEMENT</div>
+</div>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <span class="stat-num" id="cGames">1</span>
+      <span class="stat-label">Games Available</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">0</span>
+      <span class="stat-label">Downloads Needed</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">100%</span>
+      <span class="stat-label">Free Forever</span>
+    </div>
+  </div>
+</div>
+
+<!-- GAMES SECTION -->
+<section id="games">
+  <div class="section-header reveal">
+    <h2 class="section-title">ALL GAMES</h2>
+    <div class="section-line"></div>
+    <span class="section-count">MORE COMING SOON</span>
+  </div>
+
+  <div class="game-grid">
+
+    <!-- BULLET STORM — LIVE -->
+    <a class="game-card red reveal" href="bullet-storm/index.html">
+      <div class="card-thumb">
+        <span>🔥</span>
+        <span class="card-tag tag-hot">HOT</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">BULLET STORM</div>
+        <div class="card-desc">Survive endless waves of enemies. Dodge bullets, collect power-ups, defeat bosses. 3 modes: Endless, Levels & Tutorial.</div>
+        <div class="card-meta">
+          <span class="card-genre">Shooter</span>
+          <span class="card-play">PLAY NOW</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- SNAKE — LIVE -->
+    <a class="game-card green reveal" href="snake/index.html">
+      <div class="card-thumb">
+        <span>🐍</span>
+        <span class="card-tag tag-new">NEW</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">SNAKE</div>
+        <div class="card-desc">The classic snake game reimagined with neon visuals. Eat food, grow longer, beat your high score. Touch & keyboard supported.</div>
+        <div class="card-meta">
+          <span class="card-genre">Classic</span>
+          <span class="card-play">PLAY NOW</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- COMING SOON CARDS -->
+    <div class="game-card cyan coming-soon">
+      <div class="card-thumb">
+        <span>🃏</span>
+        <span class="card-tag tag-soon">SOON</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">MEMORY MATCH</div>
+        <div class="card-desc">Flip cards and find matching pairs. Train your memory across multiple difficulty levels.</div>
+        <div class="card-meta">
+          <span class="card-genre">Puzzle</span>
+          <span class="card-play">COMING SOON</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="game-card yellow coming-soon">
+      <div class="card-thumb">
+        <span>⌨️</span>
+        <span class="card-tag tag-soon">SOON</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">TYPING SPEED</div>
+        <div class="card-desc">Test and improve your typing speed. Race against the clock and beat your WPM record.</div>
+        <div class="card-meta">
+          <span class="card-genre">Skill</span>
+          <span class="card-play">COMING SOON</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- AD BANNER BOTTOM -->
+<div class="ad-banner" style="margin-bottom:60px;">
+  <!-- Replace this div with your Google AdSense rectangle (336x280) code -->
+  <div class="ad-slot">ADVERTISEMENT</div>
+</div>
+
+<!-- FOOTER -->
+<footer id="about">
+  <div class="footer-logo">WEBGAME+</div>
+  <p class="footer-text">
+    Free browser arcade games — no download, no login, no cost.<br>
+    New games added regularly.<br><br>
+    <a href="#">Privacy Policy</a> · <a href="#">Contact</a>
+  </p>
+</footer>
+
+<script>
+// ── STAR FIELD ──
+const canvas = document.getElementById('stars');
+const ctx = canvas.getContext('2d');
+let stars = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+function initStars() {
+  stars = Array.from({length: 120}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 1.2 + 0.2,
+    o: Math.random() * 0.5 + 0.1,
+    speed: Math.random() * 0.15 + 0.03
+  }));
+}
+
+function drawStars() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  stars.forEach(s => {
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(180,200,255,${s.o})`;
+    ctx.fill();
+    s.y += s.speed;
+    if (s.y > canvas.height) { s.y = 0; s.x = Math.random() * canvas.width; }
+  });
+  requestAnimationFrame(drawStars);
+}
+
+resizeCanvas(); initStars(); drawStars();
+window.addEventListener('resize', () => { resizeCanvas(); initStars(); });
+
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ── GAME COUNT (update when you add more games) ──
+document.getElementById('cGames').textContent = '2';
+</script>
+</body>
+</html>
