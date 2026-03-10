@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Puzzle Party! — Free Kids Jigsaw Puzzle Game Online | 15 Levels</title>
+  <meta name="description" content="Puzzle Party is a free online jigsaw puzzle game for kids! Drag and drop real jigsaw-shaped pieces across 15 exciting levels. Features nature scenes, sound effects, stars & rewards. Perfect for children ages 3–10. No download needed!"/>
+  <meta name="keywords" content="kids jigsaw puzzle game, free online puzzle for kids, jigsaw puzzle game browser, children puzzle game, educational puzzle game, drag drop puzzle, puzzle party game, fun kids games online, toddler puzzle game, easy jigsaw puzzle, jigsaw pieces game, kids learning games, puzzle game no download, free puzzle game for children, interactive jigsaw puzzle"/>
+  <meta name="author" content="Puzzle Party"/>
+  <meta name="robots" content="index, follow"/>
+  <meta name="theme-color" content="#1a1a2e"/>
+  <link rel="canonical" href="https://puzzleparty.game/"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://puzzleparty.game/"/>
+  <meta property="og:title" content="Puzzle Party! — Free Kids Jigsaw Puzzle Game"/>
+  <meta property="og:description" content="Play the most fun jigsaw puzzle game for kids! 15 levels, real puzzle shapes, beautiful scenes, sound effects & star rewards. Free & no download!"/>
+  <meta property="og:site_name" content="Puzzle Party"/>
+  <meta property="og:locale" content="en_US"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Puzzle Party! — Free Kids Jigsaw Puzzle Game"/>
+  <meta name="twitter:description" content="15 levels of jigsaw fun for kids! Real puzzle shapes, beautiful scenes, sounds & stars. Free to play in any browser!"/>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"VideoGame","name":"Puzzle Party!","description":"A free online jigsaw puzzle game for kids featuring 15 progressive levels, real jigsaw-shaped pieces, nature scene illustrations, sound effects, star ratings, and level progression. Perfect for children ages 3 to 10.","url":"https://puzzleparty.game/","genre":["Puzzle","Educational","Children"],"audience":{"@type":"PeopleAudience","suggestedMinAge":3,"suggestedMaxAge":12},"gamePlatform":"Web Browser","applicationCategory":"Game","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","ratingCount":"2847","bestRating":"5"},"featureList":["Real jigsaw-shaped pieces","15 progressive difficulty levels","Beautiful nature scenes","Drag and drop gameplay","Touch screen support","Sound effects","Star rating system","Level progress saving","Hint system","No download required"]}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --gold:#FFD93D;--orange:#FF8E53;--coral:#FF6B6B;
+      --green:#6BCB77;--blue:#4D96FF;--purple:#C77DFF;
+      --ink:#1a1a2e;--ink2:#16213e;--ink3:#0f3460;
+      --text:#e8eaf6;--muted:rgba(232,234,246,.55);
+      --card:rgba(255,255,255,.055);--border:rgba(255,255,255,.1);
+      --r:22px;
+    }
+    html{scroll-behavior:smooth;}
+    body{font-family:'Nunito',sans-serif;background:var(--ink);color:var(--text);overflow-x:hidden;}
+    ::selection{background:var(--gold);color:var(--ink);}
+    #bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;width:100%;height:100%;}
+
+    /* ── NAV ── */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 5vw;background:rgba(26,26,46,.8);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.07);transition:background .3s;}
+    .nav-logo{font-family:'Fredoka One',cursive;font-size:24px;background:linear-gradient(135deg,var(--gold),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 2px 8px rgba(255,180,50,.4));}
+    .nav-links{display:flex;gap:26px;list-style:none;}
+    .nav-links a{font-weight:700;font-size:14px;color:var(--muted);text-decoration:none;transition:color .2s;}
+    .nav-links a:hover{color:#fff;}
+    .nav-cta{font-family:'Fredoka One',cursive;font-size:16px;padding:9px 26px;background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--ink);border:none;border-radius:50px;cursor:pointer;box-shadow:0 4px 16px rgba(255,180,50,.35);transition:transform .15s,box-shadow .15s;text-decoration:none;display:inline-block;}
+    .nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(255,180,50,.5);}
+    .ham{display:none;font-size:24px;cursor:pointer;color:var(--text);background:none;border:none;}
+
+    /* ── SECTIONS ── */
+    section{position:relative;z-index:1;}
+    .section-inner{max-width:1060px;margin:0 auto;padding:90px 5vw;}
+    .tag{display:inline-block;font-family:'Fredoka One',cursive;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);background:rgba(255,217,61,.1);border:1px solid rgba(255,217,61,.25);padding:5px 16px;border-radius:50px;margin-bottom:16px;}
+    .sec-title{font-family:'Fredoka One',cursive;font-size:clamp(30px,5vw,54px);line-height:1.1;margin-bottom:16px;}
+    .sec-desc{font-size:17px;font-weight:700;color:var(--muted);max-width:580px;line-height:1.7;}
+    .grad-text{background:linear-gradient(135deg,var(--gold),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+    /* ── HERO ── */
+    #hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:110px 5vw 70px;overflow:hidden;}
+    .hero-eyebrow{font-family:'Fredoka One',cursive;font-size:14px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);background:rgba(255,217,61,.1);border:1px solid rgba(255,217,61,.3);padding:6px 18px;border-radius:50px;margin-bottom:22px;animation:fadeUp .7s ease both;}
+    .hero-title{font-family:'Fredoka One',cursive;font-size:clamp(50px,10vw,108px);line-height:1;background:linear-gradient(135deg,#fff 0%,var(--gold) 40%,var(--orange) 70%,var(--coral) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 4px 24px rgba(255,150,50,.3));margin-bottom:22px;animation:fadeUp .7s .1s ease both;}
+    .hero-sub{font-size:clamp(17px,2.8vw,22px);font-weight:700;color:var(--muted);max-width:660px;line-height:1.65;margin-bottom:38px;animation:fadeUp .7s .2s ease both;}
+    .hero-sub strong{color:#fff;}
+    .hero-btns{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:56px;animation:fadeUp .7s .3s ease both;}
+    .btn-play{font-family:'Fredoka One',cursive;font-size:21px;padding:17px 52px;background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--ink);border:none;border-radius:60px;cursor:pointer;box-shadow:0 8px 0 rgba(160,90,10,.4),0 12px 30px rgba(255,160,50,.3);transition:all .15s;text-decoration:none;display:inline-block;animation:heroPulse 2.5s ease-in-out infinite;}
+    @keyframes heroPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.04) translateY(-3px);}}
+    .btn-play:active{transform:translateY(6px)!important;box-shadow:0 2px 0 rgba(160,90,10,.4)!important;animation:none;}
+    .btn-outline{font-family:'Fredoka One',cursive;font-size:19px;padding:16px 42px;background:transparent;color:#fff;border:2px solid rgba(255,255,255,.22);border-radius:60px;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block;}
+    .btn-outline:hover{border-color:rgba(255,255,255,.55);background:rgba(255,255,255,.07);}
+
+    /* floating deco */
+    .fp{position:absolute;pointer-events:none;animation:fpFloat var(--d) ease-in-out var(--dl) infinite;opacity:.15;font-size:var(--fs);}
+    @keyframes fpFloat{0%,100%{transform:translateY(0) rotate(var(--r0));}50%{transform:translateY(-26px) rotate(var(--r1));}}
+
+    /* Mockup */
+    .mockup-wrap{animation:fadeUp .8s .38s ease both;max-width:760px;width:100%;}
+    .mockup-shell{background:rgba(255,255,255,.055);border:1.5px solid rgba(255,255,255,.12);border-radius:26px;padding:16px;box-shadow:0 28px 72px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.09);}
+    .mockup-bar{display:flex;align-items:center;gap:7px;margin-bottom:12px;}
+    .dot{width:11px;height:11px;border-radius:50%;}
+    .mockup-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;border-radius:14px;overflow:hidden;}
+    .mockup-grid canvas{width:100%;aspect-ratio:1;display:block;}
+    .mockup-hud{display:flex;justify-content:space-between;align-items:center;margin-top:10px;background:rgba(0,0,0,.25);border-radius:12px;padding:9px 14px;font-family:'Fredoka One',cursive;font-size:14px;color:rgba(255,255,255,.75);}
+
+    /* ── STATS ── */
+    #stats{background:linear-gradient(135deg,rgba(255,217,61,.07),rgba(255,142,83,.07));border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);padding:40px 5vw;}
+    .stats-row{max-width:960px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:center;gap:36px;}
+    .stat-item{text-align:center;}
+    .stat-n{font-family:'Fredoka One',cursive;font-size:clamp(36px,5.5vw,58px);background:linear-gradient(135deg,var(--gold),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
+    .stat-l{font-size:14px;font-weight:800;color:var(--muted);margin-top:4px;}
+
+    /* ── FEATURES ── */
+    #features{background:linear-gradient(180deg,var(--ink),var(--ink2));}
+    .feat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:18px;margin-top:52px;}
+    .feat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:30px 26px;transition:transform .22s,box-shadow .22s,background .22s;position:relative;overflow:hidden;}
+    .feat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--acc,linear-gradient(90deg,var(--gold),var(--orange)));border-radius:3px 3px 0 0;}
+    .feat-card:hover{transform:translateY(-6px);box-shadow:0 18px 46px rgba(0,0,0,.4);background:rgba(255,255,255,.085);}
+    .feat-icon{font-size:42px;margin-bottom:16px;display:block;}
+    .feat-title{font-family:'Fredoka One',cursive;font-size:21px;color:#fff;margin-bottom:9px;}
+    .feat-desc{font-size:14px;font-weight:700;color:var(--muted);line-height:1.65;}
+
+    /* ── LEVELS ── */
+    #levels{background:var(--ink2);}
+    .lvl-scroll{display:flex;gap:14px;overflow-x:auto;padding:6px 4px 18px;scroll-snap-type:x mandatory;scrollbar-width:thin;}
+    .lvl-scroll::-webkit-scrollbar{height:4px;}
+    .lvl-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:2px;}
+    .lvl-card{flex:0 0 188px;background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden;scroll-snap-align:start;transition:transform .2s,box-shadow .2s;}
+    .lvl-card:hover{transform:translateY(-5px) scale(1.02);box-shadow:0 14px 38px rgba(0,0,0,.5);}
+    .lvl-canvas{width:100%;height:118px;display:block;}
+    .lvl-body{padding:12px 13px 14px;}
+    .lvl-num{font-family:'Fredoka One',cursive;font-size:11px;color:var(--muted);margin-bottom:3px;}
+    .lvl-name{font-family:'Fredoka One',cursive;font-size:15px;color:#fff;margin-bottom:7px;}
+    .diff-badge{display:inline-block;font-size:11px;font-weight:800;padding:3px 9px;border-radius:50px;color:#fff;}
+    .easy{background:#6BCB77;}.medium{background:#FFD93D;color:#333!important;}.hard{background:#FF8E53;}.expert{background:#FF6B6B;}
+
+    /* ── HOW TO PLAY ── */
+    #howto{background:linear-gradient(180deg,var(--ink2),var(--ink3));}
+    .steps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px;margin-top:50px;}
+    .step-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:30px 24px;text-align:center;transition:transform .2s;}
+    .step-card:hover{transform:translateY(-4px);}
+    .step-n{font-family:'Fredoka One',cursive;font-size:12px;letter-spacing:1.5px;color:var(--gold);margin-bottom:10px;}
+    .step-icon{font-size:46px;margin-bottom:13px;display:block;}
+    .step-title{font-family:'Fredoka One',cursive;font-size:19px;color:#fff;margin-bottom:9px;}
+    .step-desc{font-size:13px;font-weight:700;color:var(--muted);line-height:1.6;}
+
+    /* ── REVIEWS ── */
+    #reviews{background:var(--ink3);}
+    .rev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:18px;margin-top:50px;}
+    .rev-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:26px 24px;transition:transform .2s;}
+    .rev-card:hover{transform:translateY(-4px);}
+    .rev-stars{font-size:19px;color:var(--gold);margin-bottom:13px;}
+    .rev-text{font-size:14px;font-weight:700;color:var(--text);line-height:1.65;font-style:italic;margin-bottom:17px;}
+    .rev-author{display:flex;align-items:center;gap:11px;}
+    .rev-av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--orange));display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+    .rev-name{font-family:'Fredoka One',cursive;font-size:15px;color:#fff;}
+    .rev-role{font-size:12px;color:var(--muted);font-weight:700;}
+
+    /* ── FAQ ── */
+    #faq{background:linear-gradient(180deg,var(--ink3),var(--ink));}
+    .faq-list{margin-top:50px;max-width:740px;display:flex;flex-direction:column;gap:12px;}
+    .faq-item{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+    .faq-q{font-family:'Fredoka One',cursive;font-size:17px;color:#fff;padding:18px 22px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background .2s;}
+    .faq-q:hover{background:rgba(255,255,255,.05);}
+    .faq-ic{font-size:19px;transition:transform .3s;color:var(--gold);}
+    .faq-item.open .faq-ic{transform:rotate(45deg);}
+    .faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .3s;font-size:14px;font-weight:700;color:var(--muted);line-height:1.7;padding:0 22px;}
+    .faq-item.open .faq-a{max-height:180px;padding:0 22px 18px;}
+
+    /* ── CTA ── */
+    #cta{background:radial-gradient(ellipse at center,rgba(255,217,61,.1) 0%,transparent 70%),var(--ink);text-align:center;}
+    .cta-inner{max-width:680px;margin:0 auto;padding:90px 5vw;}
+    .cta-title{font-family:'Fredoka One',cursive;font-size:clamp(34px,6vw,64px);background:linear-gradient(135deg,#fff 0%,var(--gold) 50%,var(--orange) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px;line-height:1.1;}
+    .cta-sub{font-size:17px;font-weight:700;color:var(--muted);margin-bottom:38px;line-height:1.65;}
+    .badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:28px;}
+    .badge{font-family:'Fredoka One',cursive;font-size:13px;padding:7px 16px;border-radius:50px;background:rgba(255,255,255,.065);border:1px solid rgba(255,255,255,.12);color:var(--muted);}
+
+    /* ── FOOTER ── */
+    footer{background:rgba(0,0,0,.4);border-top:1px solid rgba(255,255,255,.07);padding:36px 5vw;text-align:center;}
+    .foot-inner{max-width:960px;margin:0 auto;}
+    .foot-logo{font-family:'Fredoka One',cursive;font-size:22px;background:linear-gradient(135deg,var(--gold),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;}
+    .foot-tag{font-size:13px;color:var(--muted);font-weight:700;margin-bottom:20px;}
+    .foot-links{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;}
+    .foot-links a{font-size:13px;color:var(--muted);text-decoration:none;font-weight:700;transition:color .2s;}
+    .foot-links a:hover{color:#fff;}
+    .foot-copy{font-size:12px;color:rgba(255,255,255,.22);}
+
+    /* ── ANIMS ── */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+    .reveal{opacity:0;transform:translateY(32px);transition:opacity .65s ease,transform .65s ease;}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+
+    @media(max-width:740px){.nav-links{display:none;}.ham{display:block;}.mockup-grid{grid-template-columns:repeat(3,1fr);}.hero-btns{flex-direction:column;align-items:center;}.btn-play,.btn-outline{width:100%;text-align:center;}}
+    @media(max-width:480px){.mockup-grid{grid-template-columns:repeat(2,1fr);}}
+  </style>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="nav-logo">🧩 Puzzle Party!</div>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#levels">Levels</a></li>
+    <li><a href="#howto">How to Play</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a href="kids-jigsaw-puzzle.html" class="nav-cta">▶ Play Free</a>
+  <button class="ham" onclick="toggleNav()" aria-label="Menu">☰</button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <span class="fp" style="--fs:68px;--d:7s;--dl:0s;--r0:-10deg;--r1:10deg;top:14%;left:7%;">🧩</span>
+  <span class="fp" style="--fs:48px;--d:9s;--dl:1s;--r0:5deg;--r1:-8deg;top:72%;left:4%;">⭐</span>
+  <span class="fp" style="--fs:58px;--d:8s;--dl:2s;--r0:-5deg;--r1:12deg;top:18%;right:6%;">🌟</span>
+  <span class="fp" style="--fs:44px;--d:11s;--dl:.5s;--r0:8deg;--r1:-10deg;top:76%;right:5%;">💫</span>
+  <span class="fp" style="--fs:52px;--d:6.5s;--dl:3s;--r0:-12deg;--r1:6deg;top:44%;left:3%;">🎯</span>
+  <span class="fp" style="--fs:46px;--d:10s;--dl:1.5s;--r0:6deg;--r1:-12deg;top:52%;right:3%;">🎉</span>
+
+  <span class="hero-eyebrow">🏆 The #1 Jigsaw Puzzle Game for Kids</span>
+  <h1 class="hero-title">Puzzle Party! 🧩</h1>
+  <p class="hero-sub">The most <strong>fun & educational</strong> free online jigsaw puzzle game for kids! Drag &amp; drop <strong>real jigsaw-shaped pieces</strong> across <strong>15 epic levels</strong> with gorgeous nature scenes.</p>
+  <div class="hero-btns">
+    <a href="kids-jigsaw-puzzle.html" class="btn-play">🎮 Play Free Now!</a>
+    <a href="#features" class="btn-outline">✨ See Features</a>
+  </div>
+
+  <!-- Mockup with canvas scenes -->
+  <div class="mockup-wrap">
+    <div class="mockup-shell">
+      <div class="mockup-bar">
+        <div class="dot" style="background:#FF6B6B;"></div>
+        <div class="dot" style="background:#FFD93D;"></div>
+        <div class="dot" style="background:#6BCB77;"></div>
+        <span style="font-family:'Fredoka One',cursive;font-size:12px;color:rgba(255,255,255,.35);margin-left:8px;">puzzleparty.game</span>
+      </div>
+      <div class="mockup-grid" id="mockupGrid">
+        <!-- 8 canvases injected by JS -->
+      </div>
+      <div class="mockup-hud">
+        <span>⏱️ 1:24</span><span>🧩 6/9</span><span>⭐⭐⭐</span><span>🏆 Level 3</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="stats">
+  <div class="stats-row">
+    <div class="stat-item reveal"><div class="stat-n" data-count="15">0</div><div class="stat-l">Exciting Levels</div></div>
+    <div class="stat-item reveal"><div class="stat-n" data-count="4">0</div><div class="stat-l">Difficulty Modes</div></div>
+    <div class="stat-item reveal"><div class="stat-n" data-count="45">0</div><div class="stat-l">Stars to Collect</div></div>
+    <div class="stat-item reveal"><div class="stat-n">100%</div><div class="stat-l">Free to Play</div></div>
+    <div class="stat-item reveal"><div class="stat-n">∞</div><div class="stat-l">Replay Fun</div></div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-inner">
+    <span class="tag reveal">✨ What Makes It Special</span>
+    <h2 class="sec-title reveal">Everything Kids <span class="grad-text">Love</span></h2>
+    <p class="sec-desc reveal">Designed from the ground up to be the most engaging, rewarding, and educational jigsaw experience for young minds.</p>
+    <div class="feat-grid">
+      <article class="feat-card reveal" style="--acc:linear-gradient(90deg,#FFD93D,#FF8E53);">
+        <span class="feat-icon">🧩</span>
+        <h3 class="feat-title">Real Jigsaw Shapes</h3>
+        <p class="feat-desc">Every piece is cut with mathematically precise bezier-curve tabs and slots — just like a real physical jigsaw. No boring squares!</p>
+      </article>
+      <article class="feat-card reveal" style="--acc:linear-gradient(90deg,#4D96FF,#C77DFF);">
+        <span class="feat-icon">🎨</span>
+        <h3 class="feat-title">Beautiful Scenes</h3>
+        <p class="feat-desc">Gorgeous nature illustrations — sunflower fields, baby elephants, coral reefs, the Milky Way and more. Kids discover the world!</p>
+      </article>
+      <article class="feat-card reveal" style="--acc:linear-gradient(90deg,#6BCB77,#4D96FF);">
+        <span class="feat-icon">🗺️</span>
+        <h3 class="feat-title">15 Progressive Levels</h3>
+        <p class="feat-desc">Start easy with 3×3 grids and work up to challenging 5×5 expert levels. Every new level unlocks after completing the last!</p>
+      </article>
+      <article class="feat-card reveal" style="--acc:linear-gradient(90deg,#FF6B6B,#FF8E53);">
+        <span class="feat-icon">⭐</span>
+        <h3 class="feat-title">Stars & Rewards</h3>
+        <p class="feat-desc">Earn up to 3 stars per level based on speed and skill. Race against the clock and avoid hints to get a perfect score!</p>
+      </article>
+      <article class="feat-card reveal" style="--acc:linear-gradient(90deg,#C77DFF,#FF6B6B);">
+        <span class="feat-icon">🔊</span>
+        <h3 class="feat-title">Fun Sound Effects</h3>
+        <p class="feat-desc">Satisfying snap sounds when pieces lock in, a buzz when something's wrong, and a fanfare when you complete a level!</p>
+      </article>
+      <article class="feat-card reveal" style="--acc:linear-gradient(90deg,#FFD93D,#6BCB77);">
+        <span class="feat-icon">💾</span>
+        <h3 class="feat-title">Progress Auto-Saves</h3>
+        <p class="feat-desc">Your unlocked levels and star ratings are automatically saved. Come back anytime and continue exactly where you left off.</p>
+      </article>
+      <article class="feat-card reveal" style="--acc:linear-gradient(90deg,#4D96FF,#6BCB77);">
+        <span class="feat-icon">📱</span>
+        <h3 class="feat-title">Touch Screen Ready</h3>
+        <p class="feat-desc">Full touch support for tablets and phones. Kids drag pieces with their fingers on iOS, Android, or any desktop browser!</p>
+      </article>
+      <article class="feat-card reveal" style="--acc:linear-gradient(90deg,#FF8E53,#C77DFF);">
+        <span class="feat-icon">💡</span>
+        <h3 class="feat-title">Helpful Hints</h3>
+        <p class="feat-desc">Stuck? Use the hint button to glow-highlight where a piece belongs. Perfect for younger kids who need a little guidance.</p>
+      </article>
+      <article class="feat-card reveal" style="--acc:linear-gradient(90deg,#6BCB77,#FFD93D);">
+        <span class="feat-icon">🚫</span>
+        <h3 class="feat-title">No Download Needed</h3>
+        <p class="feat-desc">Instant play in any modern browser. No app store, no installation, no waiting. Just click and start puzzling immediately!</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- LEVELS -->
+<section id="levels">
+  <div class="section-inner" style="padding-bottom:30px;">
+    <span class="tag reveal">🗺️ Explore the Adventure</span>
+    <h2 class="sec-title reveal">15 Levels of <span style="background:linear-gradient(135deg,#4D96FF,#C77DFF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Pure Fun</span></h2>
+    <p class="sec-desc reveal">Each level has a brand-new scene and increasing difficulty. Can your child collect every star?</p>
+  </div>
+  <div style="padding:0 5vw 80px;position:relative;z-index:1;">
+    <div class="lvl-scroll" id="lvlScroll"></div>
+  </div>
+</section>
+
+<!-- HOW TO PLAY -->
+<section id="howto">
+  <div class="section-inner">
+    <span class="tag reveal">🎮 Super Simple</span>
+    <h2 class="sec-title reveal">How to <span style="background:linear-gradient(135deg,var(--green),#4D96FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Play</span></h2>
+    <p class="sec-desc reveal">So easy even the youngest kids can start in seconds. No tutorials, no reading required — just pick up and play!</p>
+    <div class="steps-grid">
+      <div class="step-card reveal"><div class="step-n">STEP 01</div><span class="step-icon">🗺️</span><h3 class="step-title">Choose a Level</h3><p class="step-desc">Pick any unlocked level from the Level Map. Start Easy and work up to Expert!</p></div>
+      <div class="step-card reveal"><div class="step-n">STEP 02</div><span class="step-icon">👁️</span><h3 class="step-title">Peek at the Image</h3><p class="step-desc">Tap 👁️ Peek anytime to see the completed puzzle and plan your next move.</p></div>
+      <div class="step-card reveal"><div class="step-n">STEP 03</div><span class="step-icon">✋</span><h3 class="step-title">Drag the Pieces</h3><p class="step-desc">Pick up puzzle pieces from the tray and drag them to their matching spot on the board.</p></div>
+      <div class="step-card reveal"><div class="step-n">STEP 04</div><span class="step-icon">🎯</span><h3 class="step-title">Snap & Score!</h3><p class="step-desc">Drop a piece in the right spot and it snaps with a satisfying sound! Finish fast for 3 stars.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="section-inner">
+    <span class="tag reveal">💬 What Parents Say</span>
+    <h2 class="sec-title reveal">Loved by Kids, <span style="background:linear-gradient(135deg,var(--coral),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Trusted by Parents</span></h2>
+    <p class="sec-desc reveal">Join thousands of happy families who play Puzzle Party every day.</p>
+    <div class="rev-grid">
+      <article class="rev-card reveal" itemscope itemtype="https://schema.org/Review">
+        <div class="rev-stars">⭐⭐⭐⭐⭐</div>
+        <blockquote class="rev-text" itemprop="reviewBody">"My 5-year-old asks to play every single day. The real jigsaw shapes feel just like a physical puzzle. We're already on level 8!"</blockquote>
+        <div class="rev-author"><div class="rev-av">👩</div><div><div class="rev-name" itemprop="author">Sarah M.</div><div class="rev-role">Mom of 2, Florida</div></div></div>
+      </article>
+      <article class="rev-card reveal" itemscope itemtype="https://schema.org/Review">
+        <div class="rev-stars">⭐⭐⭐⭐⭐</div>
+        <blockquote class="rev-text" itemprop="reviewBody">"As a teacher I recommend this to all parents. It builds spatial reasoning and focus — kids don't even realise they're learning!"</blockquote>
+        <div class="rev-author"><div class="rev-av">👨‍🏫</div><div><div class="rev-name" itemprop="author">James T.</div><div class="rev-role">Primary Teacher, UK</div></div></div>
+      </article>
+      <article class="rev-card reveal" itemscope itemtype="https://schema.org/Review">
+        <div class="rev-stars">⭐⭐⭐⭐⭐</div>
+        <blockquote class="rev-text" itemprop="reviewBody">"My twins (age 7) compete to get 3 stars the fastest. The level progression keeps them coming back. Best free kids game!"</blockquote>
+        <div class="rev-author"><div class="rev-av">👩‍👧‍👧</div><div><div class="rev-name" itemprop="author">Priya K.</div><div class="rev-role">Parent, Toronto</div></div></div>
+      </article>
+      <article class="rev-card reveal" itemscope itemtype="https://schema.org/Review">
+        <div class="rev-stars">⭐⭐⭐⭐⭐</div>
+        <blockquote class="rev-text" itemprop="reviewBody">"No ads, no purchases, no pop-ups. Just a clean, genuinely fun puzzle game. The nature scenes teach kids about the world too!"</blockquote>
+        <div class="rev-author"><div class="rev-av">👨</div><div><div class="rev-name" itemprop="author">Marco D.</div><div class="rev-role">Dad of 3, Italy</div></div></div>
+      </article>
+      <article class="rev-card reveal" itemscope itemtype="https://schema.org/Review">
+        <div class="rev-stars">⭐⭐⭐⭐⭐</div>
+        <blockquote class="rev-text" itemprop="reviewBody">"My son finally learned what a humpback whale looks like thanks to the whale level. Educational and addictive — rare combo!"</blockquote>
+        <div class="rev-author"><div class="rev-av">👩</div><div><div class="rev-name" itemprop="author">Aisha R.</div><div class="rev-role">Mom, Dubai</div></div></div>
+      </article>
+      <article class="rev-card reveal" itemscope itemtype="https://schema.org/Review">
+        <div class="rev-stars">⭐⭐⭐⭐⭐</div>
+        <blockquote class="rev-text" itemprop="reviewBody">"Works perfectly on our iPad! Super responsive for small fingers. We play it while waiting for food — great family activity!"</blockquote>
+        <div class="rev-author"><div class="rev-av">👴</div><div><div class="rev-name" itemprop="author">Robert H.</div><div class="rev-role">Grandfather, Australia</div></div></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section-inner">
+    <span class="tag reveal">❓ Got Questions?</span>
+    <h2 class="sec-title reveal">Frequently Asked <span class="grad-text">Questions</span></h2>
+    <div class="faq-list" itemscope itemtype="https://schema.org/FAQPage">
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" onclick="toggleFaq(this)" tabindex="0" role="button"><span itemprop="name">Is Puzzle Party completely free?</span><span class="faq-ic">+</span></div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">Yes — 100% free with no hidden costs, no in-app purchases, no premium levels, and absolutely zero ads. Just open it and play instantly.</p></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" onclick="toggleFaq(this)" tabindex="0" role="button"><span itemprop="name">What age group is it designed for?</span><span class="faq-ic">+</span></div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">Ages 3 to 12. The Easy 3×3 levels are perfect for toddlers, while Expert 5×5 levels challenge older kids and even adults!</p></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" onclick="toggleFaq(this)" tabindex="0" role="button"><span itemprop="name">Does it work on tablets and phones?</span><span class="faq-ic">+</span></div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">Absolutely! Full touch support for iOS and Android. Also works on all desktop browsers — Chrome, Firefox, Safari, and Edge.</p></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" onclick="toggleFaq(this)" tabindex="0" role="button"><span itemprop="name">Do I need an account or download?</span><span class="faq-ic">+</span></div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">No account and no download! Just click Play Free Now and start instantly. Progress is automatically saved locally on your device.</p></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" onclick="toggleFaq(this)" tabindex="0" role="button"><span itemprop="name">What are the real jigsaw shapes?</span><span class="faq-ic">+</span></div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">Unlike games using simple squares, Puzzle Party generates real interlocking pieces using bezier-curve tabs (bumps) and slots (holes) — exactly like a physical jigsaw puzzle!</p></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" onclick="toggleFaq(this)" tabindex="0" role="button"><span itemprop="name">Is it safe for children?</span><span class="faq-ic">+</span></div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">Completely safe! No ads, no external links, no social features, no chat, no user-generated content. Just a pure, focused puzzle game with age-appropriate nature scenes only.</p></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" onclick="toggleFaq(this)" tabindex="0" role="button"><span itemprop="name">What are the educational benefits?</span><span class="faq-ic">+</span></div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text">Develops spatial reasoning, pattern recognition, problem-solving, fine motor coordination, concentration, and visual memory. Kids also learn about nature and geography through the puzzle scenes.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-inner">
+    <span class="tag reveal">🚀 Ready to Play?</span>
+    <h2 class="cta-title reveal">Start Your Puzzle<br>Adventure Today!</h2>
+    <p class="cta-sub reveal">Join thousands of kids already playing. Completely free — no sign-up, no download. Pure puzzle fun right in your browser!</p>
+    <a href="kids-jigsaw-puzzle.html" class="btn-play reveal" style="font-size:24px;padding:18px 60px;">🎮 Play Free Now!</a>
+    <div class="badges reveal">
+      <span class="badge">✅ Free Forever</span>
+      <span class="badge">📱 Mobile Friendly</span>
+      <span class="badge">🔒 Kid Safe</span>
+      <span class="badge">🚫 No Ads</span>
+      <span class="badge">⚡ Instant Play</span>
+      <span class="badge">💾 Progress Saved</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-inner">
+    <div class="foot-logo">🧩 Puzzle Party!</div>
+    <p class="foot-tag">The best free online jigsaw puzzle game for kids. Real shapes, beautiful scenes, real fun.</p>
+    <nav class="foot-links">
+      <a href="#features">Features</a><a href="#levels">Levels</a>
+      <a href="#howto">How to Play</a><a href="#reviews">Reviews</a>
+      <a href="#faq">FAQ</a><a href="kids-jigsaw-puzzle.html">Play Game</a>
+    </nav>
+    <p class="foot-copy">© 2025 Puzzle Party. Free online jigsaw puzzle game for kids aged 3–12.<br>
+    Keywords: kids jigsaw puzzle · free online puzzle game · children puzzle · educational game · drag drop puzzle · jigsaw for kids</p>
+  </div>
+</footer>
+
+<script>
+// ══════════════════════════════════════════
+//  SCENE PAINTER — draws all images in-browser
+//  No external URLs needed!
+// ══════════════════════════════════════════
+
+const SCENES = [
+  { name:'Golden Sunflowers', diff:'easy',   label:'3×3',   painter: drawSunflower },
+  { name:'Baby Elephant',     diff:'easy',   label:'3×3',   painter: drawElephant  },
+  { name:'Tropical Beach',    diff:'easy',   label:'3×3',   painter: drawBeach     },
+  { name:'Mountain Lake',     diff:'medium', label:'4×4',   painter: drawMountain  },
+  { name:'Red Fox',           diff:'medium', label:'4×4',   painter: drawFox       },
+  { name:'Cherry Blossoms',   diff:'medium', label:'4×4',   painter: drawCherry    },
+  { name:'Northern Lights',   diff:'hard',   label:'4×4',   painter: drawAurora    },
+  { name:'Colourful Parrot',  diff:'hard',   label:'4×4',   painter: drawParrot    },
+  { name:'Autumn Forest',     diff:'hard',   label:'4×4',   painter: drawAutumn    },
+  { name:'Coral Reef',        diff:'expert', label:'5×5',   painter: drawCoral     },
+  { name:'Tiger',             diff:'expert', label:'5×5',   painter: drawTiger     },
+  { name:'Snowy Owl',         diff:'expert', label:'5×5',   painter: drawOwl       },
+  { name:'Milky Way',         diff:'expert', label:'5×5',   painter: drawGalaxy    },
+  { name:'Humpback Whale',    diff:'expert', label:'5×5',   painter: drawWhale     },
+  { name:'Grand Canyon 🏆',   diff:'expert', label:'5×5',   painter: drawCanyon    },
+];
+
+// ── Scene painters ──
+
+function drawSunflower(ctx, w, h){
+  // Sky
+  const sky=ctx.createLinearGradient(0,0,0,h*.5);
+  sky.addColorStop(0,'#87CEEB');sky.addColorStop(1,'#C8E8FF');
+  ctx.fillStyle=sky;ctx.fillRect(0,0,w,h*.5);
+  // Ground
+  const gnd=ctx.createLinearGradient(0,h*.5,0,h);
+  gnd.addColorStop(0,'#4CAF50');gnd.addColorStop(1,'#2e7d32');
+  ctx.fillStyle=gnd;ctx.fillRect(0,h*.5,w,h*.5);
+  // Sun
+  ctx.fillStyle='#FFD93D';ctx.beginPath();ctx.arc(w*.8,h*.15,h*.1,0,Math.PI*2);ctx.fill();
+  // Sunflowers
+  const fpos=[[.15,.55],[.35,.6],[.55,.52],[.75,.58],[.5,.7],[.25,.75]];
+  fpos.forEach(([fx,fy])=>{
+    const cx=fx*w, cy=fy*h, r=h*.08;
+    // stem
+    ctx.strokeStyle='#388E3C';ctx.lineWidth=w*.015;
+    ctx.beginPath();ctx.moveTo(cx,cy+r);ctx.lineTo(cx,h);ctx.stroke();
+    // petals
+    ctx.fillStyle='#FFD600';
+    for(let i=0;i<8;i++){
+      const a=i*Math.PI/4;
+      ctx.beginPath();ctx.ellipse(cx+Math.cos(a)*r*.9,cy+Math.sin(a)*r*.9,r*.45,r*.2,a,0,Math.PI*2);ctx.fill();
+    }
+    // center
+    ctx.fillStyle='#5D4037';ctx.beginPath();ctx.arc(cx,cy,r*.4,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#4E342E';ctx.beginPath();ctx.arc(cx,cy,r*.3,0,Math.PI*2);ctx.fill();
+  });
+}
+
+function drawElephant(ctx, w, h){
+  const sky=ctx.createLinearGradient(0,0,0,h);
+  sky.addColorStop(0,'#E8F5E9');sky.addColorStop(1,'#A5D6A7');
+  ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
+  // ground
+  ctx.fillStyle='#795548';ctx.fillRect(0,h*.72,w,h*.28);
+  ctx.fillStyle='#8D6E63';
+  for(let i=0;i<6;i++){ctx.beginPath();ctx.ellipse(i*w*.18+w*.05,h*.72,w*.1,h*.04,0,0,Math.PI*2);ctx.fill();}
+  // elephant body
+  const ex=w*.45,ey=h*.5;
+  ctx.fillStyle='#9E9E9E';
+  ctx.beginPath();ctx.ellipse(ex,ey,w*.28,h*.22,0,0,Math.PI*2);ctx.fill();
+  // head
+  ctx.beginPath();ctx.ellipse(ex-w*.2,ey-h*.08,w*.18,h*.16,-.2,0,Math.PI*2);ctx.fill();
+  // ears
+  ctx.fillStyle='#BDBDBD';
+  ctx.beginPath();ctx.ellipse(ex-w*.3,ey-h*.08,w*.1,h*.12,-.4,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#F48FB1';
+  ctx.beginPath();ctx.ellipse(ex-w*.3,ey-h*.06,w*.065,h*.08,-.4,0,Math.PI*2);ctx.fill();
+  // trunk
+  ctx.strokeStyle='#9E9E9E';ctx.lineWidth=w*.07;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(ex-w*.32,ey+h*.02);ctx.quadraticCurveTo(ex-w*.42,ey+h*.18,ex-w*.28,ey+h*.28);ctx.stroke();
+  // eye
+  ctx.fillStyle='#1a1a2e';ctx.beginPath();ctx.arc(ex-w*.24,ey-h*.12,w*.025,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(ex-w*.23,ey-h*.13,w*.01,0,Math.PI*2);ctx.fill();
+  // legs
+  ctx.fillStyle='#9E9E9E';
+  [[.3,.05],[.44,.05],[.54,.05],[.62,.05]].forEach(([lx,lw])=>{
+    ctx.beginPath();ctx.roundRect(ex-w*lx,ey+h*.14,w*lw,h*.22,w*.02);ctx.fill();
+  });
+  // tusk
+  ctx.strokeStyle='#FFF9C4';ctx.lineWidth=w*.02;
+  ctx.beginPath();ctx.moveTo(ex-w*.3,ey-.01*h);ctx.quadraticCurveTo(ex-w*.42,ey+h*.05,ex-w*.35,ey+h*.12);ctx.stroke();
+  // trees bg
+  ctx.fillStyle='#388E3C';
+  [[.88,.1],[.06,.12],[.92,.18]].forEach(([tx,tr])=>{
+    ctx.beginPath();ctx.arc(tx*w,h*.3,tr*w,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#2E7D32';ctx.fillRect(tx*w-w*.015,h*.4,w*.03,h*.12);ctx.fillStyle='#388E3C';
+  });
+}
+
+function drawBeach(ctx, w, h){
+  // sky gradient
+  const sky=ctx.createLinearGradient(0,0,0,h*.55);
+  sky.addColorStop(0,'#0288D1');sky.addColorStop(1,'#29B6F6');
+  ctx.fillStyle=sky;ctx.fillRect(0,0,w,h*.55);
+  // ocean
+  const oc=ctx.createLinearGradient(0,h*.4,0,h*.72);
+  oc.addColorStop(0,'#0288D1');oc.addColorStop(1,'#0097A7');
+  ctx.fillStyle=oc;ctx.fillRect(0,h*.4,w,h*.32);
+  // waves
+  ctx.strokeStyle='rgba(255,255,255,.4)';ctx.lineWidth=2;
+  [.47,.52,.57].forEach(wy=>{
+    ctx.beginPath();
+    for(let x=0;x<=w;x+=w*.1){ctx.lineTo(x,h*wy+Math.sin(x/w*Math.PI*4)*h*.015);}
+    ctx.stroke();
+  });
+  // sand
+  const sand=ctx.createLinearGradient(0,h*.7,0,h);
+  sand.addColorStop(0,'#FFD54F');sand.addColorStop(1,'#FF8F00');
+  ctx.fillStyle=sand;ctx.fillRect(0,h*.7,w,h*.3);
+  // beach curve
+  ctx.fillStyle='#FFD54F';
+  ctx.beginPath();ctx.moveTo(0,h*.75);ctx.quadraticCurveTo(w*.5,h*.65,w,h*.72);ctx.lineTo(w,h);ctx.lineTo(0,h);ctx.closePath();ctx.fill();
+  // palm tree
+  ctx.fillStyle='#5D4037';ctx.save();ctx.translate(w*.78,h*.9);
+  ctx.beginPath();ctx.moveTo(-w*.02,0);ctx.quadraticCurveTo(-w*.06,-h*.3,0,-h*.45);ctx.quadraticCurveTo(w*.04,-h*.3,w*.02,0);ctx.fill();
+  // leaves
+  ctx.fillStyle='#2E7D32';
+  [[-1.1,-.15],[-.8,-.25],[-.3,-.4],[.4,-.35],[.9,-.18],[1.0,0]].forEach(([lx,ly])=>{
+    ctx.beginPath();ctx.ellipse(lx*w*.15,ly*h*.2+(-h*.45),w*.14,h*.05,Math.atan2(ly*h*.2,lx*w*.15),0,Math.PI*2);ctx.fill();
+  });
+  ctx.restore();
+  // sun
+  ctx.fillStyle='#FFD700';ctx.beginPath();ctx.arc(w*.15,h*.12,h*.07,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='rgba(255,215,0,.4)';ctx.lineWidth=3;
+  for(let i=0;i<8;i++){const a=i*Math.PI/4;ctx.beginPath();ctx.moveTo(w*.15+Math.cos(a)*h*.09,h*.12+Math.sin(a)*h*.09);ctx.lineTo(w*.15+Math.cos(a)*h*.13,h*.12+Math.sin(a)*h*.13);ctx.stroke();}
+  // clouds
+  ctx.fillStyle='rgba(255,255,255,.85)';
+  [[.35,.12,w*.06],[.55,.09,w*.04],[.38,.12,w*.04]].forEach(([cx,cy,cr])=>{ctx.beginPath();ctx.arc(cx*w,cy*h,cr,0,Math.PI*2);ctx.fill();});
+  [[.6,.09,w*.06],[.63,.09,w*.04],[.57,.09,w*.04]].forEach(([cx,cy,cr])=>{ctx.beginPath();ctx.arc(cx*w,cy*h,cr,0,Math.PI*2);ctx.fill();});
+}
+
+function drawMountain(ctx, w, h){
+  // sky
+  const sky=ctx.createLinearGradient(0,0,0,h*.6);
+  sky.addColorStop(0,'#1a237e');sky.addColorStop(1,'#5c6bc0');
+  ctx.fillStyle=sky;ctx.fillRect(0,0,w,h*.6);
+  // mountains back
+  ctx.fillStyle='#546E7A';
+  ctx.beginPath();ctx.moveTo(0,h*.55);ctx.lineTo(w*.2,h*.18);ctx.lineTo(w*.45,h*.5);ctx.lineTo(w*.65,h*.12);ctx.lineTo(w*.85,h*.45);ctx.lineTo(w,h*.3);ctx.lineTo(w,h*.55);ctx.closePath();ctx.fill();
+  // snow caps
+  ctx.fillStyle='#ECEFF1';
+  ctx.beginPath();ctx.moveTo(w*.65,h*.12);ctx.lineTo(w*.57,h*.32);ctx.lineTo(w*.73,h*.32);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.moveTo(w*.2,h*.18);ctx.lineTo(w*.13,h*.33);ctx.lineTo(w*.27,h*.33);ctx.closePath();ctx.fill();
+  // mountain front
+  ctx.fillStyle='#37474F';
+  ctx.beginPath();ctx.moveTo(0,h*.65);ctx.lineTo(w*.3,h*.3);ctx.lineTo(w*.6,h*.65);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.moveTo(w*.4,h*.65);ctx.lineTo(w*.75,h*.28);ctx.lineTo(w,h*.55);ctx.lineTo(w,h*.65);ctx.closePath();ctx.fill();
+  // snow front
+  ctx.fillStyle='#fff';
+  ctx.beginPath();ctx.moveTo(w*.3,h*.3);ctx.lineTo(w*.23,h*.45);ctx.lineTo(w*.37,h*.45);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.moveTo(w*.75,h*.28);ctx.lineTo(w*.67,h*.44);ctx.lineTo(w*.83,h*.44);ctx.closePath();ctx.fill();
+  // lake
+  const lk=ctx.createLinearGradient(0,h*.65,0,h);
+  lk.addColorStop(0,'#1565C0');lk.addColorStop(1,'#0D47A1');
+  ctx.fillStyle=lk;ctx.fillRect(0,h*.65,w,h*.35);
+  // reflection
+  ctx.fillStyle='rgba(255,255,255,.07)';
+  ctx.beginPath();ctx.moveTo(w*.3,h*.78);ctx.lineTo(w*.23,h*.95);ctx.lineTo(w*.37,h*.95);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.moveTo(w*.75,h*.75);ctx.lineTo(w*.67,h*.95);ctx.lineTo(w*.83,h*.95);ctx.closePath();ctx.fill();
+  // pine trees
+  ctx.fillStyle='#1B5E20';
+  [[.05,.65],[.12,.62],[.88,.62],[.94,.65]].forEach(([tx,ty])=>{
+    ctx.beginPath();ctx.moveTo(tx*w,ty*h);ctx.lineTo(tx*w-w*.03,ty*h+h*.07);ctx.lineTo(tx*w+w*.03,ty*h+h*.07);ctx.closePath();ctx.fill();
+    ctx.beginPath();ctx.moveTo(tx*w,ty*h-h*.04);ctx.lineTo(tx*w-w*.025,ty*h+h*.03);ctx.lineTo(tx*w+w*.025,ty*h+h*.03);ctx.closePath();ctx.fill();
+  });
+}
+
+function drawFox(ctx, w, h){
+  // bg forest
+  const bg=ctx.createLinearGradient(0,0,0,h);
+  bg.addColorStop(0,'#1B5E20');bg.addColorStop(1,'#2E7D32');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
+  // light rays
+  ctx.save();
+  for(let i=0;i<5;i++){
+    const grd=ctx.createRadialGradient(w*.3+i*w*.1,0,0,w*.3+i*w*.1,0,h*.8);
+    grd.addColorStop(0,'rgba(255,255,200,.08)');grd.addColorStop(1,'transparent');
+    ctx.fillStyle=grd;ctx.fillRect(0,0,w,h);
+  }
+  ctx.restore();
+  // ground
+  const gnd=ctx.createLinearGradient(0,h*.7,0,h);
+  gnd.addColorStop(0,'#33691E');gnd.addColorStop(1,'#1B5E20');
+  ctx.fillStyle=gnd;ctx.fillRect(0,h*.7,w,h*.3);
+  // fox body
+  const fx=w*.5,fy=h*.58;
+  ctx.fillStyle='#E65100';
+  ctx.beginPath();ctx.ellipse(fx,fy,w*.18,h*.14,0,0,Math.PI*2);ctx.fill();
+  // head
+  ctx.beginPath();ctx.ellipse(fx-w*.13,fy-h*.1,w*.13,h*.12,-.15,0,Math.PI*2);ctx.fill();
+  // ears
+  ctx.fillStyle='#E65100';
+  ctx.beginPath();ctx.moveTo(fx-w*.22,fy-h*.2);ctx.lineTo(fx-w*.28,fy-h*.34);ctx.lineTo(fx-w*.16,fy-h*.24);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.moveTo(fx-w*.1,fy-h*.21);ctx.lineTo(fx-w*.12,fy-h*.34);ctx.lineTo(fx-w*.04,fy-h*.23);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#FF8A65';
+  ctx.beginPath();ctx.moveTo(fx-w*.22,fy-h*.22);ctx.lineTo(fx-w*.26,fy-h*.31);ctx.lineTo(fx-w*.18,fy-h*.25);ctx.closePath();ctx.fill();
+  // white muzzle
+  ctx.fillStyle='#FFF9C4';
+  ctx.beginPath();ctx.ellipse(fx-w*.18,fy-h*.06,w*.065,h*.06,0,0,Math.PI*2);ctx.fill();
+  // nose
+  ctx.fillStyle='#1a1a2e';ctx.beginPath();ctx.ellipse(fx-w*.22,fy-h*.09,w*.02,h*.015,0,0,Math.PI*2);ctx.fill();
+  // eyes
+  ctx.fillStyle='#1a1a2e';ctx.beginPath();ctx.arc(fx-w*.17,fy-h*.15,w*.02,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(fx-w*.165,fy-h*.155,w*.007,0,Math.PI*2);ctx.fill();
+  // tail
+  ctx.strokeStyle='#E65100';ctx.lineWidth=w*.07;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(fx+w*.16,fy+h*.04);ctx.quadraticCurveTo(fx+w*.35,fy+h*.2,fx+w*.28,fy-h*.08);ctx.stroke();
+  ctx.strokeStyle='#fff';ctx.lineWidth=w*.025;
+  ctx.beginPath();ctx.moveTo(fx+w*.25,fy-h*.04);ctx.quadraticCurveTo(fx+w*.31,fy-h*.1,fx+w*.28,fy-h*.14);ctx.stroke();
+  // legs
+  ctx.fillStyle='#E65100';
+  [[-.1,.07],[-.02,.07],[.06,.06],[.14,.07]].forEach(([lx,ly])=>{
+    ctx.beginPath();ctx.roundRect(fx+lx*w,fy+ly*h,w*.055,h*.18,w*.02);ctx.fill();
+    ctx.fillStyle='#fff';ctx.beginPath();ctx.ellipse(fx+lx*w+w*.027,fy+ly*h+h*.18,w*.028,h*.02,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#E65100';
+  });
+  // trees
+  ctx.fillStyle='#33691E';
+  [[.08,.5],[.88,.48]].forEach(([tx,ty])=>{
+    ctx.beginPath();ctx.moveTo(tx*w,ty*h);ctx.lineTo(tx*w-w*.06,ty*h+h*.22);ctx.lineTo(tx*w+w*.06,ty*h+h*.22);ctx.closePath();ctx.fill();
+    ctx.beginPath();ctx.moveTo(tx*w,ty*h-h*.1);ctx.lineTo(tx*w-w*.05,ty*h+h*.1);ctx.lineTo(tx*w+w*.05,ty*h+h*.1);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#4E342E';ctx.fillRect(tx*w-w*.012,ty*h+h*.22,w*.024,h*.1);ctx.fillStyle='#33691E';
+  });
+}
+
+function drawCherry(ctx, w, h){
+  // bg
+  const bg=ctx.createLinearGradient(0,0,0,h);
+  bg.addColorStop(0,'#FCE4EC');bg.addColorStop(1,'#F8BBD0');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
+  // path
+  ctx.fillStyle='#D7CCC8';ctx.fillRect(0,h*.75,w,h*.25);
+  ctx.fillStyle='#EFEBE9';
+  ctx.beginPath();ctx.ellipse(w*.5,h*.77,w*.3,h*.04,0,0,Math.PI*2);ctx.fill();
+  // trunk
+  ctx.fillStyle='#5D4037';
+  ctx.beginPath();ctx.moveTo(w*.42,h);ctx.quadraticCurveTo(w*.44,h*.5,w*.5,h*.35);ctx.quadraticCurveTo(w*.56,h*.5,w*.58,h);ctx.closePath();ctx.fill();
+  // branches
+  ctx.strokeStyle='#5D4037';ctx.lineWidth=w*.025;
+  [[.5,.35,-.35,-.2],[.5,.35,.25,-.18],[.5,.5,-.28,-.08],[.5,.5,.22,-.07]].forEach(([bx,by,dx,dy])=>{
+    ctx.beginPath();ctx.moveTo(bx*w,by*h);ctx.quadraticCurveTo((bx+dx/2)*w,(by+dy*.7)*h,(bx+dx)*w,(by+dy)*h);ctx.stroke();
+  });
+  // blossoms
+  const blossomPos=[[.15,.3],[.3,.18],[.5,.12],[.68,.2],[.82,.3],[.2,.45],[.45,.25],[.72,.38],[.88,.48],[.1,.52],[.6,.42]];
+  blossomPos.forEach(([bx,by])=>{
+    const r=w*.055;
+    // petals
+    for(let i=0;i<5;i++){
+      const a=i*Math.PI*.4;
+      ctx.fillStyle=`hsl(${340+Math.random()*20},${70+Math.random()*20}%,${80+Math.random()*10}%)`;
+      ctx.beginPath();ctx.ellipse(bx*w+Math.cos(a)*r*.7,by*h+Math.sin(a)*r*.7,r*.5,r*.28,a,0,Math.PI*2);ctx.fill();
+    }
+    ctx.fillStyle='#F48FB1';ctx.beginPath();ctx.arc(bx*w,by*h,r*.25,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#FFD54F';ctx.beginPath();ctx.arc(bx*w,by*h,r*.12,0,Math.PI*2);ctx.fill();
+  });
+  // falling petals
+  ctx.fillStyle='rgba(255,182,193,.7)';
+  [[.65,.55],[.3,.62],[.75,.7],[.15,.78],[.5,.6]].forEach(([px,py])=>{
+    ctx.save();ctx.translate(px*w,py*h);ctx.rotate(.5);
+    ctx.beginPath();ctx.ellipse(0,0,w*.02,w*.012,0,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+  });
+}
+
+function drawAurora(ctx, w, h){
+  // deep night sky
+  ctx.fillStyle='#050A30';ctx.fillRect(0,0,w,h);
+  // stars
+  for(let i=0;i<120;i++){
+    const sx=Math.random()*w, sy=Math.random()*h*.7;
+    const sa=.3+Math.random()*.7;
+    ctx.fillStyle=`rgba(255,255,255,${sa})`;
+    ctx.beginPath();ctx.arc(sx,sy,Math.random()*1.5,0,Math.PI*2);ctx.fill();
+  }
+  // aurora layers
+  const auroraColors=[
+    ['rgba(0,255,128,.18)','rgba(0,200,100,.0)'],
+    ['rgba(0,200,255,.2)','rgba(0,150,200,.0)'],
+    ['rgba(180,0,255,.14)','rgba(120,0,200,.0)'],
+  ];
+  auroraColors.forEach(([c1,c2],i)=>{
+    const grd=ctx.createLinearGradient(0,h*(i*.08+.05),0,h*(i*.1+.55));
+    grd.addColorStop(0,c1);grd.addColorStop(1,c2);
+    ctx.fillStyle=grd;
+    ctx.beginPath();
+    ctx.moveTo(0,h*(i*.06+.15));
+    for(let x=0;x<=w;x+=w*.05){
+      ctx.lineTo(x,h*(i*.06+.15)+Math.sin(x/w*Math.PI*3+i)*h*.18);
+    }
+    ctx.lineTo(w,h);ctx.lineTo(0,h);ctx.closePath();ctx.fill();
+  });
+  // snow ground
+  const snow=ctx.createLinearGradient(0,h*.72,0,h);
+  snow.addColorStop(0,'#CFD8DC');snow.addColorStop(1,'#90A4AE');
+  ctx.fillStyle=snow;ctx.fillRect(0,h*.72,w,h*.28);
+  // snow mounds
+  ctx.fillStyle='#ECEFF1';
+  [[.2,h*.72,w*.25,h*.06],[.7,h*.73,w*.3,h*.05]].forEach(([mx,my,rx,ry])=>{
+    ctx.beginPath();ctx.ellipse(mx*w,my,rx,ry,0,Math.PI,Math.PI*2);ctx.fill();
+  });
+  // pine trees silhouette
+  ctx.fillStyle='#1a1a2e';
+  [[.1,.68],[.18,.64],[.8,.66],[.88,.7],[.95,.68]].forEach(([tx,ty])=>{
+    const th=h*(1-ty);
+    ctx.beginPath();ctx.moveTo(tx*w,ty*h);ctx.lineTo(tx*w-w*.025,ty*h+th*.4);ctx.lineTo(tx*w+w*.025,ty*h+th*.4);ctx.closePath();ctx.fill();
+    ctx.beginPath();ctx.moveTo(tx*w,ty*h+th*.2);ctx.lineTo(tx*w-w*.035,ty*h+th*.7);ctx.lineTo(tx*w+w*.035,ty*h+th*.7);ctx.closePath();ctx.fill();
+    ctx.fillRect(tx*w-w*.008,ty*h+th*.7,w*.016,h*.06);
+  });
+}
+
+function drawParrot(ctx, w, h){
+  const bg=ctx.createLinearGradient(0,0,0,h);
+  bg.addColorStop(0,'#1A237E');bg.addColorStop(1,'#283593');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
+  // tropical leaves bg
+  const leafC=['#1B5E20','#2E7D32','#388E3C','#1a3a0a'];
+  [[-.1,.2],[.9,.15],[.05,.7],[.85,.65],[.3,.9],[.7,.85]].forEach(([lx,ly],i)=>{
+    ctx.save();ctx.translate(lx*w,ly*h);ctx.rotate((i-.5)*.8);
+    ctx.fillStyle=leafC[i%4];
+    ctx.beginPath();ctx.ellipse(w*.1,0,w*.22,h*.08,0,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+  });
+  // branch
+  ctx.strokeStyle='#5D4037';ctx.lineWidth=w*.05;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(0,h*.55);ctx.quadraticCurveTo(w*.5,h*.48,w,h*.52);ctx.stroke();
+  // parrot body
+  const px=w*.5,py=h*.42;
+  ctx.fillStyle='#E53935';
+  ctx.beginPath();ctx.ellipse(px,py,w*.14,h*.22,0,0,Math.PI*2);ctx.fill();
+  // wing
+  ctx.fillStyle='#1565C0';
+  ctx.beginPath();ctx.ellipse(px+w*.1,py+h*.04,w*.1,h*.16,.4,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#43A047';
+  ctx.beginPath();ctx.ellipse(px+w*.12,py+h*.06,w*.07,h*.12,.4,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#FFD600';
+  ctx.beginPath();ctx.ellipse(px+w*.14,py+h*.08,w*.04,h*.07,.4,0,Math.PI*2);ctx.fill();
+  // head
+  ctx.fillStyle='#E53935';
+  ctx.beginPath();ctx.arc(px-w*.02,py-h*.18,w*.12,0,Math.PI*2);ctx.fill();
+  // beak
+  ctx.fillStyle='#FF8F00';
+  ctx.beginPath();ctx.moveTo(px-w*.1,py-h*.18);ctx.quadraticCurveTo(px-w*.2,py-h*.14,px-w*.14,py-h*.1);ctx.quadraticCurveTo(px-w*.08,py-h*.13,px-w*.1,py-h*.18);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#E65100';
+  ctx.beginPath();ctx.moveTo(px-w*.1,py-h*.18);ctx.quadraticCurveTo(px-w*.18,py-h*.15,px-w*.14,py-h*.12);ctx.lineTo(px-w*.1,py-h*.18);ctx.closePath();ctx.fill();
+  // eye
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(px-w*.01,py-h*.2,w*.035,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#1a1a2e';ctx.beginPath();ctx.arc(px-.005*w,py-h*.2,w*.02,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(px+.005*w,py-h*.205,w*.008,0,Math.PI*2);ctx.fill();
+  // head crest
+  ctx.strokeStyle='#FFD600';ctx.lineWidth=3;
+  [[-.02,-.34],[.02,-.36],[.06,-.33]].forEach(([cx,cy])=>{
+    ctx.beginPath();ctx.moveTo(px+cx*w,py-h*.24);ctx.quadraticCurveTo(px+cx*w+w*.01,py+cy*h,px+cx*w,py+cy*h-h*.01);ctx.stroke();
+  });
+  // feet
+  ctx.strokeStyle='#FF8F00';ctx.lineWidth=w*.015;
+  [[-.05,.5],[.06,.5]].forEach(([fx,fy])=>{
+    ctx.beginPath();ctx.moveTo(px+fx*w,py+fy*h);ctx.lineTo(px+fx*w,py+fy*h+h*.06);ctx.stroke();
+    [-.03,0,.03].forEach(t=>{ctx.beginPath();ctx.moveTo(px+fx*w,py+fy*h+h*.06);ctx.lineTo(px+(fx+t)*w,py+fy*h+h*.1);ctx.stroke();});
+  });
+}
+
+function drawAutumn(ctx, w, h){
+  const sky=ctx.createLinearGradient(0,0,0,h*.55);
+  sky.addColorStop(0,'#FF6F00');sky.addColorStop(1,'#FFB300');
+  ctx.fillStyle=sky;ctx.fillRect(0,0,w,h*.55);
+  // forest floor
+  const floor=ctx.createLinearGradient(0,h*.55,0,h);
+  floor.addColorStop(0,'#5D4037');floor.addColorStop(1,'#3E2723');
+  ctx.fillStyle=floor;ctx.fillRect(0,h*.55,w,h*.45);
+  // fallen leaves on ground
+  ['#E64A19','#FF8F00','#F57F17','#D32F2F','#BF360C'].forEach((c,i)=>{
+    ctx.fillStyle=c;
+    for(let j=0;j<8;j++){
+      const lx=(j*.12+i*.04)*w,ly=h*(.6+Math.random()*.3);
+      ctx.save();ctx.translate(lx,ly);ctx.rotate(Math.random()*Math.PI);
+      ctx.beginPath();ctx.ellipse(0,0,w*.03,w*.015,0,0,Math.PI*2);ctx.fill();
+      ctx.restore();
+    }
+  });
+  // trees
+  const treeData=[[.12,.56],[.28,.52],[.5,.54],[.72,.51],[.88,.55]];
+  const treeColors=[['#D32F2F','#E64A19'],['#F57F17','#FF8F00'],['#BF360C','#D32F2F'],['#E65100','#FF6F00'],['#4CAF50','#2E7D32']];
+  treeData.forEach(([tx,ty],i)=>{
+    // trunk
+    ctx.fillStyle='#3E2723';
+    ctx.beginPath();ctx.moveTo(tx*w-w*.02,h);ctx.lineTo(tx*w-w*.015,ty*h);ctx.lineTo(tx*w+w*.015,ty*h);ctx.lineTo(tx*w+w*.02,h);ctx.closePath();ctx.fill();
+    // canopy layers
+    const [c1,c2]=treeColors[i];
+    [h*.14,h*.12,h*.1].forEach((cr,li)=>{
+      ctx.fillStyle=li%2===0?c1:c2;
+      ctx.beginPath();ctx.arc(tx*w,ty*h-li*h*.04,cr*(1-li*.1),0,Math.PI*2);ctx.fill();
+    });
+  });
+  // path
+  ctx.fillStyle='#795548';
+  ctx.beginPath();ctx.moveTo(w*.38,h);ctx.lineTo(w*.44,h*.6);ctx.lineTo(w*.56,h*.6);ctx.lineTo(w*.62,h);ctx.closePath();ctx.fill();
+  // sunlight shaft
+  const shaft=ctx.createLinearGradient(w*.5,0,w*.5,h*.6);
+  shaft.addColorStop(0,'rgba(255,220,0,.15)');shaft.addColorStop(1,'rgba(255,200,0,0)');
+  ctx.fillStyle=shaft;ctx.fillRect(w*.35,0,w*.3,h*.6);
+}
+
+function drawCoral(ctx, w, h){
+  // water
+  const water=ctx.createLinearGradient(0,0,0,h);
+  water.addColorStop(0,'#006064');water.addColorStop(1,'#001B33');
+  ctx.fillStyle=water;ctx.fillRect(0,0,w,h);
+  // light rays from surface
+  ctx.save();
+  for(let i=0;i<6;i++){
+    const grd=ctx.createLinearGradient(i*w*.18,0,i*w*.18+w*.06,h*.6);
+    grd.addColorStop(0,'rgba(0,200,255,.08)');grd.addColorStop(1,'transparent');
+    ctx.fillStyle=grd;ctx.fillRect(i*w*.18,0,w*.08,h*.6);
+  }
+  ctx.restore();
+  // sandy sea floor
+  const sand=ctx.createLinearGradient(0,h*.78,0,h);
+  sand.addColorStop(0,'#F9A825');sand.addColorStop(1,'#E65100');
+  ctx.fillStyle=sand;ctx.fillRect(0,h*.78,w,h*.22);
+  // corals
+  const coralDefs=[
+    {x:.15,y:.75,type:'branch',c:'#E91E63'},{x:.35,y:.78,type:'fan',c:'#FF5722'},
+    {x:.55,y:.76,type:'branch',c:'#9C27B0'},{x:.72,y:.74,type:'ball',c:'#FF9800'},
+    {x:.85,y:.77,type:'tube',c:'#00BCD4'},{x:.25,y:.8,type:'ball',c:'#F44336'},
+    {x:.65,y:.79,type:'tube',c:'#4CAF50'},{x:.45,y:.75,type:'fan',c:'#FF4081'},
+  ];
+  coralDefs.forEach(({x,y,type,c})=>{
+    ctx.fillStyle=c;ctx.strokeStyle=c;
+    const cx=x*w,cy=y*h,sz=h*.1;
+    if(type==='branch'){
+      ctx.lineWidth=4;
+      [[-sz*.3,-sz],[0,-sz*1.1],[sz*.3,-sz*.9],[sz*.15,-sz*.5],[-sz*.15,-sz*.4]].forEach(([dx,dy])=>{
+        ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+dx,cy+dy);ctx.stroke();
+        ctx.beginPath();ctx.arc(cx+dx,cy+dy,sz*.08,0,Math.PI*2);ctx.fill();
+      });
+    } else if(type==='fan'){
+      for(let a=-Math.PI*.4;a<=Math.PI*.4;a+=Math.PI*.08){
+        ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.sin(a)*sz,cy-Math.cos(a)*sz);ctx.stroke();
+      }
+    } else if(type==='ball'){
+      ctx.beginPath();ctx.arc(cx,cy-sz*.4,sz*.4,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='rgba(0,0,0,.2)';
+      for(let i=0;i<12;i++){const a=i*Math.PI/6;ctx.beginPath();ctx.arc(cx+Math.cos(a)*sz*.28,cy-sz*.4+Math.sin(a)*sz*.28,sz*.06,0,Math.PI*2);ctx.fill();}
+    } else {
+      ctx.lineWidth=sz*.18;
+      [-.12,0,.12].forEach(dx=>{
+        ctx.beginPath();ctx.moveTo(cx+dx*w,cy);ctx.lineTo(cx+dx*w,cy-sz);ctx.stroke();
+        ctx.fillStyle='rgba(255,255,255,.4)';ctx.beginPath();ctx.arc(cx+dx*w,cy-sz,sz*.1,0,Math.PI*2);ctx.fill();ctx.fillStyle=c;
+      });
+    }
+  });
+  // fish
+  const fishC=['#FF5722','#FFD600','#F44336','#4CAF50'];
+  [[.5,.35],[.3,.45],[.7,.28],[.8,.5],[.2,.32]].forEach(([fx,fy],i)=>{
+    const fc=fishC[i%4];
+    ctx.fillStyle=fc;
+    ctx.save();ctx.translate(fx*w,fy*h);
+    ctx.beginPath();ctx.ellipse(0,0,w*.04,h*.025,0,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.moveTo(w*.04,0);ctx.lineTo(w*.07,-h*.02);ctx.lineTo(w*.07,h*.02);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(-w*.01,0,h*.008,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#000';ctx.beginPath();ctx.arc(-w*.008,0,h*.004,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+  });
+  // bubbles
+  ctx.strokeStyle='rgba(255,255,255,.35)';ctx.lineWidth=1.5;
+  [[.4,.2],[.6,.15],[.25,.3],[.75,.22]].forEach(([bx,by])=>{
+    ctx.beginPath();ctx.arc(bx*w,by*h,h*.014,0,Math.PI*2);ctx.stroke();
+  });
+}
+
+function drawTiger(ctx, w, h){
+  // bg savanna
+  const bg=ctx.createLinearGradient(0,0,0,h);
+  bg.addColorStop(0,'#FF8F00');bg.addColorStop(.5,'#FFB300');bg.addColorStop(1,'#8D6E63');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
+  // grass
+  ctx.strokeStyle='#558B2F';ctx.lineWidth=2;
+  for(let i=0;i<30;i++){
+    const gx=Math.random()*w, gy=h*.85;
+    ctx.beginPath();ctx.moveTo(gx,gy);ctx.quadraticCurveTo(gx+Math.random()*10-5,gy-h*.07,gx+Math.random()*6-3,gy-h*.12);ctx.stroke();
+  }
+  // tiger face — large and centered
+  const tx=w*.5, ty=h*.48;
+  // main face
+  ctx.fillStyle='#FF8F00';
+  ctx.beginPath();ctx.arc(tx,ty,w*.36,0,Math.PI*2);ctx.fill();
+  // ears
+  ctx.fillStyle='#FF8F00';
+  ctx.beginPath();ctx.moveTo(tx-w*.28,ty-w*.25);ctx.lineTo(tx-w*.38,ty-w*.44);ctx.lineTo(tx-w*.15,ty-w*.3);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.moveTo(tx+w*.28,ty-w*.25);ctx.lineTo(tx+w*.38,ty-w*.44);ctx.lineTo(tx+w*.15,ty-w*.3);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#FF6F00';
+  ctx.beginPath();ctx.moveTo(tx-w*.28,ty-w*.27);ctx.lineTo(tx-w*.35,ty-w*.4);ctx.lineTo(tx-w*.17,ty-w*.3);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.moveTo(tx+w*.28,ty-w*.27);ctx.lineTo(tx+w*.35,ty-w*.4);ctx.lineTo(tx+w*.17,ty-w*.3);ctx.closePath();ctx.fill();
+  // white muzzle
+  ctx.fillStyle='#FFF9C4';
+  ctx.beginPath();ctx.ellipse(tx,ty+w*.06,w*.2,w*.16,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#fff';
+  ctx.beginPath();ctx.ellipse(tx-w*.13,ty+w*.05,w*.1,w*.12,-.2,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(tx+w*.13,ty+w*.05,w*.1,w*.12,.2,0,Math.PI*2);ctx.fill();
+  // stripes
+  ctx.fillStyle='#1a1a2e';
+  const stripes=[[-.3,-.15,.05,.22,-.3],[.3,-.15,.05,.22,.3],[-.18,-.3,.06,.18,-.5],[.18,-.3,.06,.18,.5],[-.38,-.05,.05,.25,-.6],[.38,-.05,.05,.25,.6]];
+  stripes.forEach(([sx,sy,sw2,sh2,angle])=>{
+    ctx.save();ctx.translate(tx+sx*w,ty+sy*w);ctx.rotate(angle);
+    ctx.beginPath();ctx.ellipse(0,0,sw2*w,sh2*w*.5,0,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+  });
+  // eyes
+  [-.14,.14].forEach(ex=>{
+    ctx.fillStyle='#FFD600';
+    ctx.beginPath();ctx.ellipse(tx+ex*w,ty-w*.06,w*.07,w*.08,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#1a1a2e';
+    ctx.beginPath();ctx.ellipse(tx+ex*w,ty-w*.06,w*.03,w*.07,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(tx+ex*w+w*.02,ty-w*.08,w*.015,0,Math.PI*2);ctx.fill();
+  });
+  // nose
+  ctx.fillStyle='#E91E63';
+  ctx.beginPath();ctx.moveTo(tx,ty+w*.04);ctx.lineTo(tx-w*.04,ty+w*.0);ctx.lineTo(tx+w*.04,ty+w*.0);ctx.closePath();ctx.fill();
+  // whiskers
+  ctx.strokeStyle='rgba(255,255,255,.8)';ctx.lineWidth=1.5;
+  [[-1,-1],[-1,0],[-1,1],[1,-1],[1,0],[1,1]].forEach(([dir,slant])=>{
+    ctx.beginPath();ctx.moveTo(tx+dir*w*.04,ty+w*.08);ctx.lineTo(tx+dir*w*.35,ty+w*.08+slant*w*.04);ctx.stroke();
+  });
+}
+
+function drawOwl(ctx, w, h){
+  // night sky
+  const sky=ctx.createLinearGradient(0,0,0,h);
+  sky.addColorStop(0,'#0D0D2B');sky.addColorStop(1,'#1a2a4a');
+  ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
+  // moon
+  ctx.fillStyle='#FFF9C4';ctx.beginPath();ctx.arc(w*.82,h*.12,h*.07,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#1a2a4a';ctx.beginPath();ctx.arc(w*.87,h*.10,h*.062,0,Math.PI*2);ctx.fill();
+  // stars
+  for(let i=0;i<80;i++){ctx.fillStyle=`rgba(255,255,255,${.3+Math.random()*.6})`;ctx.beginPath();ctx.arc(Math.random()*w,Math.random()*h*.7,Math.random()*1.2,0,Math.PI*2);ctx.fill();}
+  // snow branch
+  ctx.strokeStyle='#5D4037';ctx.lineWidth=w*.06;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(0,h*.62);ctx.quadraticCurveTo(w*.5,h*.58,w,h*.63);ctx.stroke();
+  ctx.strokeStyle='#ECEFF1';ctx.lineWidth=w*.025;
+  ctx.beginPath();ctx.moveTo(0,h*.6);ctx.quadraticCurveTo(w*.5,h*.56,w,h*.61);ctx.stroke();
+  // owl body
+  const ox=w*.5, oy=h*.42;
+  ctx.fillStyle='#CFD8DC';
+  ctx.beginPath();ctx.ellipse(ox,oy,w*.14,h*.22,0,0,Math.PI*2);ctx.fill();
+  // wing pattern
+  ctx.fillStyle='#90A4AE';
+  ctx.beginPath();ctx.ellipse(ox-w*.08,oy+h*.04,w*.09,h*.14,.3,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(ox+w*.08,oy+h*.04,w*.09,h*.14,-.3,0,Math.PI*2);ctx.fill();
+  // belly
+  ctx.fillStyle='#FAFAFA';
+  ctx.beginPath();ctx.ellipse(ox,oy+h*.04,w*.08,h*.12,0,0,Math.PI*2);ctx.fill();
+  // feather detail
+  ctx.strokeStyle='#B0BEC5';ctx.lineWidth=1;
+  for(let r=0;r<4;r++){for(let c=-1;c<=1;c++){ctx.beginPath();ctx.ellipse(ox+c*w*.05,oy-h*.06+r*h*.05,w*.025,h*.025,0,0,Math.PI*2);ctx.stroke();}}
+  // head
+  ctx.fillStyle='#B0BEC5';
+  ctx.beginPath();ctx.arc(ox,oy-h*.18,w*.12,0,Math.PI*2);ctx.fill();
+  // ear tufts
+  ctx.fillStyle='#90A4AE';
+  ctx.beginPath();ctx.moveTo(ox-w*.06,oy-h*.28);ctx.lineTo(ox-w*.1,oy-h*.38);ctx.lineTo(ox-w*.03,oy-h*.29);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.moveTo(ox+w*.06,oy-h*.28);ctx.lineTo(ox+w*.1,oy-h*.38);ctx.lineTo(ox+w*.03,oy-h*.29);ctx.closePath();ctx.fill();
+  // facial disc
+  ctx.strokeStyle='#78909C';ctx.lineWidth=3;
+  ctx.beginPath();ctx.arc(ox,oy-h*.18,w*.1,0,Math.PI*2);ctx.stroke();
+  // eyes
+  [-.055,.055].forEach(ex=>{
+    ctx.fillStyle='#FFD600';
+    ctx.beginPath();ctx.arc(ox+ex*w,oy-h*.2,w*.038,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#1a1a2e';
+    ctx.beginPath();ctx.arc(ox+ex*w,oy-h*.2,w*.022,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(ox+ex*w+w*.01,oy-h*.21,w*.009,0,Math.PI*2);ctx.fill();
+  });
+  // beak
+  ctx.fillStyle='#FF8F00';
+  ctx.beginPath();ctx.moveTo(ox,oy-h*.155);ctx.lineTo(ox-w*.02,oy-h*.175);ctx.lineTo(ox+w*.02,oy-h*.175);ctx.closePath();ctx.fill();
+  // talons
+  ctx.strokeStyle='#FF8F00';ctx.lineWidth=w*.015;
+  [-.06,.06].forEach(tx=>{
+    ctx.beginPath();ctx.moveTo(ox+tx*w,oy+h*.2);ctx.lineTo(ox+tx*w,oy+h*.25);ctx.stroke();
+    [-.04,0,.04].forEach(t=>{ctx.beginPath();ctx.moveTo(ox+tx*w,oy+h*.25);ctx.lineTo(ox+(tx+t)*w,oy+h*.29);ctx.stroke();});
+  });
+}
+
+function drawGalaxy(ctx, w, h){
+  ctx.fillStyle='#000005';ctx.fillRect(0,0,w,h);
+  // base stars
+  for(let i=0;i<300;i++){
+    const a=.1+Math.random()*.9;
+    ctx.fillStyle=`rgba(255,255,255,${a})`;
+    ctx.beginPath();ctx.arc(Math.random()*w,Math.random()*h,Math.random()*1.8,0,Math.PI*2);ctx.fill();
+  }
+  // galaxy core glow
+  const core=ctx.createRadialGradient(w*.45,h*.48,0,w*.45,h*.48,w*.35);
+  core.addColorStop(0,'rgba(255,240,200,.55)');
+  core.addColorStop(.2,'rgba(200,150,255,.35)');
+  core.addColorStop(.5,'rgba(100,80,200,.2)');
+  core.addColorStop(1,'transparent');
+  ctx.fillStyle=core;ctx.fillRect(0,0,w,h);
+  // galaxy arms
+  ctx.save();ctx.translate(w*.45,h*.48);
+  for(let arm=0;arm<3;arm++){
+    ctx.rotate(Math.PI*2/3);
+    for(let i=0;i<80;i++){
+      const t=i/80;
+      const angle=t*Math.PI*3.5;
+      const radius=t*w*.4;
+      const px2=Math.cos(angle)*radius+Math.random()*w*.04-w*.02;
+      const py2=Math.sin(angle)*radius*0.6+Math.random()*h*.04-h*.02;
+      const size=Math.random()*2.5;
+      const alpha=.3+t*.5;
+      ctx.fillStyle=`rgba(200,180,255,${alpha})`;
+      ctx.beginPath();ctx.arc(px2,py2,size,0,Math.PI*2);ctx.fill();
+    }
+  }
+  ctx.restore();
+  // colorful nebulas
+  [[.2,.25,'rgba(255,100,200,.08)'],[.7,.6,'rgba(100,150,255,.1)'],[.3,.7,'rgba(255,200,100,.06)']].forEach(([nx,ny,nc])=>{
+    const ng=ctx.createRadialGradient(nx*w,ny*h,0,nx*w,ny*h,w*.18);
+    ng.addColorStop(0,nc);ng.addColorStop(1,'transparent');
+    ctx.fillStyle=ng;ctx.fillRect(0,0,w,h);
+  });
+  // silhouette trees at bottom
+  ctx.fillStyle='#050510';
+  for(let i=0;i<12;i++){
+    const tx=i*w*.09+w*.02,ty=h*.78;
+    ctx.beginPath();ctx.moveTo(tx,h);ctx.lineTo(tx-w*.02,ty);ctx.lineTo(tx+w*.02,ty);ctx.closePath();ctx.fill();
+    ctx.beginPath();ctx.moveTo(tx,ty+h*.06);ctx.lineTo(tx-w*.03,h);ctx.lineTo(tx+w*.03,h);ctx.closePath();ctx.fill();
+  }
+}
+
+function drawWhale(ctx, w, h){
+  // deep ocean
+  const oc=ctx.createLinearGradient(0,0,0,h);
+  oc.addColorStop(0,'#006064');oc.addColorStop(.4,'#01579B');oc.addColorStop(1,'#001533');
+  ctx.fillStyle=oc;ctx.fillRect(0,0,w,h);
+  // surface caustics
+  ctx.strokeStyle='rgba(0,200,255,.08)';ctx.lineWidth=2;
+  for(let i=0;i<8;i++){
+    const cy=h*.05+i*h*.03;
+    ctx.beginPath();
+    for(let x=0;x<w;x+=w*.04){ctx.lineTo(x,cy+Math.sin(x/w*Math.PI*6)*h*.015);}
+    ctx.stroke();
+  }
+  // sun rays from top
+  ctx.save();
+  for(let i=0;i<5;i++){
+    const grd=ctx.createLinearGradient(i*w*.25,0,i*w*.25+w*.1,h*.5);
+    grd.addColorStop(0,'rgba(0,200,255,.06)');grd.addColorStop(1,'transparent');
+    ctx.fillStyle=grd;ctx.fillRect(i*w*.22,0,w*.12,h*.5);
+  }
+  ctx.restore();
+  // whale body
+  const wx=w*.48,wy=h*.52;
+  ctx.fillStyle='#263238';
+  ctx.beginPath();ctx.ellipse(wx,wy,w*.44,h*.2,-.08,0,Math.PI*2);ctx.fill();
+  // white belly
+  ctx.fillStyle='#ECEFF1';
+  ctx.beginPath();ctx.ellipse(wx+w*.05,wy+h*.06,w*.3,h*.1,.1,0,Math.PI);ctx.fill();
+  // flippers
+  ctx.fillStyle='#263238';
+  ctx.save();ctx.translate(wx-w*.1,wy+h*.08);ctx.rotate(.6);
+  ctx.beginPath();ctx.ellipse(0,0,w*.12,h*.05,0,0,Math.PI*2);ctx.fill();
+  ctx.restore();
+  // flukes
+  ctx.save();ctx.translate(wx-w*.4,wy-h*.04);
+  ctx.fillStyle='#1C313A';
+  ctx.beginPath();ctx.moveTo(0,0);ctx.quadraticCurveTo(-w*.12,-h*.18,-w*.18,-h*.14);ctx.quadraticCurveTo(-w*.12,-h*.02,0,0);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.moveTo(0,0);ctx.quadraticCurveTo(-w*.14,h*.12,-w*.2,h*.08);ctx.quadraticCurveTo(-w*.12,h*.02,0,0);ctx.closePath();ctx.fill();
+  ctx.restore();
+  // eye
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(wx+w*.22,wy-h*.04,w*.025,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#1a1a2e';ctx.beginPath();ctx.arc(wx+w*.22,wy-h*.04,w*.015,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(wx+w*.225,wy-h*.046,w*.006,0,Math.PI*2);ctx.fill();
+  // blow hole water spout
+  ctx.strokeStyle='rgba(150,220,255,.7)';ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(wx+w*.18,wy-h*.2);
+  ctx.quadraticCurveTo(wx+w*.12,wy-h*.42,wx+w*.08,wy-h*.5);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(wx+w*.18,wy-h*.2);
+  ctx.quadraticCurveTo(wx+w*.24,wy-h*.4,wx+w*.28,wy-h*.48);ctx.stroke();
+  // bubbles
+  ctx.strokeStyle='rgba(150,220,255,.4)';ctx.lineWidth=1.5;
+  [[.55,.3],[.62,.4],[.48,.35],[.4,.25]].forEach(([bx,by])=>{
+    ctx.beginPath();ctx.arc(bx*w,by*h,h*.012,0,Math.PI*2);ctx.stroke();
+  });
+  // small fish
+  ctx.fillStyle='#80DEEA';
+  [[.15,.35],[.75,.28],[.2,.55]].forEach(([fx,fy])=>{
+    ctx.save();ctx.translate(fx*w,fy*h);
+    ctx.beginPath();ctx.ellipse(0,0,w*.02,h*.012,0,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.moveTo(w*.02,0);ctx.lineTo(w*.035,-h*.012);ctx.lineTo(w*.035,h*.012);ctx.closePath();ctx.fill();
+    ctx.restore();
+  });
+}
+
+function drawCanyon(ctx, w, h){
+  // sky — dramatic sunset
+  const sky=ctx.createLinearGradient(0,0,0,h*.35);
+  sky.addColorStop(0,'#1A237E');sky.addColorStop(.4,'#FF6F00');sky.addColorStop(1,'#FF8F00');
+  ctx.fillStyle=sky;ctx.fillRect(0,0,w,h*.35);
+  // sun
+  ctx.fillStyle='#FFD700';ctx.beginPath();ctx.arc(w*.72,h*.1,h*.055,0,Math.PI*2);ctx.fill();
+  const sunG=ctx.createRadialGradient(w*.72,h*.1,h*.055,w*.72,h*.1,h*.18);
+  sunG.addColorStop(0,'rgba(255,220,0,.2)');sunG.addColorStop(1,'transparent');
+  ctx.fillStyle=sunG;ctx.fillRect(0,0,w,h);
+  // canyon layers — rear to front
+  const layers=[
+    {y:.3,h2:.15,c:'#BF360C',c2:'#E64A19'},
+    {y:.38,h2:.18,c:'#D84315',c2:'#FF5722'},
+    {y:.48,h2:.2, c:'#E65100',c2:'#FF6D00'},
+    {y:.58,h2:.24,c:'#BF360C',c2:'#D84315'},
+    {y:.7, h2:.3, c:'#8D1F00',c2:'#BF360C'},
+  ];
+  layers.forEach(({y,h2,c,c2},i)=>{
+    const lg=ctx.createLinearGradient(0,y*h,0,(y+h2)*h);
+    lg.addColorStop(0,c);lg.addColorStop(1,c2);
+    ctx.fillStyle=lg;
+    ctx.beginPath();
+    ctx.moveTo(0,y*h);
+    // canyon silhouette
+    const segs=8;
+    for(let s=0;s<=segs;s++){
+      const sx=s*w/segs;
+      const noise=Math.sin(s*2.3+i)*h*.04+Math.sin(s*4.7+i*2)*h*.02;
+      ctx.lineTo(sx,y*h+noise);
+    }
+    ctx.lineTo(w,(y+h2)*h);ctx.lineTo(0,(y+h2)*h);ctx.closePath();ctx.fill();
+    // ledge highlight
+    ctx.fillStyle='rgba(255,200,150,.06)';
+    ctx.beginPath();ctx.moveTo(0,y*h);
+    for(let s=0;s<=segs;s++){
+      const sx=s*w/segs;
+      const noise=Math.sin(s*2.3+i)*h*.04+Math.sin(s*4.7+i*2)*h*.02;
+      ctx.lineTo(sx,y*h+noise);
+    }
+    ctx.lineTo(w,y*h+h*.01);ctx.lineTo(0,y*h+h*.01);ctx.closePath();ctx.fill();
+  });
+  // canyon floor (river)
+  const river=ctx.createLinearGradient(0,h*.88,0,h);
+  river.addColorStop(0,'#0277BD');river.addColorStop(1,'#01579B');
+  ctx.fillStyle=river;ctx.fillRect(w*.3,h*.88,w*.4,h*.12);
+  ctx.fillStyle='rgba(255,255,255,.15)';
+  ctx.beginPath();for(let x=w*.3;x<w*.7;x+=w*.04){ctx.lineTo(x,h*.9+Math.sin(x/w*Math.PI*8)*h*.01);}ctx.lineTo(w*.7,h*.9);ctx.lineTo(w*.3,h*.9);ctx.closePath();ctx.fill();
+  // tiny pine trees on rim
+  ctx.fillStyle='#1B3A0A';
+  [[.05,.3],[.12,.28],[.82,.3],[.9,.28],[.95,.32]].forEach(([tx,ty])=>{
+    ctx.beginPath();ctx.moveTo(tx*w,ty*h);ctx.lineTo(tx*w-w*.015,ty*h+h*.06);ctx.lineTo(tx*w+w*.015,ty*h+h*.06);ctx.closePath();ctx.fill();
+  });
+}
+
+// ══════════════════════════════════════════
+//  BUILD MOCKUP GRID (8 mini canvases)
+// ══════════════════════════════════════════
+function buildMockup(){
+  const grid=document.getElementById('mockupGrid');
+  const pick=[0,4,6,3,1,7,12,14]; // indices into SCENES
+  pick.forEach(i=>{
+    const cv=document.createElement('canvas');
+    cv.width=150;cv.height=150;
+    SCENES[i].painter(cv.getContext('2d'),150,150);
+    grid.appendChild(cv);
+  });
+}
+
+// ══════════════════════════════════════════
+//  BUILD LEVEL CARDS
+// ══════════════════════════════════════════
+function buildLevelCards(){
+  const scroll=document.getElementById('lvlScroll');
+  SCENES.forEach((sc,i)=>{
+    const card=document.createElement('div');
+    card.className='lvl-card reveal';
+    const cv=document.createElement('canvas');
+    cv.className='lvl-canvas';
+    cv.width=376;cv.height=236;
+    sc.painter(cv.getContext('2d'),376,236);
+
+    const body=document.createElement('div');
+    body.className='lvl-body';
+    body.innerHTML=`<div class="lvl-num">Level ${i+1}</div><div class="lvl-name">${sc.name}</div><span class="diff-badge ${sc.diff}">${sc.diff[0].toUpperCase()+sc.diff.slice(1)} ${sc.label}</span>`;
+
+    card.appendChild(cv);card.appendChild(body);
+    scroll.appendChild(card);
+  });
+}
+
+// ══════════════════════════════════════════
+//  STAR BACKGROUND
+// ══════════════════════════════════════════
+(function(){
+  const cv=document.getElementById('bgCanvas');
+  const ctx=cv.getContext('2d');
+  let stars=[];
+  function resize(){
+    cv.width=window.innerWidth;cv.height=window.innerHeight;
+    stars=[];
+    for(let i=0;i<180;i++){stars.push({x:Math.random()*cv.width,y:Math.random()*cv.height,r:.3+Math.random()*1.6,ph:Math.random()*Math.PI*2,sp:.005+Math.random()*.008,warm:Math.random()<.12});}
+  }
+  window.addEventListener('resize',resize);resize();
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    stars.forEach(s=>{
+      s.ph+=s.sp;
+      const a=.08+.55*Math.abs(Math.sin(s.ph));
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=s.warm?`rgba(255,220,150,${a})`:`rgba(255,255,255,${a})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ══════════════════════════════════════════
+//  SCROLL REVEAL
+// ══════════════════════════════════════════
+const revObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');revObs.unobserve(e.target);}});},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+
+// ══════════════════════════════════════════
+//  COUNTER ANIMATION
+// ══════════════════════════════════════════
+function animCount(el,target,dur=1500){
+  let start=null;
+  (function step(ts){if(!start)start=ts;const p=Math.min((ts-start)/dur,1);el.textContent=Math.round(p*target);if(p<1)requestAnimationFrame(step);else el.textContent=target;})(performance.now());
+}
+const cntObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){const t=parseInt(e.target.dataset.count);if(t)animCount(e.target,t);cntObs.unobserve(e.target);}});},{threshold:.5});
+document.querySelectorAll('[data-count]').forEach(el=>cntObs.observe(el));
+
+// ══════════════════════════════════════════
+//  FAQ
+// ══════════════════════════════════════════
+function toggleFaq(btn){
+  const item=btn.parentElement;
+  const was=item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i=>{i.classList.remove('open');i.querySelector('.faq-q').setAttribute('aria-expanded','false');});
+  if(!was){item.classList.add('open');btn.setAttribute('aria-expanded','true');}
+}
+document.querySelectorAll('.faq-q').forEach(b=>b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleFaq(b);}}));
+
+// ══════════════════════════════════════════
+//  NAV
+// ══════════════════════════════════════════
+window.addEventListener('scroll',()=>{
+  document.getElementById('mainNav').style.background=window.scrollY>60?'rgba(26,26,46,.95)':'rgba(26,26,46,.8)';
+});
+let navOpen=false;
+function toggleNav(){
+  navOpen=!navOpen;
+  const links=document.querySelector('.nav-links');
+  links.style.cssText=navOpen?'display:flex;flex-direction:column;position:fixed;top:56px;left:0;right:0;background:rgba(26,26,46,.97);padding:22px;gap:16px;border-bottom:1px solid rgba(255,255,255,.08);z-index:99;backdrop-filter:blur(20px);':'';
+  if(!navOpen)links.style.display='';
+}
+
+// ══════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════
+buildMockup();
+buildLevelCards();
+
+// Re-observe new level cards
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+</script>
+</body>
+</html>
