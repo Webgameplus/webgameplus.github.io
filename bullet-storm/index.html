@@ -6,14 +6,14 @@
 <title>Bullet Storm Survival</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box;}
-  body{background:#000;overflow:hidden;font-family:'Courier New',monospace;touch-action:none;user-select:none;}
-  #gameCanvas{display:block;margin:0 auto;background:#000;}
-  .screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,8,.93);z-index:100;color:#fff;text-align:center;padding:20px;}
+  html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Courier New',monospace;touch-action:none;user-select:none;-webkit-user-select:none;}
+  #gameCanvas{display:block;position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;}
+  .screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,8,.93);z-index:100;color:#fff;text-align:center;padding:16px 12px;overflow-y:auto;}
   .screen.hidden{display:none;}
   .logo{font-size:clamp(28px,6vw,64px);font-weight:900;letter-spacing:4px;color:#0ff;text-shadow:0 0 20px #0ff,0 0 40px #0af,0 0 80px #08f;margin-bottom:8px;}
   .subtitle{font-size:clamp(12px,2.5vw,18px);color:#0af;opacity:.8;margin-bottom:30px;letter-spacing:3px;}
-  .mode-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;max-width:720px;width:100%;margin-bottom:20px;}
-  .mode-card{border:2px solid;border-radius:12px;padding:20px 16px;cursor:pointer;transition:transform .15s,box-shadow .15s;background:rgba(255,255,255,.04);}
+  .mode-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(180px,80vw),1fr));gap:12px;max-width:720px;width:100%;margin-bottom:16px;}
+  .mode-card{border:2px solid;border-radius:12px;padding:16px 12px;cursor:pointer;transition:transform .15s,box-shadow .15s;background:rgba(255,255,255,.04);}
   .mode-card:hover,.mode-card:active{transform:scale(1.04);}
   .mode-card.endless{border-color:#f60;}.mode-card.endless:hover{box-shadow:0 0 30px #f605;}
   .mode-card.levels{border-color:#0f0;}.mode-card.levels:hover{box-shadow:0 0 30px #0f05;}
@@ -26,34 +26,65 @@
   .stat-row{display:flex;justify-content:space-between;gap:30px;margin:6px 0;font-size:clamp(13px,2.5vw,17px);}
   .stat-row span:last-child{color:#0ff;font-weight:700;}
   .stats-box{border:1px solid #0ff3;border-radius:10px;padding:16px 24px;margin:16px 0;min-width:280px;max-width:400px;width:100%;}
-  #hud{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:8px 14px;pointer-events:none;z-index:50;background:linear-gradient(to bottom,rgba(0,0,10,.78) 80%,transparent);}
-  .hud-left,.hud-center,.hud-right{display:flex;align-items:center;gap:10px;font-size:clamp(12px,2.5vw,15px);color:#aef;font-weight:700;}
+  #hud{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:8px 58px 8px 14px;pointer-events:none;z-index:50;background:linear-gradient(to bottom,rgba(0,0,10,.78) 80%,transparent);}
+  .hud-left,.hud-center,.hud-right{display:flex;align-items:center;gap:8px;font-size:clamp(11px,2.5vw,15px);color:#aef;font-weight:700;}
   .hud-center{flex-direction:column;align-items:center;gap:2px;}
-  .hud-score{font-size:clamp(18px,4vw,26px);color:#ff0;text-shadow:0 0 8px #ff08;}
-  .hud-multi{font-size:11px;color:#fa0;letter-spacing:2px;}
-  .hp-bar-wrap{width:90px;height:10px;background:#111;border-radius:5px;overflow:hidden;border:1px solid #0ff3;}
+  .hud-score{font-size:clamp(16px,4vw,26px);color:#ff0;text-shadow:0 0 8px #ff08;}
+  .hud-multi{font-size:10px;color:#fa0;letter-spacing:2px;}
+  .hp-bar-wrap{width:clamp(60px,12vw,90px);height:10px;background:#111;border-radius:5px;overflow:hidden;border:1px solid #0ff3;}
   .hp-bar{height:100%;background:linear-gradient(90deg,#0f8,#0ff);border-radius:5px;transition:width .12s;}
-  .shield-indicator{color:#0ff;font-size:12px;opacity:0;transition:opacity .3s;}
+  .shield-indicator{color:#0ff;font-size:11px;opacity:0;transition:opacity .3s;}
   .shield-indicator.active{opacity:1;animation:pulse 1s infinite;}
-  .shield-bar-wrap{width:90px;height:6px;background:#111;border-radius:3px;overflow:hidden;border:1px solid rgba(0,200,255,0.3);margin-top:3px;}
+  .shield-bar-wrap{width:clamp(60px,12vw,90px);height:6px;background:#111;border-radius:3px;overflow:hidden;border:1px solid rgba(0,200,255,0.3);margin-top:3px;}
   .shield-bar{height:100%;background:linear-gradient(90deg,#09f,#0ff);border-radius:3px;transition:width .12s;}
-  #autoFireBtn{pointer-events:auto;padding:4px 10px;border:1.5px solid #0af;border-radius:6px;background:rgba(0,30,60,0.75);color:#0af;font-family:inherit;font-size:11px;letter-spacing:1px;cursor:pointer;transition:all .15s;white-space:nowrap;}
+  #autoFireBtn{pointer-events:auto;padding:5px 11px;border:1.5px solid #0af;border-radius:6px;background:rgba(0,30,60,0.85);color:#0af;font-family:inherit;font-size:clamp(10px,2.2vw,12px);letter-spacing:1px;cursor:pointer;transition:all .15s;white-space:nowrap;min-width:56px;text-align:center;}
   #autoFireBtn:hover{border-color:#ff0;color:#ff0;}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-  #pauseBtn{position:fixed;top:8px;right:14px;z-index:60;pointer-events:auto;background:rgba(0,0,20,.6);border:1px solid #0ff4;border-radius:6px;color:#0ff;font-size:18px;width:36px;height:36px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;}
+  #pauseBtn{position:fixed;top:8px;right:14px;z-index:60;pointer-events:auto;background:rgba(0,0,20,.6);border:1px solid #0ff4;border-radius:6px;color:#0ff;font-size:18px;width:38px;height:38px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;}
   #pauseBtn:hover{background:rgba(0,255,255,.15);}
-  #tipBox{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(0,10,30,.92);border:2px solid #ff0;border-radius:10px;padding:12px 20px;color:#ff0;font-size:clamp(12px,2.8vw,15px);max-width:90vw;text-align:center;z-index:60;pointer-events:none;opacity:0;transition:opacity .4s;line-height:1.6;}
+  #tipBox{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 200px);left:50%;transform:translateX(-50%);background:rgba(0,10,30,.95);border:2px solid #ff0;border-radius:10px;padding:12px 18px;color:#ff0;font-size:clamp(11px,3vw,15px);max-width:min(88vw,520px);width:max-content;text-align:center;z-index:60;pointer-events:none;opacity:0;transition:opacity .4s;line-height:1.6;}
+  @media(min-width:600px){#tipBox{bottom:90px;}}
   #tipBox.show{opacity:1;}
+  /* ── INVENTORY BAR ── */
+  #inventoryBar{position:fixed;top:54px;left:50%;transform:translateX(-50%);display:none;flex-direction:row;gap:7px;align-items:center;z-index:51;pointer-events:auto;flex-wrap:nowrap;max-width:96vw;overflow-x:auto;padding:2px 4px;}
+  .inv-slot{position:relative;width:clamp(42px,9vw,54px);height:clamp(42px,9vw,54px);border-radius:9px;background:rgba(0,10,30,0.88);border:2px solid rgba(0,200,255,0.35);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:transform .12s,box-shadow .12s,border-color .12s;flex-shrink:0;touch-action:manipulation;}
+  .inv-slot:hover,.inv-slot:active{transform:scale(1.13);box-shadow:0 0 18px var(--sc,#0ff);border-color:var(--sc,#0ff);}
+  .inv-slot.active-pu{border-color:var(--sc,#0ff);box-shadow:0 0 14px var(--sc,#0ff);animation:invPulse 1s infinite;}
+  @keyframes invPulse{0%,100%{box-shadow:0 0 10px var(--sc,#0ff)}50%{box-shadow:0 0 24px var(--sc,#0ff)}}
+  .inv-icon{font-size:clamp(18px,4vw,24px);line-height:1;}
+  .inv-count{position:absolute;top:2px;right:4px;font-size:10px;color:#ff0;font-weight:900;font-family:'Courier New',monospace;text-shadow:0 0 6px #f80;}
+  .inv-label{font-size:8px;color:rgba(180,230,255,0.7);letter-spacing:0.5px;margin-top:1px;font-family:'Courier New',monospace;}
+  .inv-slot-empty{opacity:0.25;cursor:default;pointer-events:none;}
   #levelBanner{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:clamp(28px,7vw,72px);font-weight:900;color:#0ff;text-shadow:0 0 30px #0ff,0 0 60px #0ff;letter-spacing:6px;z-index:70;pointer-events:none;opacity:0;transition:opacity .3s;}
-  /* D-Pad */
-  #dpad{position:fixed;bottom:18px;left:18px;z-index:55;display:none;flex-direction:column;align-items:center;gap:4px;touch-action:none;}
-  #dpadRow{display:flex;align-items:center;gap:4px;}
-  .dpad-center{width:44px;height:44px;}
-  .dpad-btn{width:54px;height:54px;border-radius:10px;background:rgba(0,30,60,.75);border:2px solid rgba(0,220,255,.45);color:#0ff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;touch-action:none;user-select:none;-webkit-user-select:none;transition:background .08s,transform .08s;}
-  .dpad-btn:active,.dpad-btn.pressed{background:rgba(0,180,255,.35);transform:scale(0.9);box-shadow:0 0 14px #0ff6;}
-  #shootBtn{position:fixed;bottom:18px;right:18px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#f70,#c00);border:3px solid #f55;color:#fff;font-size:22px;cursor:pointer;z-index:55;display:none;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 20px #f006;touch-action:none;user-select:none;-webkit-user-select:none;transition:transform .08s;}
+  #comboPopup{position:fixed;top:45%;left:50%;transform:translate(-50%,-50%);font-size:clamp(18px,4vw,40px);font-weight:900;color:#ff0;text-shadow:0 0 20px #ff0,0 0 40px #f80;pointer-events:none;z-index:65;opacity:0;transition:opacity .2s;letter-spacing:3px;}
+  /* === RESPONSIVE FIXES === */
+  @media(max-width:480px){
+    .dpad-center{width:40px;height:40px;}
+    #shootBtn span{display:none;}
+    .hud-left .shield-indicator{display:none;}
+    .subtitle{margin-bottom:16px;}
+    .stats-box{padding:12px 14px;}
+  }
+  @media(max-height:520px) and (orientation:landscape){
+    #dpad{bottom:6px;left:8px;}
+    #shootBtn{bottom:6px;right:10px;}
+    #mobileAutoBtn{bottom:6px;}
+    #tipBox{bottom:calc(env(safe-area-inset-bottom,0px) + 140px);font-size:10px;padding:8px 12px;}
+    .dpad-btn{width:46px;height:46px;font-size:16px;}
+    .dpad-center{width:38px;height:38px;}
+  }
+</style>
+  #dpad{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);left:14px;z-index:55;display:none;flex-direction:column;align-items:center;gap:3px;touch-action:none;}
+  #dpadRow{display:flex;align-items:center;gap:3px;}
+  .dpad-center{width:48px;height:48px;}
+  .dpad-btn{width:clamp(52px,12vw,62px);height:clamp(52px,12vw,62px);border-radius:10px;background:rgba(0,30,60,.82);border:2px solid rgba(0,220,255,.5);color:#0ff;font-size:clamp(18px,4vw,22px);cursor:pointer;display:flex;align-items:center;justify-content:center;touch-action:none;user-select:none;-webkit-user-select:none;transition:background .08s,transform .08s;}
+  .dpad-btn:active,.dpad-btn.pressed{background:rgba(0,180,255,.4);transform:scale(0.9);box-shadow:0 0 14px #0ff6;}
+  #shootBtn{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);right:18px;width:clamp(76px,18vw,90px);height:clamp(76px,18vw,90px);border-radius:50%;background:radial-gradient(circle at 35% 35%,#f70,#c00);border:3px solid #f55;color:#fff;font-size:clamp(20px,5vw,26px);cursor:pointer;z-index:55;display:none;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 20px #f006;touch-action:none;user-select:none;-webkit-user-select:none;transition:transform .08s;}
   #shootBtn:active,#shootBtn.pressed{transform:scale(0.9);box-shadow:0 0 30px #f008;}
-  .level-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;max-width:500px;width:100%;margin:20px 0;}
+  /* Auto fire button - shown separately on mobile below/beside shoot */
+  #mobileAutoBtn{position:fixed;z-index:55;display:none;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);right:calc(clamp(76px,18vw,90px) + 26px);pointer-events:auto;padding:8px 12px;border:1.5px solid #0af;border-radius:8px;background:rgba(0,30,60,0.88);color:#0af;font-family:'Courier New',monospace;font-size:clamp(9px,2.5vw,12px);letter-spacing:1px;cursor:pointer;transition:all .15s;white-space:nowrap;text-align:center;touch-action:none;}
+  #mobileAutoBtn.active{background:rgba(255,200,0,0.25);color:#ff0;border-color:#ff0;}
+  .level-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;max-width:min(500px,90vw);width:100%;margin:16px 0;}
   .lvl-btn{aspect-ratio:1;border:2px solid #0f04;border-radius:8px;background:rgba(0,255,0,.06);color:#0f0;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:inherit;position:relative;}
   .lvl-btn:hover{background:#0f0;color:#000;box-shadow:0 0 16px #0f08;}
   .lvl-btn.locked{opacity:.3;cursor:default;border-color:#555;color:#555;}
@@ -61,8 +92,7 @@
   .lvl-btn.star::after{content:'⭐';position:absolute;top:-4px;right:-4px;font-size:10px;}
   #levelProgressWrap{position:fixed;bottom:0;left:0;right:0;height:5px;background:#111;z-index:50;}
   #levelProgressBar{height:100%;background:linear-gradient(90deg,#0f0,#0ff);width:0;transition:width .3s;}
-  #comboPopup{position:fixed;top:45%;left:50%;transform:translate(-50%,-50%);font-size:clamp(20px,4vw,40px);font-weight:900;color:#ff0;text-shadow:0 0 20px #ff0,0 0 40px #f80;pointer-events:none;z-index:65;opacity:0;transition:opacity .2s;letter-spacing:3px;}
-</style>
+  /* D-Pad */
 </head>
 <body>
 
@@ -132,10 +162,10 @@
     <div style="font-size:11px;color:#446;" id="timeDisp">0:00</div>
   </div>
   <div class="hud-right" style="gap:8px;flex-wrap:wrap;justify-content:flex-end;">
-    <span id="powerupDisp" style="font-size:16px;"></span>
-    <button id="autoFireBtn" onclick="autoFire=!autoFire">🔫 AUTO</button>
+    <button id="autoFireBtn" onclick="toggleAutoFire()">🔫 AUTO</button>
   </div>
 </div>
+<div id="inventoryBar"></div>
 <button id="pauseBtn" class="hidden" onclick="togglePause()">⏸</button>
 <!-- On-screen d-pad + shoot (shown always, works on desktop too) -->
 <div id="dpad">
@@ -148,6 +178,7 @@
   <button id="btnDown"  class="dpad-btn" data-key="ArrowDown">▼</button>
 </div>
 <button id="shootBtn">🔥<span style="display:block;font-size:9px;letter-spacing:1px;margin-top:2px">FIRE</span></button>
+<button id="mobileAutoBtn" onclick="toggleAutoFire()">🔫 AUTO</button>
 <div id="tipBox"></div>
 <div id="levelBanner"></div>
 <div id="levelProgressWrap" style="display:none"><div id="levelProgressBar"></div></div>
@@ -190,17 +221,16 @@ function lerpAngle(a,b,t){let d=((b-a)%(Math.PI*2)+Math.PI*3)%(Math.PI*2)-Math.P
 // ─── CANVAS ─────────────────────────────────────────────────
 const canvas=document.getElementById('gameCanvas');
 const ctx=canvas.getContext('2d');
-let CW,CH,scale;
-const WW=CFG.BASE_W,WH=CFG.BASE_H;
+let CW,CH,scale,WW,WH;
 const wx=x=>x*scale, wy=y=>y*scale;
 
 function resizeCanvas(){
   const sw=window.innerWidth,sh=window.innerHeight;
-  scale=Math.min(sw/WW,sh/WH);
-  CW=Math.round(WW*scale);CH=Math.round(WH*scale);
+  scale=Math.min(sw/CFG.BASE_W,sh/CFG.BASE_H);
+  CW=sw;CH=sh;
+  WW=sw/scale;WH=sh/scale;
   canvas.width=CW;canvas.height=CH;
-  canvas.style.width=CW+'px';canvas.style.height=CH+'px';
-  canvas.style.marginTop=((sh-CH)/2)+'px';
+  canvas.style.width=sw+'px';canvas.style.height=sh+'px';
 }
 window.addEventListener('resize',resizeCanvas);
 resizeCanvas();
@@ -649,6 +679,81 @@ const POWERUP_TYPES=[
   {id:'doubleshot',icon:'🎯',color:'#f90',label:'Double Shot',  desc:'Fires 2 bullets at once'},
 ];
 function spawnPowerup(){const def=POWERUP_TYPES[randI(0,POWERUP_TYPES.length-1)];powerups.push({x:rand(50,WW-50),y:rand(50,WH-50),r:18,...def,alive:true,bob:rand(0,Math.PI*2),age:0,spin:0});}
+
+// ─── INVENTORY ───────────────────────────────────────────────
+// inventory: array of {id, icon, color, label, count}
+const inventory=[];
+
+function inventoryAdd(p){
+  // repair & bomb: store in inventory with stack count
+  const existing=inventory.find(s=>s.id===p.id);
+  if(existing){existing.count++;} 
+  else{inventory.push({id:p.id,icon:p.icon,color:p.color,label:p.label,count:1});}
+  addFloatingText(p.x,p.y-28,'STORED: '+p.label,p.color,20);
+  renderInventory();
+}
+
+function inventoryUse(id){
+  const slot=inventory.find(s=>s.id===id);
+  if(!slot||slot.count<=0)return;
+  if(!gameRunning||gamePaused)return;
+  // find powerup def
+  const def=POWERUP_TYPES.find(d=>d.id===id);
+  if(!def)return;
+  SFX.pickup();
+  // apply effect using player position as origin for floating text
+  const px=player.x,py=player.y;
+  if(id==='shield')     {player.shield=true;player.shieldTimer=8;player.shieldHp=player.maxShieldHp;}
+  if(id==='rapidfire')  {player.rapidFire=true;player.rfTimer=7;}
+  if(id==='slowmo')     {player.slowMotion=true;player.smTimer=6;}
+  if(id==='invincible') {player.invincible=true;player.invTimer=5;}
+  if(id==='bomb')       {for(const b of eBullets)b.alive=false;for(const e of enemies){if(e.type!=='boss'){e.alive=false;onEnemyKilled(e);}}triggerShake(0.45,0.5);}
+  if(id==='repair')     {player.hp=Math.min(player.maxHp,player.hp+40);spawnParticles(px,py,'#0f0',14);}
+  if(id==='rush')       {player.rush=true;player.rushTimer=6;}
+  if(id==='laser')      {player.laser=true;player.laserTimer=6;}
+  if(id==='magnet')     {player.magnet=true;player.magnetTimer=8;}
+  if(id==='doubleshot') {player.doubleShot=true;player.dblTimer=8;}
+  addFloatingText(px,py-28,def.label+'!',def.color,28);
+  slot.count--;
+  if(slot.count<=0)inventory.splice(inventory.indexOf(slot),1);
+  renderInventory();
+}
+
+function renderInventory(){
+  const bar=document.getElementById('inventoryBar');
+  if(!bar)return;
+  bar.innerHTML='';
+  if(inventory.length===0){bar.style.display='none';return;}
+  bar.style.display='flex';
+  for(const slot of inventory){
+    const el=document.createElement('div');
+    el.className='inv-slot';
+    el.style.setProperty('--sc',slot.color);
+    el.title=slot.label+(slot.id==='bomb'?' — TAP TO DETONATE':slot.id==='repair'?' — TAP TO HEAL':' — TAP TO ACTIVATE');
+    // check if this powerup is currently active on player
+    let isActive=false;
+    if(slot.id==='shield'&&player.shield)isActive=true;
+    if(slot.id==='rapidfire'&&player.rapidFire)isActive=true;
+    if(slot.id==='slowmo'&&player.slowMotion)isActive=true;
+    if(slot.id==='invincible'&&player.invincible)isActive=true;
+    if(slot.id==='rush'&&player.rush)isActive=true;
+    if(slot.id==='laser'&&player.laser)isActive=true;
+    if(slot.id==='magnet'&&player.magnet)isActive=true;
+    if(slot.id==='doubleshot'&&player.doubleShot)isActive=true;
+    if(isActive)el.classList.add('active-pu');
+    el.innerHTML=`<span class="inv-icon">${slot.icon}</span><span class="inv-label">${slot.label.substring(0,6)}</span>${slot.count>1?`<span class="inv-count">×${slot.count}</span>`:''}`;
+    el.addEventListener('click',()=>inventoryUse(slot.id));
+    el.addEventListener('touchend',e=>{e.preventDefault();inventoryUse(slot.id);});
+    bar.appendChild(el);
+  }
+}
+
+// keyboard shortcut: B = use bomb, Q = use first inventory item
+window.addEventListener('keydown',e=>{
+  if(!gameRunning||gamePaused)return;
+  if(e.code==='KeyB'){inventoryUse('bomb');}
+  if(e.code==='KeyQ'&&inventory.length>0){inventoryUse(inventory[0].id);}
+});
 function updatePowerups(dt){
   for(const p of powerups){
     p.bob+=dt*2.2;p.age+=dt;p.spin+=dt*2;if(p.age>13)p.alive=false;
@@ -660,18 +765,8 @@ function updatePowerups(dt){
   powerups.splice(0,powerups.length,...powerups.filter(p=>p.alive));
 }
 function applyPowerup(p){
-  SFX.pickup();
-  if(p.id==='shield')     {player.shield=true;player.shieldTimer=8;player.shieldHp=player.maxShieldHp;}
-  if(p.id==='rapidfire')  {player.rapidFire=true;player.rfTimer=7;}
-  if(p.id==='slowmo')     {player.slowMotion=true;player.smTimer=6;}
-  if(p.id==='invincible') {player.invincible=true;player.invTimer=5;}
-  if(p.id==='bomb')       {for(const b of eBullets)b.alive=false;for(const e of enemies){if(e.type!=='boss'){e.alive=false;onEnemyKilled(e);}}triggerShake(0.45,0.5);}
-  if(p.id==='repair')     {player.hp=Math.min(player.maxHp,player.hp+40);spawnParticles(player.x,player.y,'#0f0',14);}
-  if(p.id==='rush')       {player.rush=true;player.rushTimer=6;}
-  if(p.id==='laser')      {player.laser=true;player.laserTimer=6;}
-  if(p.id==='magnet')     {player.magnet=true;player.magnetTimer=8;}
-  if(p.id==='doubleshot') {player.doubleShot=true;player.dblTimer=8;}
-  addFloatingText(p.x,p.y-24,p.label,p.color,28);
+  // All pickups now go to inventory — player activates them manually
+  inventoryAdd(p);
 }
 function drawPowerups(){
   ctx.save();
@@ -770,22 +865,24 @@ function updateHUD(){
   const m=Math.floor(survivalTime/60),s=Math.floor(survivalTime%60);document.getElementById('timeDisp').textContent=`${m}:${s<10?'0':''}${s}`;
   const multi=Math.min(comboCount,8);document.getElementById('multiDisp').textContent=multi>1?`×${multi} COMBO`:'';
   document.getElementById('shieldInd').classList.toggle('active',player.shield);
-  // Shield bar
   const sbEl=document.getElementById('shieldBar');
   if(sbEl){sbEl.style.width=clamp(player.shieldHp/player.maxShieldHp*100,0,100)+'%';}
-  // Powerup icons
-  let pu='';
-  if(player.rapidFire) pu+='⚡';
-  if(player.slowMotion)pu+='⌛';
-  if(player.invincible)pu+='✨';
-  if(player.rush)      pu+='🚀';
-  if(player.laser)     pu+='🔆';
-  if(player.magnet)    pu+='🧲';
-  if(player.doubleShot)pu+='🎯';
-  document.getElementById('powerupDisp').textContent=pu;
-  // AutoFire button colour
-  const afBtn=document.getElementById('autoFireBtn');
-  if(afBtn){afBtn.style.background=autoFire?'rgba(255,200,0,0.25)':'rgba(0,30,60,0.75)';afBtn.style.color=autoFire?'#ff0':'#0af';}
+  // Refresh active-state glow on inventory slots
+  const bar=document.getElementById('inventoryBar');
+  if(bar){bar.querySelectorAll('.inv-slot').forEach(el=>{
+    const id=inventory[Array.from(bar.children).indexOf(el)]?.id;
+    let isActive=false;
+    if(id==='shield'&&player.shield)isActive=true;
+    if(id==='rapidfire'&&player.rapidFire)isActive=true;
+    if(id==='slowmo'&&player.slowMotion)isActive=true;
+    if(id==='invincible'&&player.invincible)isActive=true;
+    if(id==='rush'&&player.rush)isActive=true;
+    if(id==='laser'&&player.laser)isActive=true;
+    if(id==='magnet'&&player.magnet)isActive=true;
+    if(id==='doubleshot'&&player.doubleShot)isActive=true;
+    el.classList.toggle('active-pu',isActive);
+  });}
+  updateAutoFireBtns();
 }
 
 // ─── TEACHING ───────────────────────────────────────────────
@@ -811,7 +908,13 @@ function startTeachingStep(i){
 function updateTeaching(dt){teachTimer-=dt;if(teachTimer<=0)startTeachingStep(teachStep+1);}
 function endTeaching(){hideTip();setTimeout(showMenu,600);}
 
-let tipTimeout=null;
+function toggleAutoFire(){autoFire=!autoFire;updateAutoFireBtns();}
+function updateAutoFireBtns(){
+  const afBtn=document.getElementById('autoFireBtn');
+  const mab=document.getElementById('mobileAutoBtn');
+  if(afBtn){afBtn.style.background=autoFire?'rgba(255,200,0,0.25)':'rgba(0,30,60,0.75)';afBtn.style.color=autoFire?'#ff0':'#0af';}
+  if(mab){mab.classList.toggle('active',autoFire);}
+}
 function showTip(msg){const tb=document.getElementById('tipBox');tb.textContent=msg;tb.classList.add('show');}
 function hideTip(){document.getElementById('tipBox').classList.remove('show');}
 let bannerTimeout=null;
@@ -854,12 +957,14 @@ function startTeaching(){gameMode='teaching';difficultyLevel=0;startGame();teach
 function startGame(){
   score=0;survivalTime=0;comboCount=0;comboTimer=0;
   enemies.length=0;eBullets.length=0;pBullets.length=0;powerups.length=0;particles.length=0;floatingTexts.length=0;
+  inventory.length=0;renderInventory();
   resetPlayer();powerupTimer=0;nextPowerupIn=rand(CFG.POWERUP_INTERVAL_MIN,CFG.POWERUP_INTERVAL_MAX);
   bossTimer=0;diffTimer=0;enemySpawnCooldown=1500;lastTime=0;
   gameRunning=true;gamePaused=false;
   document.getElementById('levelProgressWrap').style.display='none';
   showScreen(null);document.getElementById('hud').classList.remove('hidden');document.getElementById('pauseBtn').classList.remove('hidden');
-  if(isTD()){document.getElementById('dpad').style.display='flex';document.getElementById('shootBtn').style.display='flex';}
+  document.getElementById('inventoryBar').style.display='none'; // hidden until first pickup
+  if(isTD()){document.getElementById('dpad').style.display='flex';document.getElementById('shootBtn').style.display='flex';document.getElementById('mobileAutoBtn').style.display='block';}
   requestAnimationFrame(gameLoop);
 }
 
@@ -883,7 +988,8 @@ function showMenu(){
   gameRunning=false;gamePaused=false;enemies.length=0;eBullets.length=0;pBullets.length=0;powerups.length=0;
   hideTip();document.getElementById('levelProgressWrap').style.display='none';
   document.getElementById('hud').classList.add('hidden');document.getElementById('pauseBtn').classList.add('hidden');
-  document.getElementById('dpad').style.display='none';document.getElementById('shootBtn').style.display='none';
+  document.getElementById('inventoryBar').style.display='none';
+  document.getElementById('dpad').style.display='none';document.getElementById('shootBtn').style.display='none';document.getElementById('mobileAutoBtn').style.display='none';
   showScreen('mainMenu');
 }
 function showScreen(id){['mainMenu','levelSelectScreen','pauseScreen','gameOverScreen','levelWinScreen'].forEach(s=>document.getElementById(s).classList.add('hidden'));if(id)document.getElementById(id).classList.remove('hidden');}
