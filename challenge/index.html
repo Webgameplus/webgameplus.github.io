@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Color Panic – The Most Brutal Brain Game Ever Made | NIGHTMARE MODE</title>
+<meta name="description" content="97% of players fail in under 30 seconds. Color Panic is the most psychologically brutal color brain game ever made. Do you dare enter NIGHTMARE MODE?">
+<meta name="keywords" content="color panic, hardest brain game, stroop effect game, nightmare mode game, color brain test, most difficult game">
+<meta property="og:title" content="Color Panic – NIGHTMARE MODE | Can Your Brain Survive?">
+<meta property="og:description" content="97% of players quit in panic. The most brutal brain game ever made is waiting for you.">
+<meta property="og:type" content="website">
+
+<!-- AdSense — replace ca-pub-XXXXXXXXXXXXXXXX with your publisher ID -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@300;400;700&family=Share+Tech+Mono&display=swap');
+
+/* ══════════════════════════════
+   ROOT & RESET
+══════════════════════════════ */
+:root{
+  --red:#ff1744;--dark-red:#c0001a;--yellow:#ffea00;--green:#00e676;
+  --bg:#06060a;--bg2:#0d0d14;--bg3:#12121e;
+  --text:#f0f0f0;--dim:rgba(255,255,255,.5);
+  --border:rgba(255,23,68,.2);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  font-family:'Oswald',sans-serif;
+  color:var(--text);
+  overflow-x:hidden;
+  cursor:default;
+}
+
+/* scanlines */
+body::before{
+  content:'';position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.07) 3px,rgba(0,0,0,.07) 4px);
+  pointer-events:none;z-index:9999;
+  animation:scanScroll 10s linear infinite;
+}
+@keyframes scanScroll{0%{background-position:0 0;}100%{background-position:0 120px;}}
+
+/* noise grain */
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9998;opacity:.4;
+}
+
+/* ══════════════════════════════
+   CANVAS BG
+══════════════════════════════ */
+#bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+/* ══════════════════════════════
+   LAYOUT WRAPPER
+══════════════════════════════ */
+.page{position:relative;z-index:1;}
+
+/* ══════════════════════════════
+   AD SLOTS
+══════════════════════════════ */
+.ad-slot{
+  width:100%;max-width:728px;margin:0 auto;
+  min-height:90px;
+  background:rgba(255,255,255,.02);
+  border:1px dashed rgba(255,255,255,.06);
+  border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.ad-slot-box{
+  display:flex;align-items:center;justify-content:center;
+  width:100%;
+}
+
+/* ══════════════════════════════
+   HERO
+══════════════════════════════ */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  padding:40px 20px 60px;
+  position:relative;
+  overflow:hidden;
+}
+
+/* pulsing red vignette */
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at center,transparent 30%,rgba(255,23,68,.06) 70%,rgba(0,0,0,.8) 100%);
+  animation:vigPulse 3s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes vigPulse{0%,100%{opacity:.8;}50%{opacity:1.0;}}
+
+.hero-eyebrow{
+  font-family:'Share Tech Mono',monospace;
+  font-size:clamp(10px,2.5vw,13px);
+  letter-spacing:6px;
+  color:var(--red);
+  text-transform:uppercase;
+  margin-bottom:16px;
+  animation:blink .9s step-end infinite;
+  position:relative;
+}
+@keyframes blink{50%{opacity:0;}}
+
+.hero-title{
+  font-family:'Bebas Neue',cursive;
+  font-size:clamp(72px,20vw,180px);
+  line-height:.85;
+  letter-spacing:-2px;
+  position:relative;
+}
+.hero-title .line1{
+  display:block;
+  background:linear-gradient(135deg,#ff1744,#f50057,#d500f9,#2979ff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 40px rgba(255,23,68,.6));
+  animation:titleFlicker 4s ease-in-out infinite;
+}
+@keyframes titleFlicker{
+  0%,91%,100%{filter:drop-shadow(0 0 40px rgba(255,23,68,.6));}
+  92%{filter:drop-shadow(0 0 3px rgba(255,23,68,.2)) brightness(.3) blur(1px);}
+  93%{filter:drop-shadow(0 0 40px rgba(255,23,68,.6));}
+  95%{filter:drop-shadow(0 0 3px rgba(255,23,68,.2)) brightness(.3);}
+  96%{filter:drop-shadow(0 0 40px rgba(255,23,68,.6));}
+}
+.hero-title .line2{
+  display:block;
+  font-size:clamp(28px,7vw,70px);
+  letter-spacing:10px;
+  color:rgba(255,255,255,.75);
+  -webkit-text-fill-color:rgba(255,255,255,.75);
+}
+
+.hero-tagline{
+  font-family:'Share Tech Mono',monospace;
+  font-size:clamp(13px,3vw,18px);
+  color:rgba(255,255,255,.55);
+  margin:20px 0 10px;
+  max-width:560px;
+  line-height:1.6;
+}
+
+/* STAT BADGES */
+.stat-row{
+  display:flex;flex-wrap:wrap;gap:10px;
+  justify-content:center;
+  margin:20px 0 32px;
+}
+.stat-badge{
+  background:rgba(255,23,68,.08);
+  border:1px solid rgba(255,23,68,.25);
+  border-radius:6px;
+  padding:8px 16px;
+  font-family:'Share Tech Mono',monospace;
+  font-size:clamp(11px,2.5vw,13px);
+  color:var(--red);
+  letter-spacing:1px;
+}
+.stat-badge b{color:#fff;font-size:1.2em;}
+
+/* CTA BUTTON */
+.btn-cta{
+  display:inline-block;
+  background:linear-gradient(135deg,var(--red),#d500f9);
+  border:none;border-radius:6px;
+  padding:22px 56px;
+  font-family:'Bebas Neue',cursive;
+  font-size:clamp(22px,5vw,32px);
+  letter-spacing:6px;color:#fff;
+  text-decoration:none;
+  cursor:pointer;
+  box-shadow:0 0 60px rgba(255,23,68,.55),0 0 120px rgba(255,23,68,.2);
+  transition:transform .12s,box-shadow .2s;
+  position:relative;overflow:hidden;
+  animation:ctaPulse 2s ease-in-out infinite;
+}
+.btn-cta::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);
+  transform:translateX(-100%);animation:shimmer 2.4s ease-in-out infinite;
+}
+@keyframes shimmer{100%{transform:translateX(100%);}}
+@keyframes ctaPulse{
+  0%,100%{box-shadow:0 0 60px rgba(255,23,68,.55),0 0 120px rgba(255,23,68,.2);}
+  50%{box-shadow:0 0 80px rgba(255,23,68,.8),0 0 160px rgba(255,23,68,.35);}
+}
+.btn-cta:hover{transform:scale(1.04);}
+.btn-cta:active{transform:scale(.97);}
+
+.btn-subtext{
+  display:block;margin-top:10px;
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;letter-spacing:2px;
+  color:rgba(255,255,255,.3);
+}
+
+/* scroll hint */
+.scroll-hint{
+  margin-top:40px;
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;letter-spacing:3px;color:rgba(255,255,255,.2);
+  text-transform:uppercase;
+  animation:bounce 2s ease-in-out infinite;
+}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(6px);}}
+
+/* ══════════════════════════════
+   SECTIONS COMMON
+══════════════════════════════ */
+section{padding:80px 20px;max-width:1100px;margin:0 auto;}
+.section-label{
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;letter-spacing:5px;color:var(--red);
+  text-transform:uppercase;margin-bottom:12px;
+  opacity:.8;
+}
+.section-title{
+  font-family:'Bebas Neue',cursive;
+  font-size:clamp(40px,8vw,72px);
+  line-height:.95;
+  letter-spacing:2px;
+  margin-bottom:24px;
+}
+.section-title .accent{color:var(--red);}
+
+/* ══════════════════════════════
+   FEAR SECTION
+══════════════════════════════ */
+#fear{text-align:center;}
+.fear-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:16px;margin-top:40px;
+}
+.fear-card{
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:12px;padding:28px 22px;
+  text-align:left;
+  position:relative;overflow:hidden;
+  transition:transform .2s,border-color .2s;
+}
+.fear-card::before{
+  content:'';position:absolute;top:0;left:0;width:3px;height:100%;
+  background:linear-gradient(to bottom,var(--red),transparent);
+}
+.fear-card:hover{transform:translateY(-4px);border-color:rgba(255,23,68,.45);}
+.fear-icon{font-size:32px;margin-bottom:12px;display:block;}
+.fear-card h3{
+  font-family:'Bebas Neue',cursive;
+  font-size:22px;letter-spacing:2px;
+  color:var(--red);margin-bottom:8px;
+}
+.fear-card p{
+  font-size:14px;font-weight:300;
+  color:rgba(255,255,255,.55);line-height:1.7;
+}
+
+/* ══════════════════════════════
+   STROOP DEMO (live interactive)
+══════════════════════════════ */
+#demo{text-align:center;}
+.demo-arena{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:16px;padding:36px 24px;
+  max-width:480px;margin:32px auto 0;
+  position:relative;overflow:hidden;
+}
+.demo-arena::after{
+  content:'LIVE PREVIEW';position:absolute;top:12px;right:12px;
+  font-family:'Share Tech Mono',monospace;font-size:9px;
+  letter-spacing:3px;color:rgba(255,23,68,.4);
+}
+#demoQuestion{
+  font-family:'Bebas Neue',cursive;
+  font-size:clamp(48px,14vw,80px);
+  letter-spacing:6px;
+  margin-bottom:10px;
+  transition:all .15s;
+}
+.demo-instruction{
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;letter-spacing:2px;
+  color:rgba(255,255,255,.3);text-transform:uppercase;
+  margin-bottom:20px;
+}
+.demo-buttons{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+.demo-btn{
+  border:none;border-radius:8px;padding:10px 18px;
+  font-family:'Bebas Neue',cursive;font-size:16px;letter-spacing:2px;
+  color:#fff;cursor:pointer;transition:transform .1s,filter .15s;
+}
+.demo-btn:hover{transform:scale(1.08);}
+.demo-result{
+  margin-top:16px;height:24px;
+  font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:2px;
+  transition:opacity .2s;
+}
+.demo-result.correct{color:var(--green);}
+.demo-result.wrong{color:var(--red);}
+
+/* ══════════════════════════════
+   HOW TO PLAY
+══════════════════════════════ */
+#howtoplay{}
+.steps-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:16px;margin-top:40px;
+}
+.step-card{
+  background:var(--bg3);border:1px solid rgba(255,255,255,.06);
+  border-radius:12px;padding:28px 20px;
+  position:relative;
+}
+.step-num{
+  font-family:'Bebas Neue',cursive;
+  font-size:56px;line-height:1;
+  color:rgba(255,23,68,.12);
+  position:absolute;top:12px;right:16px;
+}
+.step-card h3{
+  font-family:'Bebas Neue',cursive;
+  font-size:20px;letter-spacing:2px;
+  color:var(--yellow);margin-bottom:10px;
+}
+.step-card p{font-size:14px;font-weight:300;color:rgba(255,255,255,.55);line-height:1.7;}
+
+/* rules table */
+.rules-table{
+  width:100%;border-collapse:collapse;margin-top:36px;
+}
+.rules-table th{
+  font-family:'Bebas Neue',cursive;font-size:16px;letter-spacing:2px;
+  color:var(--red);text-align:left;padding:10px 14px;
+  border-bottom:1px solid rgba(255,23,68,.2);
+}
+.rules-table td{
+  padding:12px 14px;font-size:14px;font-weight:300;
+  color:rgba(255,255,255,.6);
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+.rules-table tr:hover td{background:rgba(255,23,68,.04);}
+
+/* ══════════════════════════════
+   CHALLENGE CALLOUT
+══════════════════════════════ */
+.challenge-banner{
+  background:linear-gradient(135deg,rgba(255,23,68,.08),rgba(213,0,249,.08));
+  border:1px solid rgba(255,23,68,.22);
+  border-radius:16px;padding:48px 32px;
+  text-align:center;margin:0 20px;
+  position:relative;overflow:hidden;
+}
+.challenge-banner::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(45deg,rgba(255,23,68,.03) 0px,rgba(255,23,68,.03) 20px,transparent 20px,transparent 40px);
+}
+.challenge-banner h2{
+  font-family:'Bebas Neue',cursive;
+  font-size:clamp(32px,7vw,64px);
+  line-height:1;letter-spacing:3px;margin-bottom:16px;
+  color:var(--red);
+  position:relative;z-index:1;
+  text-shadow:0 0 40px rgba(255,23,68,.5);
+}
+.challenge-banner p{
+  font-size:clamp(14px,3vw,17px);font-weight:300;
+  color:rgba(255,255,255,.6);max-width:560px;margin:0 auto 28px;
+  position:relative;z-index:1;line-height:1.7;
+}
+
+/* ══════════════════════════════
+   LEVELS
+══════════════════════════════ */
+#levels{}
+.levels-list{margin-top:36px;display:flex;flex-direction:column;gap:10px;}
+.level-item{
+  display:flex;align-items:center;gap:16px;
+  background:var(--bg3);border:1px solid rgba(255,255,255,.05);
+  border-radius:10px;padding:16px 20px;
+  transition:border-color .2s;
+}
+.level-item:hover{border-color:var(--border);}
+.level-badge{
+  font-family:'Bebas Neue',cursive;font-size:18px;letter-spacing:2px;
+  min-width:90px;padding:6px 10px;text-align:center;border-radius:6px;
+}
+.level-info h4{font-family:'Bebas Neue',cursive;font-size:18px;letter-spacing:1px;margin-bottom:4px;}
+.level-info p{font-size:13px;font-weight:300;color:rgba(255,255,255,.45);}
+.level-bar{flex:1;height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;min-width:60px;}
+.level-bar-fill{height:100%;border-radius:2px;}
+
+/* ══════════════════════════════
+   TESTIMONIALS (fake review style)
+══════════════════════════════ */
+#reviews{text-align:center;}
+.review-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:14px;margin-top:36px;
+}
+.review-card{
+  background:var(--bg3);border:1px solid rgba(255,255,255,.05);
+  border-radius:10px;padding:22px 18px;text-align:left;
+}
+.review-stars{color:var(--yellow);font-size:14px;margin-bottom:10px;}
+.review-text{
+  font-size:14px;font-weight:300;color:rgba(255,255,255,.65);
+  line-height:1.7;font-style:italic;margin-bottom:12px;
+}
+.review-author{
+  font-family:'Share Tech Mono',monospace;font-size:11px;
+  letter-spacing:2px;color:rgba(255,255,255,.3);
+}
+
+/* ══════════════════════════════
+   FINAL CTA SECTION
+══════════════════════════════ */
+#finalcta{text-align:center;padding:100px 20px;}
+.final-dare{
+  font-family:'Bebas Neue',cursive;
+  font-size:clamp(16px,4vw,22px);
+  letter-spacing:6px;
+  color:rgba(255,255,255,.3);
+  text-transform:uppercase;
+  margin-bottom:6px;
+}
+.final-title{
+  font-family:'Bebas Neue',cursive;
+  font-size:clamp(40px,10vw,90px);
+  line-height:.9;letter-spacing:2px;
+  margin-bottom:24px;
+}
+.final-title .r{color:var(--red);}
+
+/* ══════════════════════════════
+   FOOTER
+══════════════════════════════ */
+footer{
+  border-top:1px solid rgba(255,255,255,.05);
+  padding:30px 20px;text-align:center;
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;letter-spacing:2px;
+  color:rgba(255,255,255,.2);
+}
+footer a{color:rgba(255,23,68,.5);text-decoration:none;}
+
+/* ══════════════════════════════
+   SCROLL REVEAL
+══════════════════════════════ */
+.reveal{
+  opacity:0;transform:translateY(30px);
+  transition:opacity .7s ease,transform .7s ease;
+}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ══════════════════════════════
+   RESPONSIVE
+══════════════════════════════ */
+@media(max-width:600px){
+  section{padding:56px 16px;}
+  .challenge-banner{margin:0 12px;padding:32px 18px;}
+  .level-item{flex-wrap:wrap;}
+  .level-bar{min-width:100%;order:3;}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<div class="page">
+
+  <!-- ══ TOP AD ══ -->
+  <div style="padding:10px 20px;background:rgba(0,0,0,.4);">
+    <div class="ad-slot">
+      <div class="ad-slot-box">
+        <!-- AdSense leaderboard 728x90 -->
+        <ins class="adsbygoogle"
+             style="display:block;width:100%;max-width:728px;"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+             data-ad-slot="1111111111"
+             data-ad-format="horizontal"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       HERO SECTION
+  ══════════════════════════════════════ -->
+  <section class="hero">
+    <p class="hero-eyebrow">⚠ PSYCHOLOGICAL WARFARE · STROOP EFFECT · NIGHTMARE MODE ⚠</p>
+
+    <h1 class="hero-title">
+      <span class="line1">COLOR<br>PANIC</span>
+      <span class="line2">NIGHTMARE MODE</span>
+    </h1>
+
+    <p class="hero-tagline">
+      The most psychologically brutal color brain test ever created.<br>
+      Your brain <em>will</em> betray you. Your hands <em>will</em> shake.<br>
+      Most people don't last 30 seconds. <strong style="color:#ff1744">Do you dare?</strong>
+    </p>
+
+    <div class="stat-row">
+      <div class="stat-badge">⚡ <b>97%</b> of players FAIL under 30s</div>
+      <div class="stat-badge">💀 <b>3 lives</b> — lose them all, you're dead</div>
+      <div class="stat-badge">🔥 Answer window: <b>as low as 1.2 seconds</b></div>
+      <div class="stat-badge">🧠 <b>8 difficulty levels</b> up to HELL</div>
+    </div>
+
+    <a href="color-panic-nightmare-final.html" class="btn-cta" id="heroCTA">
+      ☠ ENTER NIGHTMARE ☠
+    </a>
+    <span class="btn-subtext">⚠ Not responsible for brain damage · Play at your own risk</span>
+
+    <p class="scroll-hint">▼ scroll to learn more ▼</p>
+  </section>
+
+  <!-- ══ MID AD ══ -->
+  <div style="padding:0 20px 40px;max-width:1100px;margin:0 auto;">
+    <div class="ad-slot">
+      <div class="ad-slot-box">
+        <ins class="adsbygoogle"
+             style="display:block;width:100%;max-width:728px;"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+             data-ad-slot="2222222222"
+             data-ad-format="horizontal"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       FEAR SECTION
+  ══════════════════════════════════════ -->
+  <section id="fear">
+    <p class="section-label reveal">Why your brain will melt</p>
+    <h2 class="section-title reveal">THIS GAME IS <span class="accent">DESIGNED<br>TO BREAK YOU</span></h2>
+    <p class="reveal" style="color:var(--dim);font-size:16px;font-weight:300;max-width:640px;margin:0 auto;line-height:1.8;">
+      Color Panic isn't a casual game. It's a calculated psychological attack on your prefrontal cortex.
+      Every mechanic is engineered to cause maximum cognitive confusion.
+    </p>
+
+    <div class="fear-grid">
+      <div class="fear-card reveal">
+        <span class="fear-icon">🧠</span>
+        <h3>THE STROOP EFFECT</h3>
+        <p>Your brain reads words faster than it processes color. We exploit this flaw mercilessly. The word says RED. The color is BLUE. Your brain freezes. The timer doesn't.</p>
+      </div>
+      <div class="fear-card reveal">
+        <span class="fear-icon">🎭</span>
+        <h3>TRIPLE DECEPTION</h3>
+        <p>The button label, button color, and button text color are all different things. You're deciding between 3 lies simultaneously while a countdown bar screams at you.</p>
+      </div>
+      <div class="fear-card reveal">
+        <span class="fear-icon">👻</span>
+        <h3>GHOST WORDS</h3>
+        <p>Phantom color words haunt the background. Your peripheral vision picks them up. Your brain starts second-guessing every tap. Paranoia sets in fast.</p>
+      </div>
+      <div class="fear-card reveal">
+        <span class="fear-icon">⏱</span>
+        <h3>AUTO-PUNISHMENT</h3>
+        <p>Freeze for 1.2 seconds? Gone. A life is taken. No grace period, no second chances. The game punishes hesitation as much as wrong answers.</p>
+      </div>
+      <div class="fear-card reveal">
+        <span class="fear-icon">🔄</span>
+        <h3>WORDS THAT LIE</h3>
+        <p>At higher levels, the word itself flips, mirrors, rotates, and wobbles. You can't read it normally. Your brain is trying to decode and decide simultaneously.</p>
+      </div>
+      <div class="fear-card reveal">
+        <span class="fear-icon">🩸</span>
+        <h3>HORROR ATMOSPHERE</h3>
+        <p>Blood splatters, screen cracks, heartbeat sounds, glitch effects, and a drone that grows louder as time dies. This isn't a game. It's a psychological experience.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       LIVE DEMO SECTION
+  ══════════════════════════════════════ -->
+  <section id="demo">
+    <p class="section-label reveal">Try before you die</p>
+    <h2 class="section-title reveal">THINK YOU <span class="accent">GET IT?</span><br>PROVE IT RIGHT NOW.</h2>
+    <p class="reveal" style="color:var(--dim);font-size:15px;font-weight:300;max-width:500px;margin:0 auto;line-height:1.8;">
+      This tiny demo has none of the horror. None of the pressure. None of the shaking screen.<br>
+      <strong style="color:#ff1744">And you'll still get it wrong.</strong>
+    </p>
+
+    <div class="demo-arena reveal">
+      <p class="demo-instruction">TAP THE TEXT COLOR — NOT THE WORD</p>
+      <div id="demoQuestion" style="color:#ff1744">BLUE</div>
+      <div class="demo-buttons" id="demoBtns"></div>
+      <div class="demo-result" id="demoResult"></div>
+      <p style="margin-top:20px;font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(255,255,255,.2);letter-spacing:2px;">
+        THIS IS THE EASY VERSION. THE REAL GAME IS 10× WORSE.
+      </p>
+    </div>
+
+    <div style="text-align:center;margin-top:32px;">
+      <a href="color-panic-nightmare-final.html" class="btn-cta" style="font-size:clamp(18px,4vw,26px);padding:18px 44px;">
+        I'M READY FOR THE REAL THING
+      </a>
+    </div>
+  </section>
+
+  <!-- ══ SIDEBAR-STYLE AD ══ -->
+  <div style="padding:0 20px 60px;max-width:1100px;margin:0 auto;">
+    <div class="ad-slot" style="max-width:336px;min-height:280px;margin:0 auto;">
+      <div class="ad-slot-box">
+        <ins class="adsbygoogle"
+             style="display:inline-block;width:336px;height:280px;"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+             data-ad-slot="3333333333"></ins>
+        <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       HOW TO PLAY
+  ══════════════════════════════════════ -->
+  <section id="howtoplay">
+    <p class="section-label reveal">Survival guide</p>
+    <h2 class="section-title reveal">HOW TO <span class="accent">PLAY</span><br>(If You Can)</h2>
+
+    <div class="steps-grid">
+      <div class="step-card reveal">
+        <span class="step-num">01</span>
+        <h3>LOOK AT THE WORD</h3>
+        <p>A large color word appears on screen — RED, BLUE, GREEN, etc. Your brain will desperately want to answer based on what the word says. <strong style="color:#ff1744">Resist this instinct or die.</strong></p>
+      </div>
+      <div class="step-card reveal">
+        <span class="step-num">02</span>
+        <h3>IDENTIFY THE COLOR</h3>
+        <p>Ignore what the word says. Focus on what color the letters <em>actually are</em>. If the word "GREEN" appears in red ink, the answer is RED. Simple in theory. Agony in practice.</p>
+      </div>
+      <div class="step-card reveal">
+        <span class="step-num">03</span>
+        <h3>TAP FAST OR LOSE A LIFE</h3>
+        <p>A countdown bar is draining. Tap the correct color button before it hits zero or lose a life instantly. You have 3 lives. The game gets faster. There is no mercy.</p>
+      </div>
+      <div class="step-card reveal">
+        <span class="step-num">04</span>
+        <h3>DON'T TRUST THE BUTTONS</h3>
+        <p>Color buttons are deliberately deceptive. The button labeled "RED" might be colored blue, with orange text. You must match the button's LABEL to the word's actual ink color.</p>
+      </div>
+      <div class="step-card reveal">
+        <span class="step-num">05</span>
+        <h3>SURVIVE 60 SECONDS</h3>
+        <p>The game lasts 60 seconds. Each correct answer scores +1. Each wrong answer −1. Lose all 3 lives before time ends and the game ends early with full humiliation.</p>
+      </div>
+      <div class="step-card reveal">
+        <span class="step-num">06</span>
+        <h3>REACH HELL LEVEL</h3>
+        <p>There are 8 difficulty levels from LEVEL 1 to HELL. At HELL, the answer window is 1.2 seconds, buttons shuffle, words flip, and fake instructions actively lie to you. Most players never see it.</p>
+      </div>
+    </div>
+
+    <table class="rules-table reveal">
+      <thead>
+        <tr>
+          <th>ACTION</th><th>RESULT</th><th>NOTE</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>✅ Correct answer</td><td style="color:#00e676">+1 Score</td><td>Next challenge appears instantly</td></tr>
+        <tr><td>❌ Wrong answer</td><td style="color:#ff1744">−1 Score + lose a life</td><td>Screen shakes, horror sound plays</td></tr>
+        <tr><td>⏱ Too slow</td><td style="color:#ff1744">Lose a life (no score change)</td><td>Treated same as wrong answer</td></tr>
+        <tr><td>💀 0 lives left</td><td style="color:#ff1744">Game over immediately</td><td>You get a personal insult based on score</td></tr>
+        <tr><td>⏰ 60 seconds pass</td><td style="color:#ffea00">Time's up — score tallied</td><td>Best score saved in browser</td></tr>
+        <tr><td>🔥 5x streak</td><td style="color:#ffea00">Combo bonus + special sound</td><td>Keeps going until you fail</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       CHALLENGE CALLOUT
+  ══════════════════════════════════════ -->
+  <div class="challenge-banner reveal">
+    <h2>⚠ 99% OF PEOPLE WHO READ THIS<br>ARE TOO SCARED TO CLICK PLAY.</h2>
+    <p>
+      The average human brain cannot handle the cognitive load after Level 4.
+      Anxiety spikes. Decision-making collapses. Players physically freeze.
+      We have tested this. The results were disturbing.
+      <br><br>
+      <strong style="color:#ff1744">Are you in the 1%? Or are you just going to scroll past this like everyone else?</strong>
+    </p>
+    <a href="color-panic-nightmare-final.html" class="btn-cta" style="font-size:clamp(18px,4vw,26px);padding:18px 44px;">
+      I'M NOT SCARED. LET ME IN.
+    </a>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       DIFFICULTY LEVELS
+  ══════════════════════════════════════ -->
+  <section id="levels">
+    <p class="section-label reveal">The 8 circles of hell</p>
+    <h2 class="section-title reveal">DIFFICULTY <span class="accent">LEVELS</span></h2>
+    <p class="reveal" style="color:var(--dim);font-size:15px;font-weight:300;max-width:560px;line-height:1.8;">
+      Every few correct answers the game escalates. Once it starts, it never goes back.
+    </p>
+
+    <div class="levels-list">
+      <div class="level-item reveal">
+        <div class="level-badge" style="background:rgba(0,230,118,.15);color:#00e676;">LEVEL 1</div>
+        <div class="level-info"><h4>WARM UP</h4><p>3 second window · No shuffling · No ghosts · Straight Stroop. Deceptively easy. Your confidence will be your downfall.</p></div>
+        <div class="level-bar"><div class="level-bar-fill" style="width:12%;background:#00e676;"></div></div>
+      </div>
+      <div class="level-item reveal">
+        <div class="level-badge" style="background:rgba(41,121,255,.15);color:#2979ff;">LEVEL 2</div>
+        <div class="level-info"><h4>FIRST DOUBTS</h4><p>2.5s window · Ghost words appear · Hint text starts lying. You'll start questioning your own eyes.</p></div>
+        <div class="level-bar"><div class="level-bar-fill" style="width:22%;background:#2979ff;"></div></div>
+      </div>
+      <div class="level-item reveal">
+        <div class="level-badge" style="background:rgba(255,234,0,.12);color:#ffea00;">LEVEL 3</div>
+        <div class="level-info"><h4>CONFUSION SETS IN</h4><p>2.2s window · Words start flipping · Buttons shuffle · More fake hints. Your certainty crumbles here.</p></div>
+        <div class="level-bar"><div class="level-bar-fill" style="width:35%;background:#ffea00;"></div></div>
+      </div>
+      <div class="level-item reveal">
+        <div class="level-badge" style="background:rgba(255,109,0,.15);color:#ff6d00;">LEVEL 4</div>
+        <div class="level-info"><h4>PANIC BEGINS</h4><p>1.9s window · Words rotate and mirror · Ghost words everywhere. Most players lose their first life here.</p></div>
+        <div class="level-bar"><div class="level-bar-fill" style="width:48%;background:#ff6d00;"></div></div>
+      </div>
+      <div class="level-item reveal">
+        <div class="level-badge" style="background:rgba(255,23,68,.15);color:#ff1744;">LEVEL 5</div>
+        <div class="level-info"><h4>SURVIVAL MODE</h4><p>1.7s window · Active wobbling words · Aggressive shuffling. You're making decisions on pure instinct now.</p></div>
+        <div class="level-bar"><div class="level-bar-fill" style="width:60%;background:#ff1744;"></div></div>
+      </div>
+      <div class="level-item reveal">
+        <div class="level-badge" style="background:rgba(213,0,249,.15);color:#d500f9;">INSANE</div>
+        <div class="level-info"><h4>COGNITIVE COLLAPSE</h4><p>1.5s window · Max deception everywhere · Instruction text actively misleads you. Less than 8% of players reach this.</p></div>
+        <div class="level-bar"><div class="level-bar-fill" style="width:74%;background:#d500f9;"></div></div>
+      </div>
+      <div class="level-item reveal">
+        <div class="level-badge" style="background:rgba(245,0,87,.15);color:#f50057;">CHAOS</div>
+        <div class="level-info"><h4>FULL BREAKDOWN</h4><p>1.3s window · Timer flickers with fake numbers · Everything lies. Under 2% of players reach CHAOS and survive 5 rounds.</p></div>
+        <div class="level-bar"><div class="level-bar-fill" style="width:87%;background:#f50057;"></div></div>
+      </div>
+      <div class="level-item reveal" style="border-color:rgba(255,23,68,.4);">
+        <div class="level-badge" style="background:rgba(255,23,68,.25);color:#fff;border:1px solid rgba(255,23,68,.5);">☠ HELL</div>
+        <div class="level-info"><h4 style="color:#ff1744">THE FINAL DESCENT</h4><p>1.2s window · Everything attacks your perception · No pattern, no mercy. Only 0.3% of sessions ever see HELL. You won't get there.</p></div>
+        <div class="level-bar"><div class="level-bar-fill" style="width:100%;background:linear-gradient(90deg,#ff1744,#fff);animation:hellBar 1s ease-in-out infinite alternate;"></div></div>
+      </div>
+    </div>
+    <style>@keyframes hellBar{0%{filter:brightness(1);}100%{filter:brightness(2) drop-shadow(0 0 8px #ff1744);}}</style>
+  </section>
+
+  <!-- ══ ANOTHER AD ══ -->
+  <div style="padding:0 20px 60px;max-width:1100px;margin:0 auto;">
+    <div class="ad-slot">
+      <div class="ad-slot-box">
+        <ins class="adsbygoogle"
+             style="display:block;width:100%;max-width:728px;"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+             data-ad-slot="4444444444"
+             data-ad-format="horizontal"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       REVIEWS
+  ══════════════════════════════════════ -->
+  <section id="reviews">
+    <p class="section-label reveal">Player reactions</p>
+    <h2 class="section-title reveal">WHAT SURVIVORS <span class="accent">SAY</span></h2>
+
+    <div class="review-grid">
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"I scored 4 on my first try. My 7-year-old nephew scored 11. I haven't left my room since."</p>
+        <p class="review-author">— Ahmed R., Software Engineer</p>
+      </div>
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"I actually yelled at my phone. Out loud. In a quiet library. The game insulted me afterward. I played 14 more times."</p>
+        <p class="review-author">— Sara M., Graduate Student</p>
+      </div>
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"The heartbeat sound in the last 15 seconds should be illegal. My hands were shaking. I got to INSANE level. I cried."</p>
+        <p class="review-author">— Kai T., Designer</p>
+      </div>
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"Showed this to 6 friends at lunch. Nobody scored above 18. Our lunch was 2 hours. We spent 90 minutes on this."</p>
+        <p class="review-author">— James O., Teacher</p>
+      </div>
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"At CHAOS level the instructions literally start lying to you. I got gaslit by a browser game. Respectfully, what."</p>
+        <p class="review-author">— Priya K., UX Researcher</p>
+      </div>
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"The end-game insult called my score 'criminally mediocre.' I screenshotted it. It lives on my desktop now as motivation."</p>
+        <p class="review-author">— Lena B., Nurse</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       FINAL CTA
+  ══════════════════════════════════════ -->
+  <section id="finalcta">
+    <p class="final-dare reveal">you've read enough</p>
+    <h2 class="final-title reveal">
+      <span class="r">STOP</span> SCROLLING.<br>
+      START <span class="r">PANICKING.</span>
+    </h2>
+    <p class="reveal" style="color:var(--dim);font-size:16px;font-weight:300;max-width:500px;margin:0 auto 32px;line-height:1.8;">
+      Every second you spend reading this is a second you're avoiding the inevitable.
+      You <em>will</em> play this game. You <em>will</em> fail. You <em>will</em> come back.
+      <br><br>
+      <strong style="color:#ff1744">The question is just how long you'll pretend you're not scared.</strong>
+    </p>
+    <a href="color-panic-nightmare-final.html" class="btn-cta reveal">
+      ☠ ENTER NIGHTMARE ☠
+    </a>
+    <p class="reveal" style="margin-top:12px;font-family:'Share Tech Mono',monospace;font-size:11px;color:rgba(255,255,255,.2);letter-spacing:2px;">
+      FREE TO PLAY · NO DOWNLOAD · NO SIGNUP · JUST PAIN
+    </p>
+  </section>
+
+  <!-- ══ BOTTOM AD ══ -->
+  <div style="padding:0 20px 30px;max-width:1100px;margin:0 auto;">
+    <div class="ad-slot">
+      <div class="ad-slot-box">
+        <ins class="adsbygoogle"
+             style="display:block;width:100%;max-width:728px;"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+             data-ad-slot="5555555555"
+             data-ad-format="horizontal"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FOOTER ══ -->
+  <footer>
+    <p>© 2025 Color Panic · Nightmare Mode · All brain damage is your own fault</p>
+    <p style="margin-top:8px;">
+      <a href="#">Privacy Policy</a> ·
+      <a href="#">Terms of Use</a> ·
+      <a href="color-panic-nightmare-final.html">Play Now</a>
+    </p>
+  </footer>
+
+</div><!-- end .page -->
+
+<script>
+/* ══════════════════════════════
+   ANIMATED PARTICLE BG CANVAS
+══════════════════════════════ */
+const bgCanvas = document.getElementById('bgCanvas');
+const bgCtx    = bgCanvas.getContext('2d');
+let bgW, bgH, bgParts=[];
+
+function resizeBg(){
+  bgW=bgCanvas.width=window.innerWidth;
+  bgH=bgCanvas.height=window.innerHeight;
+}
+resizeBg(); window.addEventListener('resize',resizeBg);
+
+// Floating color words in background
+const WORDS=['RED','BLUE','GREEN','YELLOW','PURPLE','ORANGE','PINK','CYAN'];
+const COLS=['#ff1744','#2979ff','#00e676','#ffea00','#d500f9','#ff6d00','#f50057','#00e5ff'];
+for(let i=0;i<18;i++){
+  bgParts.push({
+    x:Math.random()*window.innerWidth,
+    y:Math.random()*window.innerHeight,
+    vx:(Math.random()-.5)*.3,
+    vy:(Math.random()-.5)*.3,
+    word:WORDS[Math.floor(Math.random()*WORDS.length)],
+    color:COLS[Math.floor(Math.random()*COLS.length)],
+    size:14+Math.random()*30,
+    alpha:0.02+Math.random()*0.06,
+    rot:(Math.random()-.5)*.4,
+    rotV:(Math.random()-.5)*.004
+  });
+}
+(function animBg(){
+  requestAnimationFrame(animBg);
+  bgCtx.clearRect(0,0,bgW,bgH);
+  bgParts.forEach(p=>{
+    p.x+=p.vx; p.y+=p.vy; p.rot+=p.rotV;
+    if(p.x<-200)p.x=bgW+50;if(p.x>bgW+200)p.x=-50;
+    if(p.y<-100)p.y=bgH+50;if(p.y>bgH+100)p.y=-50;
+    bgCtx.save();
+    bgCtx.globalAlpha=p.alpha;
+    bgCtx.fillStyle=p.color;
+    bgCtx.font=`bold ${p.size}px 'Bebas Neue', cursive`;
+    bgCtx.translate(p.x,p.y);bgCtx.rotate(p.rot);
+    bgCtx.fillText(p.word,0,0);
+    bgCtx.restore();
+  });
+})();
+
+/* ══════════════════════════════
+   SCROLL REVEAL
+══════════════════════════════ */
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');}});
+},{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+/* ══════════════════════════════
+   LIVE DEMO
+══════════════════════════════ */
+const DEMO_COLORS=[
+  {name:'RED',hex:'#ff1744'},{name:'BLUE',hex:'#2979ff'},{name:'GREEN',hex:'#00e676'},
+  {name:'YELLOW',hex:'#ffea00'},{name:'PURPLE',hex:'#d500f9'},{name:'ORANGE',hex:'#ff6d00'}
+];
+let demoAnswer='';
+
+function demoNew(){
+  const word =DEMO_COLORS[Math.floor(Math.random()*DEMO_COLORS.length)];
+  let   color=DEMO_COLORS[Math.floor(Math.random()*DEMO_COLORS.length)];
+  while(color.name===word.name)color=DEMO_COLORS[Math.floor(Math.random()*DEMO_COLORS.length)];
+  demoAnswer=color.name;
+  const q=document.getElementById('demoQuestion');
+  q.textContent=word.name; q.style.color=color.hex;
+  q.style.filter=`drop-shadow(0 0 16px ${color.hex})`;
+  document.getElementById('demoResult').textContent='';
+  document.getElementById('demoResult').className='demo-result';
+}
+
+function buildDemoBtns(){
+  const grid=document.getElementById('demoBtns');
+  grid.innerHTML='';
+  DEMO_COLORS.forEach(c=>{
+    const b=document.createElement('button');
+    b.className='demo-btn';
+    b.textContent=c.name;
+    b.style.background=c.hex;
+    b.style.color='#fff';
+    b.addEventListener('click',()=>{
+      const res=document.getElementById('demoResult');
+      if(c.name===demoAnswer){
+        res.textContent='✓ CORRECT — But that was easy. The real game would have killed you.';
+        res.className='demo-result correct';
+      } else {
+        res.textContent='✗ WRONG — The real game just took a life. You\'d be dead already.';
+        res.className='demo-result wrong';
+      }
+      setTimeout(demoNew,1600);
+    });
+    grid.appendChild(b);
+  });
+}
+demoNew(); buildDemoBtns();
+</script>
+
+</body>
+</html>
