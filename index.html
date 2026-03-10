@@ -501,7 +501,7 @@ footer {
 <div class="stats-strip">
   <div class="stats-inner">
     <div class="stat-item">
-      <span class="stat-num" id="cGames">1</span>
+      <span class="stat-num" id="cGames">4</span>
       <span class="stat-label">Games Available</span>
     </div>
     <div class="stat-item">
@@ -557,23 +557,40 @@ footer {
       </div>
     </a>
 
-    <!-- COMING SOON CARDS -->
-    <div class="game-card cyan coming-soon">
+    <!-- MEMORY MATCH — LIVE -->
+    <a class="game-card cyan reveal" href="memory-match/index.html">
       <div class="card-thumb">
         <span>🃏</span>
-        <span class="card-tag tag-soon">SOON</span>
+        <span class="card-tag tag-new">NEW</span>
       </div>
       <div class="card-body">
         <div class="card-title">MEMORY MATCH</div>
-        <div class="card-desc">Flip cards and find matching pairs. Train your memory across multiple difficulty levels.</div>
+        <div class="card-desc">Flip cards and find matching pairs. Train your memory across multiple difficulty levels. Beat the clock!</div>
         <div class="card-meta">
           <span class="card-genre">Puzzle</span>
-          <span class="card-play">COMING SOON</span>
+          <span class="card-play">PLAY NOW</span>
         </div>
       </div>
-    </div>
+    </a>
 
-    <div class="game-card yellow coming-soon">
+    <!-- COLOR SORT — LIVE -->
+    <a class="game-card yellow reveal" href="color-sort/index.html">
+      <div class="card-thumb">
+        <span>🎨</span>
+        <span class="card-tag tag-new">NEW</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">COLOR SORT</div>
+        <div class="card-desc">Sort colored balls into matching tubes. A satisfying puzzle game that gets harder as you progress.</div>
+        <div class="card-meta">
+          <span class="card-genre">Puzzle</span>
+          <span class="card-play">PLAY NOW</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- COMING SOON -->
+    <div class="game-card cyan coming-soon">
       <div class="card-thumb">
         <span>⌨️</span>
         <span class="card-tag tag-soon">SOON</span>
@@ -656,7 +673,7 @@ const observer = new IntersectionObserver(entries => {
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
 // ── GAME COUNT (update when you add more games) ──
-document.getElementById('cGames').textContent = '2';
+document.getElementById('cGames').textContent = '4';
 </script>
 </body>
 </html>
