@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23060610'/><text y='.9em' font-size='80'>🎮</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>(function(s){s.dataset.zone='10713142',s.src='https://gizokraijaw.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+  <script>(function(s){s.dataset.zone='10713135',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flappy Bird — Fly High, Have Fun!</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ── RESET ── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --sky:    #5ecef0;
+  --sky2:   #a8e6ff;
+  --sun:    #ffe234;
+  --grass:  #6dcc4a;
+  --ground: #e8c96a;
+  --pipe:   #5cc85c;
+  --pipe-d: #3d9c3d;
+  --bird:   #ffd200;
+  --orange: #ff7b2e;
+  --red:    #ff4757;
+  --white:  #ffffff;
+  --dark:   #1e2a1e;
+  --text:   #2c3e1e;
+  --card:   #ffffff;
+  --radius: 24px;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--sky);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--sky2); }
+::-webkit-scrollbar-thumb { background: var(--pipe); border-radius: 4px; }
+
+/* ══════════════════════════════
+   NAVBAR
+══════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 32px;
+  background: rgba(94, 206, 240, 0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 3px solid rgba(255,255,255,0.5);
+  animation: slideDown .6s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes slideDown { from { transform:translateY(-100%); opacity:0; } to { transform:translateY(0); opacity:1; } }
+
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(1.3rem, 4vw, 1.8rem);
+  color: var(--white);
+  text-shadow: 0 3px 0 rgba(0,0,0,0.15);
+  text-decoration: none;
+}
+.nav-logo .bird-icon {
+  font-size: 1.8rem;
+  display: inline-block;
+  animation: navBirdFlap .5s ease-in-out infinite alternate;
+}
+@keyframes navBirdFlap { from { transform: rotate(-10deg) translateY(0); } to { transform: rotate(10deg) translateY(-4px); } }
+
+.nav-links { display: flex; align-items: center; gap: 24px; }
+.nav-links a {
+  color: rgba(255,255,255,0.85);
+  font-weight: 800; font-size: .85rem;
+  text-decoration: none; letter-spacing: .5px;
+  transition: color .2s;
+}
+.nav-links a:hover { color: var(--sun); }
+
+.nav-play {
+  background: var(--sun);
+  color: #1e2a1e !important;
+  padding: 10px 24px; border-radius: 50px;
+  font-weight: 900 !important;
+  box-shadow: 0 4px 0 #c8960c, 0 6px 16px rgba(255,226,52,.45);
+  transition: transform .15s ease, box-shadow .15s ease !important;
+}
+.nav-play:hover { transform: translateY(-2px) !important; box-shadow: 0 6px 0 #c8960c, 0 10px 24px rgba(255,226,52,.5) !important; }
+
+@media(max-width:600px) { .nav-links { display:none; } }
+
+/* ══════════════════════════════
+   HERO
+══════════════════════════════ */
+#hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  overflow: hidden;
+  padding: 100px 20px 80px;
+}
+
+/* Sky gradient background */
+#hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, #5ecef0 0%, #a8e6ff 60%, #c8f0ff 100%);
+  z-index: 0;
+}
+
+/* Animated sun */
+.hero-sun {
+  position: absolute; top: 8%; right: 12%;
+  width: clamp(80px,18vw,130px); height: clamp(80px,18vw,130px);
+  background: radial-gradient(circle, #fff7a0 30%, var(--sun) 70%);
+  border-radius: 50%;
+  box-shadow: 0 0 0 20px rgba(255,226,52,.15), 0 0 0 40px rgba(255,226,52,.07);
+  animation: sunPulse 4s ease-in-out infinite;
+  z-index: 1;
+}
+@keyframes sunPulse {
+  0%,100% { box-shadow: 0 0 0 20px rgba(255,226,52,.15), 0 0 0 40px rgba(255,226,52,.07); }
+  50%      { box-shadow: 0 0 0 30px rgba(255,226,52,.2),  0 0 0 60px rgba(255,226,52,.1);  }
+}
+
+/* Floating clouds */
+.cloud {
+  position: absolute; z-index: 1; pointer-events: none;
+  animation: cloudDrift linear infinite;
+}
+.cloud-body {
+  background: white;
+  border-radius: 50px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.06);
+  position: relative;
+}
+.cloud-body::before, .cloud-body::after {
+  content: ''; position: absolute;
+  background: white; border-radius: 50%;
+}
+@keyframes cloudDrift {
+  from { transform: translateX(110vw); }
+  to   { transform: translateX(-40vw); }
+}
+
+/* Pipe decorations */
+.hero-pipe {
+  position: absolute; bottom: 0; z-index: 2;
+  display: flex; flex-direction: column; align-items: center;
+}
+.pipe-body {
+  background: linear-gradient(90deg, #4aaa4a, #5dc45d, #4aaa4a);
+  border-radius: 4px;
+  box-shadow: inset -4px 0 8px rgba(0,0,0,.15), 2px 0 0 #3d9c3d;
+}
+.pipe-cap {
+  background: linear-gradient(90deg, #55b455, #6ace6a, #55b455);
+  border-radius: 6px;
+  box-shadow: inset -4px 0 8px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.2);
+}
+
+/* Ground strip */
+.hero-ground {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 3;
+  height: 100px;
+}
+.ground-grass {
+  height: 28px;
+  background: linear-gradient(180deg, #7de258, #6dcc4a);
+  border-top: 3px solid rgba(255,255,255,.4);
+}
+.ground-dirt {
+  flex: 1;
+  background: linear-gradient(180deg, #e8c96a, #d4a84a);
+  height: 72px;
+}
+
+/* Hero content */
+.hero-content {
+  position: relative; z-index: 5;
+  text-align: center;
+  display: flex; flex-direction: column; align-items: center;
+}
+
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,.7);
+  border: 2px solid rgba(255,255,255,.9);
+  border-radius: 50px; padding: 8px 20px;
+  font-size: .75rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--pipe-d); margin-bottom: 20px;
+  backdrop-filter: blur(8px);
+  animation: fadeUp .7s cubic-bezier(.34,1.56,.64,1) .2s both;
+}
+.eyebrow-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--pipe); animation: blink 1.2s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:.3;} }
+
+/* Big bird hero art */
+.hero-bird-wrap {
+  position: relative; margin-bottom: 16px;
+  animation: fadeUp .7s cubic-bezier(.34,1.56,.64,1) .05s both;
+}
+.hero-bird {
+  font-size: clamp(7rem, 22vw, 11rem);
+  display: block;
+  filter: drop-shadow(0 12px 24px rgba(0,0,0,.2));
+  animation: birdBob 1.4s ease-in-out infinite;
+  transform-origin: center;
+}
+@keyframes birdBob {
+  0%   { transform: translateY(0) rotate(-8deg); }
+  50%  { transform: translateY(-18px) rotate(8deg); }
+  100% { transform: translateY(0) rotate(-8deg); }
+}
+/* Wing-flap star burst */
+.star-burst {
+  position: absolute; top: 10%; right: 5%;
+  font-size: 2rem; animation: starSpin 3s linear infinite;
+}
+@keyframes starSpin { from { transform: rotate(0deg) scale(1); } 50% { transform: rotate(180deg) scale(1.3); } to { transform: rotate(360deg) scale(1); } }
+
+.hero-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(3.5rem, 14vw, 7.5rem);
+  line-height: 1; letter-spacing: 1px;
+  color: white;
+  text-shadow: 0 6px 0 #d4900a, 0 10px 0 rgba(0,0,0,.15);
+  animation: fadeUp .7s cubic-bezier(.34,1.56,.64,1) .3s both;
+  margin-bottom: 6px;
+}
+.hero-title span {
+  display: inline-block;
+  background: linear-gradient(180deg, #fff9c4 0%, var(--sun) 50%, #ff9500 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+.hero-sub {
+  font-size: clamp(.95rem, 2.8vw, 1.25rem);
+  color: rgba(255,255,255,.95);
+  font-weight: 700; max-width: 520px;
+  line-height: 1.7; margin: 10px auto 32px;
+  text-shadow: 0 1px 4px rgba(0,0,0,.15);
+  animation: fadeUp .7s ease .45s both;
+}
+
+.hero-btns {
+  display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+  animation: fadeUp .7s ease .55s both;
+  margin-bottom: 40px;
+}
+.btn-play-big {
+  background: linear-gradient(180deg, #ffe234, #ff9500);
+  color: #1e2a1e;
+  border: none; cursor: pointer;
+  padding: 18px 46px; border-radius: 50px;
+  font-family: 'Fredoka One', cursive; font-size: clamp(1.2rem, 3.5vw, 1.6rem);
+  letter-spacing: .5px;
+  box-shadow: 0 8px 0 #c8720a, 0 12px 32px rgba(255,149,0,.4);
+  transition: transform .15s ease, box-shadow .15s ease;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 10px;
+  position: relative; overflow: hidden;
+}
+.btn-play-big::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.25), transparent);
+  border-radius: 50px;
+}
+.btn-play-big:hover { transform: translateY(-4px); box-shadow: 0 12px 0 #c8720a, 0 18px 40px rgba(255,149,0,.5); }
+.btn-play-big:active { transform: translateY(2px); box-shadow: 0 4px 0 #c8720a; }
+
+.btn-howto {
+  background: rgba(255,255,255,.8);
+  color: var(--pipe-d);
+  border: 3px solid rgba(255,255,255,.9); cursor: pointer;
+  padding: 18px 36px; border-radius: 50px;
+  font-family: 'Fredoka One', cursive; font-size: clamp(1.1rem, 3vw, 1.4rem);
+  letter-spacing: .5px; backdrop-filter: blur(8px);
+  transition: background .2s, transform .15s;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-howto:hover { background: white; transform: translateY(-3px); }
+
+/* Score badge */
+.score-badge {
+  display: flex; align-items: center; gap: 24px;
+  background: rgba(255,255,255,.75);
+  border: 3px solid rgba(255,255,255,.9);
+  border-radius: 50px; padding: 12px 32px;
+  backdrop-filter: blur(10px);
+  animation: fadeUp .7s ease .7s both;
+}
+.badge-stat { text-align: center; }
+.badge-stat-num {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  color: var(--orange); line-height: 1;
+  text-shadow: 0 2px 0 rgba(0,0,0,.1);
+}
+.badge-stat-label { font-size: .65rem; font-weight: 800; color: #5a7a3a; letter-spacing: 1.5px; text-transform: uppercase; }
+.badge-divider { width: 2px; height: 40px; background: rgba(0,0,0,.1); border-radius: 1px; }
+
+@keyframes fadeUp { from { transform: translateY(28px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+
+/* ══════════════════════════════
+   HOW TO PLAY
+══════════════════════════════ */
+#how {
+  background: linear-gradient(180deg, #c8f0ff, #e8faf0);
+  padding: 100px 20px;
+  position: relative; overflow: hidden;
+}
+#how::before {
+  content: '';
+  position: absolute; top: -3px; left: 0; right: 0; height: 6px;
+  background: repeating-linear-gradient(90deg, var(--grass) 0, var(--grass) 20px, #7de258 20px, #7de258 40px);
+}
+
+.section-tag {
+  display: inline-block;
+  background: var(--pipe); color: white;
+  font-size: .7rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase;
+  padding: 6px 18px; border-radius: 50px;
+  box-shadow: 0 3px 0 var(--pipe-d);
+  margin-bottom: 14px;
+}
+.section-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  color: var(--text); text-align: center; margin-bottom: 12px;
+}
+.section-sub { text-align: center; color: #5a7a3a; font-weight: 700; font-size: 1rem; max-width: 480px; margin: 0 auto 60px; line-height: 1.7; }
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px; max-width: 900px; margin: 0 auto;
+}
+.step-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 32px 24px 28px;
+  text-align: center;
+  box-shadow: 0 8px 0 rgba(0,0,0,.08), 0 12px 32px rgba(0,0,0,.06);
+  border: 3px solid rgba(255,255,255,.8);
+  position: relative;
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.step-card:hover { transform: translateY(-8px) rotate(-.5deg); }
+.step-card::before {
+  content: attr(data-num);
+  position: absolute; top: -18px; left: 50%; transform: translateX(-50%);
+  background: var(--pipe);
+  color: white; font-family: 'Fredoka One', cursive; font-size: 1.1rem;
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 3px 0 var(--pipe-d);
+}
+.step-icon { font-size: 3.5rem; display: block; margin-bottom: 14px; }
+.step-title { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: var(--text); margin-bottom: 8px; }
+.step-desc { font-size: .88rem; font-weight: 600; color: #6a8a5a; line-height: 1.7; }
+.step-card:nth-child(2) { background: linear-gradient(135deg, #fff9e6, #fffbe8); }
+.step-card:nth-child(3) { background: linear-gradient(135deg, #fff0f0, #fff5f5); }
+.step-card:nth-child(4) { background: linear-gradient(135deg, #f0f4ff, #f5f8ff); }
+
+/* ══════════════════════════════
+   LEVELS SECTION
+══════════════════════════════ */
+#levels {
+  background: linear-gradient(180deg, #fffbe8, #fff9e6);
+  padding: 100px 20px;
+  position: relative; overflow: hidden;
+}
+
+/* Scrolling levels ticker */
+.levels-ticker-wrap {
+  position: relative; overflow: hidden; padding: 10px 0 30px;
+}
+.levels-ticker-wrap::before, .levels-ticker-wrap::after {
+  content: ''; position: absolute; top: 10px; bottom: 30px; width: 80px; z-index: 2; pointer-events: none;
+}
+.levels-ticker-wrap::before { left: 0; background: linear-gradient(90deg, #fffbe8, transparent); }
+.levels-ticker-wrap::after  { right: 0; background: linear-gradient(-90deg, #fffbe8, transparent); }
+
+.ticker-track {
+  display: flex; gap: 14px;
+  width: max-content;
+  animation: ticker 28s linear infinite;
+}
+.ticker-track:nth-child(2) { animation-direction: reverse; margin-top: 12px; }
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+.level-chip {
+  display: flex; align-items: center; gap: 10px;
+  background: white;
+  border-radius: 50px; padding: 10px 20px;
+  box-shadow: 0 4px 0 rgba(0,0,0,.08), 0 6px 18px rgba(0,0,0,.06);
+  border: 2px solid rgba(255,255,255,.9);
+  white-space: nowrap; flex-shrink: 0;
+  transition: transform .2s;
+}
+.chip-icon { font-size: 1.4rem; }
+.chip-num { font-size: .6rem; font-weight: 900; color: #aaa; letter-spacing: 1px; text-transform: uppercase; }
+.chip-name { font-family: 'Fredoka One', cursive; font-size: 1rem; }
+
+/* Highlight chips */
+.chip-hacker .chip-name { color: #0284c7; }
+.chip-boss   .chip-name { color: #dc2626; }
+.chip-legend .chip-name { color: #d97706; }
+
+/* Levels grid teaser */
+.levels-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px; max-width: 900px; margin: 40px auto 0;
+}
+.lvl-box {
+  background: white;
+  border-radius: 16px; padding: 16px 12px;
+  text-align: center;
+  box-shadow: 0 4px 0 rgba(0,0,0,.08);
+  border: 2px solid rgba(0,0,0,.04);
+  transition: transform .2s cubic-bezier(.34,1.56,.64,1);
+}
+.lvl-box:hover { transform: scale(1.06) translateY(-3px); }
+.lvl-box-icon { font-size: 1.8rem; display: block; margin-bottom: 4px; }
+.lvl-box-num { font-size: .55rem; font-weight: 900; color: #bbb; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 2px; }
+.lvl-box-name { font-family: 'Fredoka One', cursive; font-size: .95rem; }
+
+/* ══════════════════════════════
+   FEATURES
+══════════════════════════════ */
+#features {
+  background: linear-gradient(180deg, #e8faf0, #d4f5e6);
+  padding: 100px 20px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 22px; max-width: 960px; margin: 0 auto;
+}
+.feat-card {
+  background: white;
+  border-radius: var(--radius); padding: 30px 26px;
+  box-shadow: 0 8px 0 rgba(0,0,0,.07), 0 10px 30px rgba(0,0,0,.05);
+  position: relative; overflow: hidden;
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+  border: 2px solid rgba(255,255,255,.9);
+}
+.feat-card:hover { transform: translateY(-8px); }
+.feat-card-accent {
+  position: absolute; top: 0; left: 0; right: 0; height: 5px;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.feat-icon-wrap {
+  width: 58px; height: 58px; border-radius: 18px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.7rem; margin-bottom: 18px;
+}
+.feat-title { font-family: 'Fredoka One', cursive; font-size: 1.25rem; margin-bottom: 8px; color: var(--text); }
+.feat-desc { font-size: .88rem; font-weight: 600; color: #6a8a5a; line-height: 1.7; }
+
+/* ══════════════════════════════
+   TESTIMONIALS
+══════════════════════════════ */
+#reviews {
+  background: linear-gradient(180deg, #fff0f8, #ffe8f5);
+  padding: 100px 20px;
+  position: relative; overflow: hidden;
+}
+#reviews::before {
+  content: '🌸🌺🌸🌺🌸🌺🌸🌺🌸🌺🌸🌺🌸🌺🌸🌺🌸🌺🌸🌺';
+  position: absolute; top: 12px; left: 0; right: 0;
+  text-align: center; font-size: 1rem; letter-spacing: 4px;
+  opacity: .3;
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px; max-width: 900px; margin: 0 auto;
+}
+.review-card {
+  background: white;
+  border-radius: var(--radius); padding: 26px 22px;
+  box-shadow: 0 6px 0 rgba(0,0,0,.07), 0 10px 28px rgba(0,0,0,.05);
+  position: relative; border: 2px solid rgba(255,255,255,.9);
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.review-card:hover { transform: translateY(-6px) rotate(.3deg); }
+.review-stars { font-size: 1.1rem; margin-bottom: 12px; letter-spacing: 2px; }
+.review-text { font-size: .9rem; font-weight: 700; color: #5a4a5a; line-height: 1.7; font-style: italic; margin-bottom: 18px; }
+.review-author { display: flex; align-items: center; gap: 12px; }
+.review-avatar { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+.review-name { font-family: 'Fredoka One', cursive; font-size: 1rem; color: var(--text); }
+.review-role { font-size: .72rem; font-weight: 700; color: #aaa; letter-spacing: .5px; }
+
+/* ══════════════════════════════
+   CTA SECTION
+══════════════════════════════ */
+#cta {
+  background: linear-gradient(180deg, #5ecef0 0%, #3ab8e8 100%);
+  padding: 100px 20px 0;
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+
+.cta-clouds {
+  position: absolute; top: 10%; left: 0; right: 0;
+  display: flex; justify-content: space-between; padding: 0 5%;
+  pointer-events: none; z-index: 1;
+}
+.cta-cloud { font-size: clamp(2.5rem, 8vw, 4.5rem); opacity: .4; animation: ctaCloudFloat 6s ease-in-out infinite; }
+.cta-cloud:nth-child(2) { animation-delay: -2s; }
+.cta-cloud:nth-child(3) { animation-delay: -4s; }
+@keyframes ctaCloudFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-15px);} }
+
+.cta-content { position: relative; z-index: 2; }
+.cta-bird { font-size: clamp(5rem, 18vw, 9rem); display: block; margin-bottom: 8px; animation: ctaBirdBob 1.2s ease-in-out infinite; filter: drop-shadow(0 10px 20px rgba(0,0,0,.2)); }
+@keyframes ctaBirdBob { 0%,100%{transform:translateY(0) rotate(-8deg);} 50%{transform:translateY(-20px) rotate(8deg);} }
+
+.cta-title { font-family: 'Fredoka One', cursive; font-size: clamp(2.5rem, 8vw, 5rem); color: white; text-shadow: 0 5px 0 rgba(0,0,0,.15); margin-bottom: 12px; }
+.cta-sub { font-size: clamp(.9rem, 2.5vw, 1.15rem); color: rgba(255,255,255,.9); font-weight: 700; max-width: 440px; margin: 0 auto 36px; line-height: 1.7; }
+
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: linear-gradient(180deg, #ffe234, #ff9500);
+  color: #1e2a1e; border: none; cursor: pointer;
+  padding: 20px 56px; border-radius: 50px;
+  font-family: 'Fredoka One', cursive; font-size: clamp(1.3rem, 4vw, 1.8rem);
+  box-shadow: 0 8px 0 #c8720a, 0 14px 36px rgba(255,149,0,.45);
+  transition: transform .15s, box-shadow .15s;
+  text-decoration: none;
+  position: relative; overflow: hidden;
+  margin-bottom: 48px;
+}
+.cta-btn::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,255,255,.25),transparent); border-radius:50px; }
+.cta-btn:hover { transform: translateY(-5px); box-shadow: 0 13px 0 #c8720a, 0 20px 44px rgba(255,149,0,.5); }
+.cta-btn:active { transform: translateY(2px); box-shadow: 0 4px 0 #c8720a; }
+
+/* Pipes at bottom of CTA */
+.cta-pipes {
+  display: flex; justify-content: space-around; align-items: flex-end;
+  position: relative; z-index: 2;
+  padding: 0 5%;
+}
+.cta-pipe { display: flex; flex-direction: column; align-items: center; }
+.cta-pipe-body { background: linear-gradient(90deg, #4aaa4a, #5dc45d, #4aaa4a); border-radius: 4px 4px 0 0; box-shadow: inset -3px 0 6px rgba(0,0,0,.12); }
+.cta-pipe-cap { background: linear-gradient(90deg, #55b455, #6ace6a, #55b455); border-radius: 6px 6px 0 0; box-shadow: inset -3px 0 6px rgba(0,0,0,.1); }
+
+/* CTA Ground */
+.cta-ground { position: relative; z-index: 3; margin-top: 0; }
+.cta-grass { height: 30px; background: linear-gradient(180deg, #7de258, #6dcc4a); border-top: 3px solid rgba(255,255,255,.4); }
+.cta-dirt { height: 50px; background: linear-gradient(180deg, #e8c96a, #d4a84a); }
+
+/* ══════════════════════════════
+   FOOTER
+══════════════════════════════ */
+footer {
+  background: var(--dark);
+  padding: 32px 40px;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+}
+.footer-logo { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--sun); display: flex; align-items: center; gap: 8px; }
+.footer-copy { color: rgba(255,255,255,.4); font-size: .78rem; font-weight: 600; }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { color: rgba(255,255,255,.5); font-size: .78rem; font-weight: 700; text-decoration: none; transition: color .2s; }
+.footer-links a:hover { color: var(--sun); }
+
+/* ══════════════════════════════
+   SCROLL REVEAL
+══════════════════════════════ */
+.reveal { opacity: 0; transform: translateY(36px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-d1 { transition-delay: .1s; }
+.reveal-d2 { transition-delay: .2s; }
+.reveal-d3 { transition-delay: .3s; }
+.reveal-d4 { transition-delay: .4s; }
+
+@media(max-width:600px) {
+  footer { flex-direction:column; align-items:center; text-align:center; }
+  .score-badge { flex-wrap:wrap; justify-content:center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <span class="bird-icon">🐦</span> Flappy Bird
+  </a>
+  <div class="nav-links">
+    <a href="#how">How to Play</a>
+    <a href="#levels">Levels</a>
+    <a href="#features">Features</a>
+    <a href="#reviews">Reviews</a>
+    <a href="flappy-bird-v2.html" class="nav-play">▶ Play Free</a>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <!-- Sun -->
+  <div class="hero-sun"></div>
+
+  <!-- Clouds (built by JS) -->
+  <div id="hero-clouds"></div>
+
+  <!-- Pipes -->
+  <div class="hero-pipe" style="left:4%;bottom:100px;">
+    <div class="pipe-cap" style="width:52px;height:18px;"></div>
+    <div class="pipe-body" style="width:44px;height:180px;"></div>
+  </div>
+  <div class="hero-pipe" style="right:6%;bottom:100px;">
+    <div class="pipe-cap" style="width:52px;height:18px;"></div>
+    <div class="pipe-body" style="width:44px;height:130px;"></div>
+  </div>
+  <div class="hero-pipe" style="left:18%;bottom:100px;opacity:.5;">
+    <div class="pipe-cap" style="width:40px;height:14px;"></div>
+    <div class="pipe-body" style="width:34px;height:90px;"></div>
+  </div>
+  <div class="hero-pipe" style="right:20%;bottom:100px;opacity:.4;">
+    <div class="pipe-cap" style="width:40px;height:14px;"></div>
+    <div class="pipe-body" style="width:34px;height:110px;"></div>
+  </div>
+
+  <!-- Ground -->
+  <div class="hero-ground">
+    <div class="ground-grass"></div>
+    <div class="ground-dirt"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="eyebrow-dot"></span>
+      Free to Play · No Download Needed
+    </div>
+
+    <div class="hero-bird-wrap">
+      <span class="hero-bird">🐦</span>
+      <span class="star-burst">✨</span>
+    </div>
+
+    <h1 class="hero-title"><span>Flappy Bird</span></h1>
+    <p class="hero-sub">
+      Tap your way through pipes, earn epic titles, and conquer all 20 levels — 
+      the most addictive bird game ever made! 🚀
+    </p>
+
+    <div class="hero-btns">
+      <a href="flappy-bird-v2.html" class="btn-play-big">🎮 Play Now — FREE!</a>
+      <a href="#how" class="btn-howto">📖 How to Play</a>
+    </div>
+
+    <div class="score-badge">
+      <div class="badge-stat">
+        <div class="badge-stat-num">20</div>
+        <div class="badge-stat-label">Levels</div>
+      </div>
+      <div class="badge-divider"></div>
+      <div class="badge-stat">
+        <div class="badge-stat-num">0s</div>
+        <div class="badge-stat-label">Download</div>
+      </div>
+      <div class="badge-divider"></div>
+      <div class="badge-stat">
+        <div class="badge-stat-num">∞</div>
+        <div class="badge-stat-label">Fun</div>
+      </div>
+      <div class="badge-divider"></div>
+      <div class="badge-stat">
+        <div class="badge-stat-num">👑</div>
+        <div class="badge-stat-label">Earn Titles</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ HOW TO PLAY ══ -->
+<section id="how">
+  <div style="text-align:center;">
+    <div class="section-tag reveal">Easy to Learn</div>
+    <h2 class="section-title reveal">How to Play</h2>
+    <p class="section-sub reveal">Simple controls, big fun — anyone can pick it up in seconds!</p>
+  </div>
+  <div class="steps">
+    <div class="step-card reveal reveal-d1" data-num="1">
+      <span class="step-icon">👆</span>
+      <h3 class="step-title">Tap to Flap</h3>
+      <p class="step-desc">Tap the screen (or press Space!) to make your bird flap its wings and fly upward.</p>
+    </div>
+    <div class="step-card reveal reveal-d2" data-num="2">
+      <span class="step-icon">🌿</span>
+      <h3 class="step-title">Dodge the Pipes</h3>
+      <p class="step-desc">Fly through the gaps between green pipes without touching them. One hit and it's game over!</p>
+    </div>
+    <div class="step-card reveal reveal-d3" data-num="3">
+      <span class="step-icon">⭐</span>
+      <h3 class="step-title">Score Points</h3>
+      <p class="step-desc">Every pipe you pass = 1 point. Reach score milestones to level up and unlock new titles!</p>
+    </div>
+    <div class="step-card reveal reveal-d4" data-num="4">
+      <span class="step-icon">👑</span>
+      <h3 class="step-title">Earn a Title</h3>
+      <p class="step-desc">Progress through 20 levels. Go from Hatchling all the way to Flappy Legend!</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ LEVELS ══ -->
+<section id="levels">
+  <div style="text-align:center;">
+    <div class="section-tag reveal" style="background:#ff9500;box-shadow:0 3px 0 #c8720a;">20 Epic Levels</div>
+    <h2 class="section-title reveal">Your Journey Awaits</h2>
+    <p class="section-sub reveal">Each level unlocks a brand new title. How far can YOU go?</p>
+  </div>
+
+  <!-- Infinite scroll chips -->
+  <div class="levels-ticker-wrap reveal">
+    <div class="ticker-track" id="ticker1"></div>
+    <div class="ticker-track" id="ticker2"></div>
+  </div>
+
+  <!-- Level boxes grid -->
+  <div class="levels-grid" id="levels-grid"></div>
+</section>
+
+<!-- ══ FEATURES ══ -->
+<section id="features">
+  <div style="text-align:center;">
+    <div class="section-tag reveal" style="background:#a855f7;box-shadow:0 3px 0 #7c3aed;">Packed with Fun</div>
+    <h2 class="section-title reveal">What Makes It Special</h2>
+    <p class="section-sub reveal">This isn't just any Flappy Bird — it's a premium experience built for all ages!</p>
+  </div>
+  <div class="features-grid">
+    <div class="feat-card reveal">
+      <div class="feat-card-accent" style="background:linear-gradient(90deg,#ffe234,#ff9500);"></div>
+      <div class="feat-icon-wrap" style="background:#fff8e1;">🎓</div>
+      <h3 class="feat-title">Tutorial for Beginners</h3>
+      <p class="feat-desc">A friendly 4-step animated guide walks new players through every mechanic. Or skip it if you're a pro!</p>
+    </div>
+    <div class="feat-card reveal reveal-d1">
+      <div class="feat-card-accent" style="background:linear-gradient(90deg,#4ade80,#22c55e);"></div>
+      <div class="feat-icon-wrap" style="background:#f0fdf4;">👑</div>
+      <h3 class="feat-title">20 Levels & Epic Titles</h3>
+      <p class="feat-desc">From Hatchling to Flappy Legend — every 5 points unlocks a new level with a glowing title reveal!</p>
+    </div>
+    <div class="feat-card reveal reveal-d2">
+      <div class="feat-card-accent" style="background:linear-gradient(90deg,#60a5fa,#3b82f6);"></div>
+      <div class="feat-icon-wrap" style="background:#eff6ff;">🔊</div>
+      <h3 class="feat-title">Sound Effects</h3>
+      <p class="feat-desc">Satisfying flap sounds, score dings, whooshes, and level-up fanfares make every moment feel rewarding!</p>
+    </div>
+    <div class="feat-card reveal reveal-d1">
+      <div class="feat-card-accent" style="background:linear-gradient(90deg,#f97316,#ef4444);"></div>
+      <div class="feat-icon-wrap" style="background:#fff7ed;">💬</div>
+      <h3 class="feat-title">Live Encouragement</h3>
+      <p class="feat-desc">"DOING WELL!" "YOU'RE ON FIRE!" The game cheers you on with animated comments as you score higher!</p>
+    </div>
+    <div class="feat-card reveal reveal-d2">
+      <div class="feat-card-accent" style="background:linear-gradient(90deg,#ec4899,#f43f5e);"></div>
+      <div class="feat-icon-wrap" style="background:#fdf2f8;">🌙</div>
+      <h3 class="feat-title">Day & Night Sky</h3>
+      <p class="feat-desc">The sky transforms into a gorgeous starlit night scene at higher levels. Twinkling stars and deep blue skies!</p>
+    </div>
+    <div class="feat-card reveal reveal-d1">
+      <div class="feat-card-accent" style="background:linear-gradient(90deg,#a855f7,#7c3aed);"></div>
+      <div class="feat-icon-wrap" style="background:#faf5ff;">🎊</div>
+      <h3 class="feat-title">Particle Effects</h3>
+      <p class="feat-desc">Confetti explosions, death particles, score sparks — every moment feels spectacular and alive!</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ REVIEWS ══ -->
+<section id="reviews">
+  <div style="text-align:center;">
+    <div class="section-tag reveal" style="background:#ec4899;box-shadow:0 3px 0 #be185d;">Kids Love It</div>
+    <h2 class="section-title reveal">What Players Say</h2>
+    <p class="section-sub reveal">Join thousands of players flapping their way to glory!</p>
+  </div>
+  <div class="reviews-grid">
+    <div class="review-card reveal">
+      <div class="review-stars">⭐⭐⭐⭐⭐</div>
+      <p class="review-text">"My son plays this every single day! He's SO excited every time he unlocks a new title. His current goal is NINJA. Best game ever!"</p>
+      <div class="review-author">
+        <div class="review-avatar" style="background:#fef3c7;">👩</div>
+        <div>
+          <div class="review-name">Sarah T.</div>
+          <div class="review-role">Parent of a 8-year-old</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card reveal reveal-d1">
+      <div class="review-stars">⭐⭐⭐⭐⭐</div>
+      <p class="review-text">"I got to HACKER level!! The pipes are SO hard now but I can't stop playing. The night sky looks amazing!"</p>
+      <div class="review-author">
+        <div class="review-avatar" style="background:#dbeafe;">🧒</div>
+        <div>
+          <div class="review-name">Aryan, Age 11</div>
+          <div class="review-role">Level 13 Hacker 💻</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card reveal reveal-d2">
+      <div class="review-stars">⭐⭐⭐⭐⭐</div>
+      <p class="review-text">"I use this in class as a reward activity. The tutorial mode is perfect for kids who've never played before. Zero learning curve!"</p>
+      <div class="review-author">
+        <div class="review-avatar" style="background:#dcfce7;">👨‍🏫</div>
+        <div>
+          <div class="review-name">Mr. Johnson</div>
+          <div class="review-role">Primary School Teacher</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA ══ -->
+<section id="cta">
+  <div class="cta-clouds">
+    <span class="cta-cloud">☁️</span>
+    <span class="cta-cloud">☁️</span>
+    <span class="cta-cloud">☁️</span>
+  </div>
+  <div class="cta-content">
+    <span class="cta-bird">🐦</span>
+    <h2 class="cta-title">Ready to Fly?</h2>
+    <p class="cta-sub">Jump in for free — no downloads, no sign-ups. Just tap and fly!</p>
+    <a href="flappy-bird-v2.html" class="cta-btn">
+      🚀 Start Playing Now!
+    </a>
+  </div>
+
+  <!-- Pipes row -->
+  <div class="cta-pipes">
+    <div class="cta-pipe">
+      <div class="cta-pipe-cap" style="width:48px;height:16px;"></div>
+      <div class="cta-pipe-body" style="width:40px;height:100px;"></div>
+    </div>
+    <div class="cta-pipe">
+      <div class="cta-pipe-cap" style="width:56px;height:18px;"></div>
+      <div class="cta-pipe-body" style="width:48px;height:140px;"></div>
+    </div>
+    <div class="cta-pipe">
+      <div class="cta-pipe-cap" style="width:48px;height:16px;"></div>
+      <div class="cta-pipe-body" style="width:40px;height:80px;"></div>
+    </div>
+    <div class="cta-pipe">
+      <div class="cta-pipe-cap" style="width:52px;height:16px;"></div>
+      <div class="cta-pipe-body" style="width:44px;height:120px;"></div>
+    </div>
+    <div class="cta-pipe">
+      <div class="cta-pipe-cap" style="width:48px;height:16px;"></div>
+      <div class="cta-pipe-body" style="width:40px;height:90px;"></div>
+    </div>
+  </div>
+  <div class="cta-ground">
+    <div class="cta-grass"></div>
+    <div class="cta-dirt"></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">🐦 Flappy Bird</div>
+  <div class="footer-copy">© 2025 Flappy Bird Premium · Made with ❤️ for all ages</div>
+  <div class="footer-links">
+    <a href="flappy-bird-v2.html">Play Game</a>
+    <a href="#how">How to Play</a>
+    <a href="#levels">Levels</a>
+    <a href="#features">Features</a>
+  </div>
+</footer>
+
+<script>
+// ── CLOUD GENERATOR ──
+(function(){
+  const container = document.getElementById('hero-clouds');
+  const cloudData = [
+    { top:'14%', left:'8%',  w:110, dur:32, delay:0   },
+    { top:'24%', left:'35%', w:80,  dur:26, delay:-8  },
+    { top:'10%', left:'62%', w:130, dur:38, delay:-14 },
+    { top:'32%', left:'80%', w:70,  dur:22, delay:-5  },
+  ];
+  cloudData.forEach(c=>{
+    const wrap = document.createElement('div');
+    wrap.className='cloud';
+    wrap.style.cssText=`top:${c.top};left:${c.left};animation-duration:${c.dur}s;animation-delay:${c.delay}s;`;
+    const body = document.createElement('div');
+    body.className='cloud-body';
+    body.style.cssText=`width:${c.w}px;height:${Math.round(c.w*0.42)}px;`;
+    body.style.setProperty('--w',c.w+'px');
+    // pseudo elements done via JS for variety
+    wrap.appendChild(body);
+    container.appendChild(wrap);
+  });
+})();
+
+// ── LEVEL DATA ──
+const LEVELS = [
+  { n:1,  icon:'🐣', name:'Hatchling',   color:'#4ade80' },
+  { n:2,  icon:'🐥', name:'Fledgling',   color:'#a3e635' },
+  { n:3,  icon:'🌟', name:'Rookie',      color:'#facc15' },
+  { n:4,  icon:'✈️', name:'Flyer',       color:'#fb923c' },
+  { n:5,  icon:'🎯', name:'Ace',         color:'#f97316' },
+  { n:6,  icon:'🧭', name:'Navigator',   color:'#f59e0b' },
+  { n:7,  icon:'💥', name:'Daredevil',   color:'#ef4444' },
+  { n:8,  icon:'⚡', name:'Speedster',   color:'#eab308' },
+  { n:9,  icon:'🛡️', name:'Survivor',    color:'#22d3ee' },
+  { n:10, icon:'⚔️', name:'Warrior',     color:'#3b82f6' },
+  { n:11, icon:'🏆', name:'Champion',    color:'#8b5cf6' },
+  { n:12, icon:'🥷', name:'Ninja',       color:'#6366f1' },
+  { n:13, icon:'💻', name:'Hacker',      color:'#0ea5e9' },
+  { n:14, icon:'👾', name:'Boss',        color:'#ec4899' },
+  { n:15, icon:'🌍', name:'Overlord',    color:'#f43f5e' },
+  { n:16, icon:'🦅', name:'Godbird',     color:'#a855f7' },
+  { n:17, icon:'☠️', name:'Immortal',    color:'#14b8a6' },
+  { n:18, icon:'🔱', name:'Mythic',      color:'#d97706' },
+  { n:19, icon:'🌌', name:'Cosmic',      color:'#7c3aed' },
+  { n:20, icon:'👑', name:'Flappy Legend', color:'#ffe066' },
+];
+
+// ── BUILD TICKERS ──
+function buildTickers(){
+  const t1 = document.getElementById('ticker1');
+  const t2 = document.getElementById('ticker2');
+  const row1 = [...LEVELS, ...LEVELS]; // duplicate for seamless loop
+  const row2 = [...LEVELS].reverse().concat([...LEVELS].reverse());
+
+  row1.forEach(lv=>{
+    const chip = document.createElement('div');
+    chip.className='level-chip';
+    chip.innerHTML=`
+      <span class="chip-icon">${lv.icon}</span>
+      <div>
+        <div class="chip-num">Level ${lv.n}</div>
+        <div class="chip-name" style="color:${lv.color}">${lv.name}</div>
+      </div>
+    `;
+    t1.appendChild(chip);
+  });
+  row2.forEach(lv=>{
+    const chip = document.createElement('div');
+    chip.className='level-chip';
+    chip.innerHTML=`
+      <span class="chip-icon">${lv.icon}</span>
+      <div>
+        <div class="chip-num">Level ${lv.n}</div>
+        <div class="chip-name" style="color:${lv.color}">${lv.name}</div>
+      </div>
+    `;
+    t2.appendChild(chip);
+  });
+}
+
+// ── BUILD LEVEL GRID ──
+function buildGrid(){
+  const grid = document.getElementById('levels-grid');
+  LEVELS.forEach(lv=>{
+    const box = document.createElement('div');
+    box.className='lvl-box reveal';
+    box.style.borderTop=`3px solid ${lv.color}`;
+    box.innerHTML=`
+      <span class="lvl-box-icon">${lv.icon}</span>
+      <div class="lvl-box-num">Level ${lv.n}</div>
+      <div class="lvl-box-name" style="color:${lv.color}">${lv.name}</div>
+    `;
+    grid.appendChild(box);
+  });
+}
+
+buildTickers();
+buildGrid();
+
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target); }
+  });
+},{ threshold:0.1 });
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+</script>
+</body>
+</html>
