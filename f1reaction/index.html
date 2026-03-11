@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F1 REFLEX — React Like a Driver</title>
+
+<!-- FAVICON: 5 F1 starting lights -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%230a0a0a'/%3E%3Ccircle cx='10' cy='32' r='7' fill='%23e8001d'/%3E%3Ccircle cx='24' cy='32' r='7' fill='%23e8001d'/%3E%3Ccircle cx='38' cy='32' r='7' fill='%23e8001d'/%3E%3Ccircle cx='52' cy='32' r='7' fill='%23333'/%3E%3Ccircle cx='10' cy='32' r='3' fill='%23ff6644' opacity='.6'/%3E%3Ccircle cx='24' cy='32' r='3' fill='%23ff6644' opacity='.6'/%3E%3Ccircle cx='38' cy='32' r='3' fill='%23ff6644' opacity='.6'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════
+   ROOT
+══════════════════════════════ */
+:root {
+  --bg:       #080808;
+  --bg2:      #0d0d0d;
+  --red:      #e8001d;
+  --red2:     #ff3320;
+  --orange:   #ff6600;
+  --yellow:   #ffd700;
+  --green:    #00e539;
+  --white:    #f2f2f2;
+  --dim:      rgba(242,242,242,0.45);
+  --dimmer:   rgba(242,242,242,0.2);
+  --card:     rgba(255,255,255,0.035);
+  --border:   rgba(255,255,255,0.07);
+  --font-d:   'Bebas Neue', Impact, sans-serif;
+  --font-b:   'Rajdhani', 'Courier New', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--font-b);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── CUSTOM CURSOR ── */
+#cur {
+  position: fixed;
+  width: 10px; height: 10px;
+  background: var(--red);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%,-50%);
+  box-shadow: 0 0 10px var(--red), 0 0 22px rgba(232,0,29,.4);
+  transition: width .12s, height .12s, background .12s;
+  mix-blend-mode: screen;
+}
+#cur.big { width: 34px; height: 34px; background: rgba(232,0,29,.12); box-shadow: 0 0 0 1px var(--red); }
+
+/* ── SCANLINES ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px);
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* ══════════════════════════════
+   NAV
+══════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 1000;
+  height: 58px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 clamp(16px, 5vw, 64px);
+  background: rgba(8,8,8,0.88);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(14px);
+}
+
+.nav-logo {
+  font-family: var(--font-d);
+  font-size: 1.55rem;
+  letter-spacing: 5px;
+  color: var(--white);
+  text-decoration: none;
+  display: flex; align-items: center; gap: 10px;
+}
+
+/* animated F1 lights in nav */
+.nav-lights {
+  display: flex; gap: 5px; align-items: center;
+}
+.nav-light {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--red);
+  box-shadow: 0 0 6px var(--red);
+  animation: navBlink 1.6s ease-in-out infinite;
+}
+.nav-light:nth-child(2) { animation-delay: .2s; }
+.nav-light:nth-child(3) { animation-delay: .4s; }
+@keyframes navBlink {
+  0%,60%,100% { opacity: 1; }
+  80% { opacity: 0.15; }
+}
+
+.nav-links {
+  display: flex; gap: 28px; list-style: none;
+}
+.nav-links a {
+  font-family: var(--font-b);
+  font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--dim); text-decoration: none;
+  transition: color .2s;
+}
+.nav-links a:hover { color: var(--red); }
+
+.nav-cta {
+  font-family: var(--font-d);
+  font-size: 0.9rem; letter-spacing: 4px;
+  color: #000 !important;
+  background: var(--red);
+  padding: 8px 20px; border-radius: 2px;
+  text-decoration: none;
+  transition: box-shadow .2s, transform .12s !important;
+  box-shadow: 0 0 16px rgba(232,0,29,.35);
+}
+.nav-cta:hover { box-shadow: 0 0 32px rgba(232,0,29,.6) !important; transform: translateY(-1px); }
+
+/* ══════════════════════════════
+   HERO
+══════════════════════════════ */
+#hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+  padding: 80px 20px 60px;
+  text-align: center;
+}
+
+/* Animated track bg */
+.track-bg {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(rgba(232,0,29,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232,0,29,.03) 1px, transparent 1px);
+  background-size: 70px 70px;
+  animation: trackMove 16s linear infinite;
+}
+@keyframes trackMove { 0%{transform:translateY(0)} 100%{transform:translateY(70px)} }
+
+/* Speed lines */
+.speed-lines {
+  position: absolute; inset: 0;
+  pointer-events: none; overflow: hidden;
+}
+.sline {
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(232,0,29,.25), transparent);
+  animation: lineShoot linear infinite;
+}
+@keyframes lineShoot {
+  0%   { transform: translateX(-100%); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateX(100vw); opacity: 0; }
+}
+
+/* vignette */
+.vignette {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, transparent 35%, #080808 80%);
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  position: relative;
+  font-size: clamp(.6rem, 2.5vw, .78rem);
+  letter-spacing: 6px; color: var(--red);
+  text-transform: uppercase;
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 18px;
+  opacity: 0; animation: fadeUp .6s .2s ease-out forwards;
+}
+.hero-eyebrow::before, .hero-eyebrow::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--red));
+  max-width: 60px;
+}
+.hero-eyebrow::after { background: linear-gradient(90deg, var(--red), transparent); }
+
+.hero-title {
+  position: relative;
+  font-family: var(--font-d);
+  font-size: clamp(5rem, 24vw, 15rem);
+  line-height: .84; letter-spacing: 6px;
+  color: var(--white);
+  opacity: 0; animation: fadeUp .7s .32s ease-out forwards;
+}
+.hero-title .t2 {
+  display: block;
+  color: var(--red);
+  text-shadow: 0 0 50px var(--red), 0 0 120px rgba(232,0,29,.25);
+  animation: heroGlow 2.8s ease-in-out infinite;
+}
+@keyframes heroGlow {
+  0%,100% { text-shadow: 0 0 50px var(--red), 0 0 120px rgba(232,0,29,.25); }
+  50%      { text-shadow: 0 0 90px var(--red), 0 0 200px rgba(232,0,29,.45); }
+}
+
+.hero-sub {
+  position: relative;
+  font-size: clamp(.88rem, 3vw, 1.22rem);
+  font-weight: 500; letter-spacing: 2px;
+  color: var(--dim); line-height: 1.7;
+  max-width: 520px; margin: 22px auto 0;
+  opacity: 0; animation: fadeUp .7s .46s ease-out forwards;
+}
+.hero-sub strong { color: var(--yellow); font-weight: 700; }
+
+/* Starting lights hero display */
+.hero-lights {
+  position: relative;
+  display: flex; gap: clamp(10px,3vw,20px);
+  margin: 32px auto;
+  opacity: 0; animation: fadeUp .7s .58s ease-out forwards;
+}
+.hl-pod {
+  width: clamp(32px,8.5vw,56px); height: clamp(32px,8.5vw,56px);
+  border-radius: 50%;
+  background: #1a0000;
+  border: 2px solid rgba(232,0,29,.25);
+  box-shadow: inset 0 0 10px rgba(0,0,0,.9);
+  position: relative; overflow: hidden;
+}
+.hl-pod.lit {
+  background: radial-gradient(circle at 38% 32%, #ff7744, #e8001d);
+  border-color: rgba(255,100,50,.4);
+  box-shadow: 0 0 clamp(12px,3.5vw,22px) var(--red),
+              0 0 clamp(24px,7vw,50px) rgba(232,0,29,.4),
+              inset 0 0 10px rgba(255,140,80,.25);
+}
+.hl-pod::after {
+  content: ''; position: absolute;
+  top: 18%; left: 20%; width: 30%; height: 24%;
+  border-radius: 50%;
+  background: rgba(255,255,255,.0);
+}
+.hl-pod.lit::after { background: rgba(255,255,255,.3); }
+
+.hero-btns {
+  position: relative;
+  display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+  opacity: 0; animation: fadeUp .7s .72s ease-out forwards;
+}
+
+.btn-main {
+  font-family: var(--font-d);
+  font-size: clamp(1rem,4vw,1.4rem);
+  letter-spacing: 6px; color: #000;
+  background: var(--red);
+  border: none; border-radius: 2px;
+  padding: 15px 48px;
+  cursor: none; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 10px;
+  box-shadow: 0 0 30px rgba(232,0,29,.4);
+  transition: box-shadow .2s, transform .12s;
+}
+.btn-main:hover { box-shadow: 0 0 60px rgba(232,0,29,.65); transform: translateY(-2px); }
+
+.btn-ghost {
+  font-family: var(--font-d);
+  font-size: clamp(.92rem,3.5vw,1.15rem);
+  letter-spacing: 5px; color: var(--white);
+  background: transparent;
+  border: 1px solid var(--border); border-radius: 2px;
+  padding: 15px 36px;
+  cursor: none; text-decoration: none;
+  transition: border-color .2s, transform .12s;
+}
+.btn-ghost:hover { border-color: rgba(255,255,255,.3); transform: translateY(-2px); }
+
+/* Scroll hint */
+.scroll-hint {
+  position: absolute; bottom: 30px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  font-size: .55rem; letter-spacing: 4px; color: var(--dimmer); text-transform: uppercase;
+  animation: fadeUp .8s 1.2s ease-out both;
+}
+.scroll-line {
+  width: 1px; height: 38px;
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,.25));
+  animation: scrollPulse 1.8s ease-in-out infinite;
+}
+@keyframes scrollPulse { 0%,100%{opacity:.3;transform:scaleY(1)} 50%{opacity:1;transform:scaleY(1.15)} }
+
+@keyframes fadeUp {
+  0%   { opacity:0; transform: translateY(22px); }
+  100% { opacity:1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════
+   TICKER
+══════════════════════════════ */
+.ticker-wrap {
+  overflow: hidden; padding: 11px 0;
+  background: var(--red);
+  border-top: 1px solid rgba(255,255,255,.1);
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.ticker-inner {
+  display: flex; white-space: nowrap;
+  animation: tickerRoll 20s linear infinite;
+}
+.ticker-item {
+  font-family: var(--font-d);
+  font-size: clamp(.78rem,.9vw,.9rem);
+  letter-spacing: 5px; color: #000;
+  padding: 0 36px; flex-shrink: 0;
+}
+.ticker-sep { color: rgba(0,0,0,.35); }
+@keyframes tickerRoll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+/* ══════════════════════════════
+   SECTION BASE
+══════════════════════════════ */
+section {
+  max-width: 1200px; margin: 0 auto;
+  padding: clamp(60px,10vw,120px) clamp(20px,6vw,80px);
+}
+
+.sec-tag {
+  font-size: .62rem; letter-spacing: 5px; color: var(--red);
+  text-transform: uppercase;
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 10px;
+}
+.sec-tag::before { content:''; display:block; width:20px; height:1px; background:var(--red); }
+
+.sec-title {
+  font-family: var(--font-d);
+  font-size: clamp(2.5rem,8vw,5.5rem);
+  letter-spacing: 4px; line-height: .94;
+  margin-bottom: 16px;
+}
+
+/* ══════════════════════════════
+   ABOUT / PREVIEW SPLIT
+══════════════════════════════ */
+#about {
+  max-width: 1200px; margin: 0 auto;
+  padding: clamp(60px,10vw,120px) clamp(20px,6vw,80px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(40px,6vw,80px);
+  align-items: center;
+}
+
+.about-text {
+  font-size: clamp(.82rem,2.2vw,.98rem);
+  font-weight: 500; line-height: 1.85;
+  color: rgba(255,255,255,.5);
+  margin-bottom: 22px;
+}
+.about-text strong { color: var(--red); font-weight: 700; }
+
+/* Phone mockup */
+.mockup-wrap {
+  display: flex; justify-content: center;
+}
+.phone {
+  width: min(260px, 58vw);
+  aspect-ratio: 9/18;
+  background: #0d0d0d;
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 0 60px rgba(232,0,29,.08), 0 40px 80px rgba(0,0,0,.7);
+  position: relative;
+  display: flex; flex-direction: column;
+}
+.phone-hud {
+  display: flex; background: rgba(0,0,0,.95);
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  flex-shrink: 0;
+}
+.phc { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:6px 2px; border-right:1px solid rgba(255,255,255,.05); }
+.phc:last-child { border-right:none; }
+.phl { font-size:.38rem; letter-spacing:3px; color:rgba(255,255,255,.25); text-transform:uppercase; }
+.phv { font-family:var(--font-d); font-size:clamp(.85rem,2.5vw,1.1rem); line-height:1.1; }
+.phone-lights {
+  display: flex; justify-content: center; gap: 5px;
+  background: rgba(0,0,0,.92);
+  border-bottom: 1px solid rgba(232,0,29,.12);
+  padding: 7px;
+}
+.phl2 { width:14px; height:14px; border-radius:50%; background:#1a0000; border:1.5px solid rgba(232,0,29,.2); }
+.phl2.on { background:var(--red); box-shadow:0 0 6px var(--red),0 0 14px rgba(232,0,29,.4); animation:plOn .8s ease-in-out infinite alternate; }
+@keyframes plOn { 0%{opacity:.7} 100%{opacity:1} }
+.phone-arena {
+  flex: 1; position: relative;
+  background: #0f0f0f;
+  background-image: linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);
+  background-size: 20px 20px;
+  overflow: hidden;
+}
+.phone-dot {
+  position: absolute;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: radial-gradient(circle at 33% 28%, #fff, #ff7700 38%, #ff1100 70%);
+  border: 2px solid rgba(255,200,100,.9);
+  box-shadow: 0 0 12px rgba(255,60,0,1), 0 0 28px rgba(255,20,0,.6), 0 0 50px rgba(200,0,0,.3);
+  transform: translate(-50%,-50%);
+  animation: dotRoam 4s ease-in-out infinite;
+}
+@keyframes dotRoam {
+  0%   { left:30%; top:35%; }
+  20%  { left:72%; top:18%; }
+  40%  { left:80%; top:68%; }
+  60%  { left:22%; top:75%; }
+  80%  { left:55%; top:28%; }
+  100% { left:30%; top:35%; }
+}
+.phone-bar { position:absolute; bottom:0; left:0; right:0; height:4px; background:linear-gradient(90deg,#00e539,#ffd700,#e8001d); animation:barShrink 2s linear infinite; }
+@keyframes barShrink { 0%{width:100%} 100%{width:0%} }
+
+/* ══════════════════════════════
+   HOW IT WORKS
+══════════════════════════════ */
+#how { background: var(--bg2); }
+#how-inner {
+  max-width: 1200px; margin: 0 auto;
+  padding: clamp(60px,10vw,120px) clamp(20px,6vw,80px);
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+  gap: 18px; margin-top: 44px;
+}
+.step-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 5px; padding: clamp(22px,4vw,34px);
+  position: relative; overflow: hidden;
+  transition: border-color .25s, transform .25s;
+}
+.step-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(232,0,29,.04), transparent);
+  opacity: 0; transition: opacity .25s;
+}
+.step-card:hover { border-color: rgba(232,0,29,.28); transform: translateY(-4px); }
+.step-card:hover::before { opacity: 1; }
+
+.step-num {
+  font-family: var(--font-d);
+  font-size: clamp(2.8rem,7vw,4.5rem);
+  line-height: 1; color: rgba(232,0,29,.15);
+  letter-spacing: 2px; margin-bottom: 10px;
+}
+.step-icon { font-size: clamp(1.8rem,4vw,2.4rem); margin-bottom: 12px; display: block; }
+.step-title {
+  font-family: var(--font-d);
+  font-size: clamp(1.2rem,3.5vw,1.7rem);
+  letter-spacing: 3px; margin-bottom: 8px;
+}
+.step-desc {
+  font-size: clamp(.72rem,2vw,.82rem);
+  font-weight: 500; color: rgba(255,255,255,.42); line-height: 1.8;
+}
+.step-accent { position:absolute; bottom:0; left:0; right:0; height:2px; }
+
+/* ══════════════════════════════
+   DIFFICULTY / ROUNDS
+══════════════════════════════ */
+#difficulty { }
+
+.rounds-grid {
+  display: grid;
+  grid-template-columns: repeat(5,1fr);
+  gap: 10px; margin-top: 42px;
+}
+.round-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 5px; padding: 18px 8px;
+  text-align: center; transition: transform .2s;
+  position: relative; overflow: hidden;
+}
+.round-card:hover { transform: scale(1.05); }
+.round-card .rnum {
+  font-family: var(--font-d);
+  font-size: clamp(1.8rem,4.5vw,3rem);
+  line-height: 1; margin-bottom: 5px;
+}
+.round-card .rname { font-size: .52rem; letter-spacing:3px; color:var(--dimmer); text-transform:uppercase; margin-bottom:12px; }
+.round-dot-demo { display:flex; justify-content:center; margin-bottom:10px; }
+.rdd {
+  border-radius:50%;
+  background: radial-gradient(circle at 35% 30%, #fff, #ff6600 40%, #e8001d 75%);
+  box-shadow: 0 0 8px rgba(255,50,0,.8), 0 0 20px rgba(255,0,0,.4);
+}
+.rwin { font-size:.5rem; letter-spacing:2px; color:rgba(255,255,255,.25); }
+.rbar { height:3px; border-radius:2px; margin-bottom:8px; }
+
+/* ══════════════════════════════
+   RATINGS TABLE
+══════════════════════════════ */
+#ratings-section {
+  background: var(--bg2);
+}
+#ratings-inner {
+  max-width: 1200px; margin: 0 auto;
+  padding: clamp(60px,10vw,120px) clamp(20px,6vw,80px);
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: clamp(40px,6vw,80px); align-items: start;
+}
+
+.ratings-table {
+  background: var(--card); border: 1px solid var(--border); border-radius: 5px;
+  overflow: hidden;
+}
+.rt-head {
+  display: grid; grid-template-columns: 60px 1fr 90px;
+  padding: 10px 18px;
+  background: rgba(255,255,255,.04);
+  border-bottom: 1px solid var(--border);
+  font-size: .55rem; letter-spacing: 3px; color: var(--dimmer); text-transform: uppercase;
+}
+.rt-row {
+  display: grid; grid-template-columns: 60px 1fr 90px;
+  padding: 13px 18px; border-bottom: 1px solid var(--border);
+  align-items: center; transition: background .15s;
+}
+.rt-row:last-child { border-bottom: none; }
+.rt-row:hover { background: rgba(255,255,255,.025); }
+.rpos { font-family: var(--font-d); font-size: clamp(1rem,3vw,1.3rem); }
+.rdesc { font-size: clamp(.7rem,2vw,.82rem); font-weight: 500; color: rgba(255,255,255,.55); }
+.rms { font-family: var(--font-d); font-size: clamp(.9rem,2.5vw,1.1rem); text-align:right; color:var(--dimmer); }
+
+.ratings-cta { display:flex; flex-direction:column; gap:18px; align-items:flex-start; }
+.rc-title {
+  font-family: var(--font-d);
+  font-size: clamp(2rem,6vw,3.8rem);
+  letter-spacing:3px; line-height:1.05;
+}
+.rc-title span { color:var(--yellow); }
+.rc-text { font-size:clamp(.78rem,2vw,.9rem); font-weight:500; color:rgba(255,255,255,.4); line-height:1.8; }
+
+/* ══════════════════════════════
+   REVIEWS
+══════════════════════════════ */
+#reviews { }
+
+.rev-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(240px,1fr));
+  gap: 14px; margin-top: 42px;
+}
+.rev-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 5px; padding: clamp(18px,3vw,26px);
+  position: relative; transition: border-color .2s, transform .2s;
+}
+.rev-card:hover { border-color: rgba(255,255,255,.14); transform: translateY(-3px); }
+.rev-stars { font-size: .72rem; color: var(--yellow); letter-spacing: 2px; margin-bottom: 10px; }
+.rev-score {
+  position: absolute; top: 18px; right: 18px;
+  font-family: var(--font-d); font-size: .72rem; color: var(--red); letter-spacing: 2px;
+}
+.rev-text { font-size: clamp(.72rem,2vw,.84rem); font-weight:500; color:rgba(255,255,255,.52); line-height:1.85; margin-bottom:12px; font-style:italic; }
+.rev-author { font-size:.58rem; letter-spacing:3px; color:rgba(255,255,255,.22); text-transform:uppercase; }
+
+/* ══════════════════════════════
+   FINAL CTA
+══════════════════════════════ */
+#finalcta {
+  padding: clamp(80px,14vw,160px) clamp(20px,6vw,80px);
+  text-align: center; position:relative; overflow:hidden;
+  border-top: 1px solid var(--border);
+}
+#finalcta::before {
+  content:''; position:absolute; inset:0;
+  background: radial-gradient(ellipse at 50% 100%, rgba(232,0,29,.07) 0%, transparent 65%);
+}
+
+.fcta-eyebrow {
+  font-size:.6rem; letter-spacing:6px; color:var(--red);
+  text-transform:uppercase; margin-bottom:14px;
+  animation: flickerAnim 3.5s infinite;
+}
+@keyframes flickerAnim {
+  0%,93%,95%,97%,100%{opacity:1} 94%{opacity:.3} 96%{opacity:.6} 98%{opacity:.2}
+}
+
+.fcta-title {
+  font-family: var(--font-d);
+  font-size: clamp(3rem,14vw,10rem);
+  letter-spacing:6px; line-height:.88;
+  margin-bottom:24px; position:relative;
+}
+.fcta-title .fl2 { display:block; color:var(--red); text-shadow:0 0 50px var(--red); }
+
+/* live countdown */
+.fcta-timer {
+  display:inline-flex; align-items:center; gap:14px;
+  font-family:var(--font-d); font-size:clamp(.9rem,3.5vw,1.3rem);
+  letter-spacing:4px; color:var(--dimmer); margin-bottom:32px;
+}
+.fcta-num {
+  font-size:clamp(2.2rem,8vw,4.5rem);
+  color:var(--red); text-shadow:0 0 30px var(--red);
+  animation: blinkAnim 1s step-end infinite;
+  min-width: 3ch; display:inline-block;
+}
+@keyframes blinkAnim { 0%,100%{opacity:1} 50%{opacity:.18} }
+
+.fcta-sub {
+  font-size:clamp(.78rem,2.5vw,.98rem); font-weight:500;
+  color:rgba(255,255,255,.35); letter-spacing:2px;
+  line-height:1.75; margin-bottom:38px;
+  max-width:440px; margin-left:auto; margin-right:auto;
+}
+
+/* ══════════════════════════════
+   FOOTER
+══════════════════════════════ */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 24px clamp(20px,6vw,80px);
+  display: flex; align-items:center; justify-content:space-between;
+  flex-wrap: wrap; gap:16px;
+}
+.foot-logo {
+  font-family: var(--font-d); font-size:1.15rem; letter-spacing:4px;
+  color:rgba(255,255,255,.2);
+  display:flex; align-items:center; gap:8px;
+}
+.foot-dot {
+  width:7px; height:7px; border-radius:50%;
+  background:var(--red); box-shadow:0 0 7px var(--red); display:inline-block;
+}
+.foot-links { display:flex; gap:22px; list-style:none; }
+.foot-links a { font-size:.58rem; letter-spacing:3px; color:rgba(255,255,255,.2); text-decoration:none; text-transform:uppercase; transition:color .2s; }
+.foot-links a:hover { color:rgba(255,255,255,.45); }
+.foot-copy { font-size:.56rem; letter-spacing:2px; color:rgba(255,255,255,.14); }
+
+/* ══════════════════════════════
+   SCROLL REVEAL
+══════════════════════════════ */
+.reveal { opacity:0; transform:translateY(28px); transition:opacity .65s ease-out,transform .65s ease-out; }
+.reveal.on { opacity:1; transform:translateY(0); }
+
+/* ══════════════════════════════
+   RESPONSIVE
+══════════════════════════════ */
+@media(max-width:768px){
+  #about { grid-template-columns:1fr; }
+  .mockup-wrap { display:none; }
+  .rounds-grid { grid-template-columns:repeat(3,1fr); }
+  #ratings-inner { grid-template-columns:1fr; }
+  .ratings-cta { display:none; }
+  .nav-links { display:none; }
+  body { cursor:auto; }
+  #cur { display:none; }
+}
+@media(max-width:480px){
+  .rounds-grid { grid-template-columns:1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <span class="nav-lights">
+      <span class="nav-light"></span>
+      <span class="nav-light"></span>
+      <span class="nav-light"></span>
+    </span>
+    F1 REFLEX
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#difficulty">Difficulty</a></li>
+    <li><a href="#ratings-section">Ratings</a></li>
+    <li><a href="f1-reflex-game.html" class="nav-cta">RACE NOW</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="track-bg"></div>
+  <div class="speed-lines" id="speedLines"></div>
+  <div class="vignette"></div>
+
+  <div class="hero-eyebrow">Formula One Reflex Training</div>
+
+  <h1 class="hero-title">
+    REACT<br>
+    <span class="t2">NOW</span>
+  </h1>
+
+  <p class="hero-sub">
+    5 red lights. One dot. <strong>Milliseconds.</strong><br>
+    Train your reflexes like the fastest drivers on earth.
+  </p>
+
+  <!-- animated lights -->
+  <div class="hero-lights" id="heroLights">
+    <div class="hl-pod" id="hl0"></div>
+    <div class="hl-pod" id="hl1"></div>
+    <div class="hl-pod" id="hl2"></div>
+    <div class="hl-pod" id="hl3"></div>
+    <div class="hl-pod" id="hl4"></div>
+  </div>
+
+  <div class="hero-btns">
+    <a href="f1-reflex-game.html" class="btn-main">&#9654;&nbsp; START ENGINE</a>
+    <a href="#about" class="btn-ghost">HOW IT WORKS</a>
+  </div>
+
+  <div class="scroll-hint">
+    <span>scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-inner">
+    <span class="ticker-item">F1 REFLEX <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">10 ROUNDS <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">3 LIVES <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">230ms WINDOW <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">REACT LIKE A DRIVER <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">FREE TO PLAY <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">MOBILE READY <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">NO MERCY <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">F1 REFLEX <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">10 ROUNDS <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">3 LIVES <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">230ms WINDOW <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">REACT LIKE A DRIVER <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">FREE TO PLAY <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">MOBILE READY <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">NO MERCY <span class="ticker-sep">✦</span></span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div id="about" class="reveal">
+  <div>
+    <div class="sec-tag">// about</div>
+    <h2 class="sec-title">WHAT IS<br>F1 REFLEX?</h2>
+    <p class="about-text">
+      F1 REFLEX simulates the most nerve-wracking moment in motorsport — the starting grid.
+      Five red lights ignite one by one. When they all go dark, a <strong>dot flashes somewhere on screen.</strong>
+      You have milliseconds to hit it.
+    </p>
+    <p class="about-text">
+      Average F1 drivers react in <strong>~200ms</strong>. Most people take 400ms+.
+      Every round the window shrinks, the dot gets smaller, and your composure collapses.
+      3 lives. 10 rounds. No second chances.
+    </p>
+    <a href="f1-reflex-game.html" class="btn-main" style="display:inline-flex; margin-top:6px;">
+      &#9654;&nbsp; RACE NOW — FREE
+    </a>
+  </div>
+
+  <div class="mockup-wrap">
+    <div class="phone">
+      <div class="phone-hud">
+        <div class="phc"><div class="phl">Round</div><div class="phv" style="color:#ffd700">4/10</div></div>
+        <div class="phc"><div class="phl">Score</div><div class="phv" style="color:#f2f2f2" id="mockScore">1240</div></div>
+        <div class="phc"><div class="phl">Lives</div><div class="phv" style="color:#e8001d">&#10084;&#10084;</div></div>
+        <div class="phc"><div class="phl">Best</div><div class="phv" style="color:#00e539;font-size:.85rem">218ms</div></div>
+      </div>
+      <div class="phone-lights">
+        <div class="phl2 on"></div>
+        <div class="phl2 on"></div>
+        <div class="phl2 on"></div>
+        <div class="phl2"></div>
+        <div class="phl2"></div>
+      </div>
+      <div class="phone-arena">
+        <div class="phone-dot"></div>
+        <div class="phone-bar"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div id="how">
+<section id="how-inner">
+  <div class="reveal" style="text-align:center">
+    <div class="sec-tag" style="justify-content:center">// how it works</div>
+    <h2 class="sec-title">FOUR STEPS<br>TO PANIC</h2>
+  </div>
+
+  <div class="steps-grid">
+    <div class="step-card reveal">
+      <div class="step-num">01</div>
+      <span class="step-icon">&#128308;</span>
+      <div class="step-title">LIGHTS ON</div>
+      <p class="step-desc">Five red lights ignite one by one with a heavy thud. Your pulse rises. This is the calm before the storm.</p>
+      <div class="step-accent" style="background:linear-gradient(90deg,var(--red),transparent)"></div>
+    </div>
+    <div class="step-card reveal" style="transition-delay:.08s">
+      <div class="step-num">02</div>
+      <span class="step-icon">&#9940;</span>
+      <div class="step-title">LIGHTS OUT</div>
+      <p class="step-desc">All five extinguish at once — random timing keeps you guessing. A dot appears somewhere on screen instantly after.</p>
+      <div class="step-accent" style="background:linear-gradient(90deg,var(--orange),transparent)"></div>
+    </div>
+    <div class="step-card reveal" style="transition-delay:.16s">
+      <div class="step-num">03</div>
+      <span class="step-icon">&#128073;</span>
+      <div class="step-title">TAP NOW</div>
+      <p class="step-desc">Click or tap the dot before the time bar hits zero. Every millisecond counts — faster taps mean higher scores.</p>
+      <div class="step-accent" style="background:linear-gradient(90deg,var(--yellow),transparent)"></div>
+    </div>
+    <div class="step-card reveal" style="transition-delay:.24s">
+      <div class="step-num">04</div>
+      <span class="step-icon">&#128293;</span>
+      <div class="step-title">SURVIVE</div>
+      <p class="step-desc">10 rounds. Window shrinks from 900ms to 230ms. Dot gets smaller. 3 misses and you're out. Can you reach Round 10?</p>
+      <div class="step-accent" style="background:linear-gradient(90deg,var(--green),transparent)"></div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- DIFFICULTY -->
+<section id="difficulty">
+  <div class="reveal">
+    <div class="sec-tag">// round progression</div>
+    <h2 class="sec-title">10 ROUNDS OF<br>ESCALATING HELL</h2>
+  </div>
+
+  <div class="rounds-grid">
+    <div class="round-card reveal" style="border-color:rgba(0,229,57,.2)">
+      <div class="rnum" style="color:#00e539">01</div>
+      <div class="rname">Warm Up</div>
+      <div class="round-dot-demo"><div class="rdd" style="width:22px;height:22px"></div></div>
+      <div class="rbar" style="background:#00e539;width:20%"></div>
+      <div class="rwin">900ms window</div>
+    </div>
+    <div class="round-card reveal" style="border-color:rgba(100,255,80,.18);transition-delay:.06s">
+      <div class="rnum" style="color:#88ff44">02</div>
+      <div class="rname">Getting Real</div>
+      <div class="round-dot-demo"><div class="rdd" style="width:20px;height:20px"></div></div>
+      <div class="rbar" style="background:#88ff44;width:38%"></div>
+      <div class="rwin">800ms window</div>
+    </div>
+    <div class="round-card reveal" style="border-color:rgba(255,215,0,.18);transition-delay:.12s">
+      <div class="rnum" style="color:#ffd700">04</div>
+      <div class="rname">Panic Mode</div>
+      <div class="round-dot-demo"><div class="rdd" style="width:17px;height:17px"></div></div>
+      <div class="rbar" style="background:#ffd700;width:55%"></div>
+      <div class="rwin">620ms window</div>
+    </div>
+    <div class="round-card reveal" style="border-color:rgba(255,102,0,.2);transition-delay:.18s">
+      <div class="rnum" style="color:#ff6600">07</div>
+      <div class="rname">Brain Melt</div>
+      <div class="round-dot-demo"><div class="rdd" style="width:13px;height:13px"></div></div>
+      <div class="rbar" style="background:#ff6600;width:73%"></div>
+      <div class="rwin">400ms window</div>
+    </div>
+    <div class="round-card reveal" style="border-color:rgba(232,0,29,.28);transition-delay:.24s">
+      <div class="rnum" style="color:#e8001d">10</div>
+      <div class="rname">Pure Hell</div>
+      <div class="round-dot-demo"><div class="rdd" style="width:9px;height:9px"></div></div>
+      <div class="rbar" style="background:#e8001d;width:100%"></div>
+      <div class="rwin">230ms window</div>
+    </div>
+  </div>
+</section>
+
+<!-- RATINGS -->
+<div id="ratings-section">
+<div id="ratings-inner">
+  <div class="reveal">
+    <div class="sec-tag">// driver ratings</div>
+    <h2 class="sec-title">WHERE DO<br>YOU RANK?</h2>
+    <div class="ratings-table">
+      <div class="rt-head"><span>POS</span><span>RATING</span><span>BEST TIME</span></div>
+      <div class="rt-row"><span class="rpos" style="color:#ffd700">P1</span><span class="rdesc">World Champion — supernatural reflexes</span><span class="rms" style="color:#ffd700">&lt;150ms</span></div>
+      <div class="rt-row"><span class="rpos" style="color:#c0c0c0">P3</span><span class="rdesc">Podium — elite but not perfect</span><span class="rms" style="color:#c0c0c0">&lt;200ms</span></div>
+      <div class="rt-row"><span class="rpos" style="color:#cd7f32">P6</span><span class="rdesc">Points — competent, forgettable</span><span class="rms" style="color:#cd7f32">&lt;280ms</span></div>
+      <div class="rt-row"><span class="rpos" style="color:var(--dimmer)">P12</span><span class="rdesc">Mid-field — where dreams go to die</span><span class="rms">&lt;400ms</span></div>
+      <div class="rt-row"><span class="rpos" style="color:var(--red)">P20</span><span class="rdesc">Backmarker — maybe try cycling</span><span class="rms" style="color:var(--red)">400ms+</span></div>
+      <div class="rt-row"><span class="rpos" style="color:var(--red)">DNF</span><span class="rdesc">Crashed out — your nan is faster</span><span class="rms" style="color:var(--red)">💀</span></div>
+    </div>
+  </div>
+
+  <div class="ratings-cta reveal">
+    <div class="rc-title">WHAT'S<br>YOUR <span>POSITION?</span></div>
+    <p class="rc-text">
+      Real F1 drivers average 200ms.<br>
+      Max Verstappen clocks under 150ms.<br>
+      Most people reading this? 450ms.<br>
+      Prove us wrong.
+    </p>
+    <a href="f1-reflex-game.html" class="btn-main">&#9654;&nbsp; FIND YOUR RATING</a>
+  </div>
+</div>
+</div>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="reveal" style="text-align:center">
+    <div class="sec-tag" style="justify-content:center">// driver feedback</div>
+    <h2 class="sec-title">WHAT PLAYERS<br>ARE SAYING</h2>
+  </div>
+
+  <div class="rev-grid">
+    <div class="rev-card reveal">
+      <div class="rev-score">P3 — 188ms</div>
+      <div class="rev-stars">★★★★★</div>
+      <p class="rev-text">"Round 9 gave me actual heart palpitations. My screen cracked. Worth it."</p>
+      <div class="rev-author">— arjun_v, mobile player</div>
+    </div>
+    <div class="rev-card reveal" style="transition-delay:.08s">
+      <div class="rev-score">DNF — 521ms</div>
+      <div class="rev-stars">★★★★☆</div>
+      <p class="rev-text">"I missed the dot. The big red glowing one. Played 30 times. Send help."</p>
+      <div class="rev-author">— reza_k, desktop</div>
+    </div>
+    <div class="rev-card reveal" style="transition-delay:.16s">
+      <div class="rev-score">P1 — 141ms</div>
+      <div class="rev-stars">★★★★★</div>
+      <p class="rev-text">"Finally a P1. My friends refuse to believe me. I have screenshots. I have witnesses."</p>
+      <div class="rev-author">— tanvir_h, desktop</div>
+    </div>
+    <div class="rev-card reveal" style="transition-delay:.24s">
+      <div class="rev-score">P6 — 263ms</div>
+      <div class="rev-stars">★★★★★</div>
+      <p class="rev-text">"The heartbeat in Round 8 made me drop my phone. Genuinely terrifying. Perfect game."</p>
+      <div class="rev-author">— priya_m, mobile</div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section id="finalcta">
+  <div class="fcta-eyebrow reveal">⚠ LIGHTS OUT IN</div>
+  <div class="fcta-timer reveal">
+    <span class="fcta-num" id="ctaNum">05</span>
+    <span>SECONDS</span>
+  </div>
+  <h2 class="fcta-title reveal">
+    ARE YOU<br>
+    <span class="fl2">READY?</span>
+  </h2>
+  <p class="fcta-sub reveal">No download. No login. No excuses.<br>Just you, five lights, and a dot.</p>
+  <div class="reveal">
+    <a href="f1-reflex-game.html" class="btn-main" style="font-size:clamp(1.1rem,5vw,1.6rem);padding:18px 56px;box-shadow:0 0 50px rgba(232,0,29,.45);">
+      &#9654;&nbsp;&nbsp; START THE RACE
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-logo"><span class="foot-dot"></span> F1 REFLEX</div>
+  <ul class="foot-links">
+    <li><a href="#">Privacy</a></li>
+    <li><a href="#">Terms</a></li>
+    <li><a href="f1-reflex-game.html">Play</a></li>
+  </ul>
+  <div class="foot-copy">&copy; 2025 F1 REFLEX. All reaction times reserved.</div>
+</footer>
+
+<script>
+/* ── CURSOR ── */
+var cur = document.getElementById('cur');
+document.addEventListener('mousemove', function(e){
+  cur.style.left = e.clientX+'px';
+  cur.style.top  = e.clientY+'px';
+});
+document.querySelectorAll('a,button').forEach(function(el){
+  el.addEventListener('mouseenter', function(){ cur.classList.add('big'); });
+  el.addEventListener('mouseleave', function(){ cur.classList.remove('big'); });
+});
+
+/* ── SPEED LINES ── */
+var sl = document.getElementById('speedLines');
+for(var i=0;i<14;i++){
+  (function(){
+    var el=document.createElement('div'); el.className='sline';
+    var top=Math.random()*100;
+    var dur=Math.random()*3+2;
+    var del=Math.random()*6;
+    var w=Math.random()*25+8;
+    el.style.cssText='top:'+top+'%;width:'+w+'%;animation-duration:'+dur+'s;animation-delay:'+del+'s;';
+    sl.appendChild(el);
+  })();
+}
+
+/* ── HERO LIGHTS ANIMATION ── */
+(function(){
+  var lits=[false,false,false,false,false];
+  function step(i){
+    if(i<5){
+      lits[i]=true;
+      document.getElementById('hl'+i).classList.add('lit');
+      setTimeout(function(){ step(i+1); },520);
+    } else {
+      // hold 600–1200ms then all out
+      setTimeout(function(){
+        for(var j=0;j<5;j++){
+          document.getElementById('hl'+j).classList.remove('lit');
+          lits[j]=false;
+        }
+        // restart after 2s
+        setTimeout(function(){ step(0); },2200);
+      }, 600+Math.random()*600);
+    }
+  }
+  setTimeout(function(){ step(0); },800);
+})();
+
+/* ── SCROLL REVEAL ── */
+var reveals = document.querySelectorAll('.reveal');
+var io = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('on'); });
+},{threshold:0.1});
+reveals.forEach(function(r){ io.observe(r); });
+
+/* ── MOCK SCORE TICK ── */
+var ms=1240;
+setInterval(function(){
+  if(Math.random()>.55){ ms+=Math.floor(Math.random()*120+30); document.getElementById('mockScore').textContent=ms; }
+},2000);
+
+/* ── CTA COUNTDOWN ── */
+var cn=5;
+var cnEl=document.getElementById('ctaNum');
+setInterval(function(){
+  cn--;
+  if(cn<0) cn=5;
+  cnEl.textContent=cn<10?'0'+cn:cn;
+},1000);
+</script>
+</body>
+</html>
