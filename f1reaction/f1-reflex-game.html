@@ -483,8 +483,11 @@ function showDot(){
   tfill.style.width='0%';
 
   hideT=setTimeout(function(){
+    // Only trigger if dot was NOT already clicked
     if(!dotActive) return;
+    if(!gameOn) return;
     dotActive=false;
+    hideT=null;
     hideDot();
     onSlow();
   }, win);
@@ -534,12 +537,18 @@ function startRound(){
 ════════════════════════════════ */
 function onDotClick(e){
   if(!gameOn||!dotActive) return;
-  e.preventDefault(); e.stopPropagation();
+  // Stop ALL propagation immediately so arena miss handler never fires
+  e.preventDefault();
+  e.stopPropagation();
+  e.stopImmediatePropagation();
 
-  var rt=Math.round(performance.now()-dotShownAt);
+  // Mark inactive BEFORE clearTimeout to prevent any race
   dotActive=false;
   clearTimeout(hideT);
+  hideT=null;
   hideDot();
+
+  var rt=Math.round(performance.now()-dotShownAt);
 
   reactions.push(rt);
   if(rt<bestMs) bestMs=rt;
@@ -567,8 +576,13 @@ function onDotClick(e){
 
 function onArenaClick(e){
   if(!gameOn) return;
-  if(e.target===dot) return; // handled above
-  if(!dotActive) return;     // don't penalise during lights
+  // Ignore if click was on dot or any child inside dot
+  var t = e.target;
+  while(t && t !== arena){
+    if(t === dot) return;
+    t = t.parentNode;
+  }
+  if(!dotActive) return; // don't penalise during lights / waiting phase
   e.preventDefault();
 
   lives--; misses++;
@@ -731,13 +745,21 @@ D('startBtn').addEventListener('click', startGame);
 D('replayBtn').addEventListener('click', function(){ initAC(); resumeAC(); startGame(); });
 D('menuBtn').addEventListener('click', function(){ stopHB(); gameOn=false; show(startScreen); });
 
-// DOT click/touch
+// DOT click/touch — must stop propagation so arena never sees it
 dot.addEventListener('click', onDotClick);
-dot.addEventListener('touchend', function(e){ e.preventDefault(); onDotClick(e); }, {passive:false});
+dot.addEventListener('touchend', function(e){
+  e.preventDefault();
+  e.stopPropagation();
+  e.stopImmediatePropagation();
+  onDotClick(e);
+}, {passive:false});
 
-// ARENA miss
+// ARENA miss — only fires when dot was NOT the source
 arena.addEventListener('click', onArenaClick);
-arena.addEventListener('touchend', function(e){ e.preventDefault(); onArenaClick(e); }, {passive:false});
+arena.addEventListener('touchend', function(e){
+  e.preventDefault();
+  onArenaClick(e);
+}, {passive:false});
 </script>
 </body>
 </html>
