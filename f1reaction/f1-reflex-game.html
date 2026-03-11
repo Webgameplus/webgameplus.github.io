@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>F1 REFLEX</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230a0a0a' rx='10'/%3E%3Ccircle cx='16' cy='32' r='8' fill='%23e8001d'/%3E%3Ccircle cx='32' cy='32' r='8' fill='%23e8001d'/%3E%3Ccircle cx='48' cy='32' r='8' fill='%23e8001d'/%3E%3C/svg%3E">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;font-family:'Courier New',monospace;color:#fff;user-select:none;-webkit-user-select:none;touch-action:manipulation;}
+
+/* scanlines */
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.12) 2px,rgba(0,0,0,0.12) 4px);pointer-events:none;z-index:9999;}
+
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.hidden{display:none!important;}
+
+/* ══ START ══ */
+#startScreen{
+  background:radial-gradient(ellipse at 50% 0%,#200000 0%,#0a0a0a 55%);
+  gap:12px;padding:20px;text-align:center;
+}
+.s-badge{font-size:clamp(.55rem,2.5vw,.7rem);letter-spacing:5px;color:#e8001d;text-transform:uppercase;border:1px solid rgba(232,0,29,.3);padding:5px 14px;border-radius:2px;margin-bottom:4px;}
+.s-title{font-family:Impact,'Arial Black',sans-serif;font-size:clamp(3.8rem,18vw,8rem);letter-spacing:4px;line-height:.88;color:#fff;text-shadow:0 0 30px rgba(232,0,29,.5);}
+.s-title-red{color:#e8001d;text-shadow:0 0 40px #e8001d,0 0 80px rgba(232,0,29,.3);}
+.s-sub{font-size:clamp(.58rem,2.8vw,.78rem);letter-spacing:5px;color:rgba(255,255,255,.38);text-transform:uppercase;}
+
+/* preview lights */
+.prev-lights{display:flex;gap:clamp(6px,2.5vw,14px);margin:4px 0;}
+.pl{width:clamp(16px,5vw,26px);height:clamp(16px,5vw,26px);border-radius:50%;background:#1a0000;border:2px solid rgba(255,34,0,.25);animation:plb 2.4s ease-in-out infinite;}
+.pl:nth-child(2){animation-delay:.18s}.pl:nth-child(3){animation-delay:.36s}.pl:nth-child(4){animation-delay:.54s}.pl:nth-child(5){animation-delay:.72s}
+@keyframes plb{0%,65%,100%{background:#1a0000;box-shadow:none}40%,55%{background:#e8001d;box-shadow:0 0 12px #e8001d,0 0 28px rgba(232,0,29,.4);}}
+
+.rules{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:13px 18px;max-width:370px;width:100%;text-align:left;}
+.rtitle{font-size:.58rem;letter-spacing:4px;color:#ffd700;text-transform:uppercase;margin-bottom:9px;}
+.rule{font-size:clamp(.67rem,3vw,.78rem);color:rgba(255,255,255,.65);margin-bottom:6px;line-height:1.5;display:flex;gap:8px;}
+
+.go-btn{font-family:Impact,sans-serif;font-size:clamp(1.1rem,5vw,1.5rem);letter-spacing:6px;color:#000;background:linear-gradient(135deg,#ff3322,#e8001d);border:none;border-radius:3px;padding:15px 48px;cursor:pointer;box-shadow:0 0 30px rgba(232,0,29,.5);transition:transform .1s;}
+.go-btn:active{transform:scale(.95);}
+
+.snd-row{display:flex;align-items:center;gap:12px;}
+.snd-btn{font-size:.58rem;letter-spacing:3px;color:rgba(255,255,255,.3);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:5px 13px;cursor:pointer;}
+.snd-btn.off{opacity:.4;}
+.hs-lbl{font-size:.62rem;letter-spacing:3px;color:rgba(255,255,255,.22);}
+.hs-lbl b{color:#ffd700;}
+
+/* ══ GAME ══ */
+#gameScreen{background:#0a0a0a;justify-content:flex-start;padding:0;}
+
+/* HUD */
+#hud{width:100%;height:52px;display:flex;background:rgba(0,0,0,.95);border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;}
+.hc{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-right:1px solid rgba(255,255,255,.07);padding:3px;}
+.hc:last-child{border-right:none;}
+.hl{font-size:clamp(.4rem,1.8vw,.52rem);letter-spacing:3px;color:rgba(255,255,255,.25);text-transform:uppercase;}
+.hv{font-family:Impact,sans-serif;font-size:clamp(1.1rem,5vw,1.5rem);line-height:1.1;}
+#hRound{color:#ffd700;}#hScore{color:#fff;}
+#hLives{display:flex;gap:3px;align-items:center;}
+.hrt{font-size:clamp(.85rem,3.5vw,1.15rem);}
+.hrt.gone{opacity:.12;filter:grayscale(1);}
+#hBest{color:#00e539;font-size:clamp(.85rem,3.8vw,1.1rem);}
+
+/* Lights panel */
+#lightsPanel{width:100%;display:flex;flex-direction:column;align-items:center;background:rgba(0,0,0,.94);border-bottom:2px solid rgba(255,34,0,.18);padding:clamp(8px,2.5vw,15px) 10px;flex-shrink:0;}
+.g-lbl{font-size:clamp(.45rem,2vw,.58rem);letter-spacing:5px;color:rgba(255,255,255,.2);text-transform:uppercase;margin-bottom:8px;}
+.lights-row{display:flex;gap:clamp(7px,3vw,18px);}
+.lb{width:clamp(26px,8.5vw,50px);height:clamp(26px,8.5vw,50px);border-radius:50%;background:#1a0000;border:2px solid rgba(255,34,0,.22);box-shadow:inset 0 0 8px rgba(0,0,0,.9);transition:background .08s,box-shadow .08s;position:relative;}
+.lb::after{content:'';position:absolute;top:18%;left:20%;width:32%;height:26%;border-radius:50%;background:transparent;transition:background .08s;}
+.lb.ON{background:radial-gradient(circle at 40% 35%,#ff6644,#e8001d);box-shadow:0 0 clamp(10px,3.5vw,20px) #e8001d,0 0 clamp(20px,7vw,45px) rgba(232,0,29,.45),inset 0 0 8px rgba(255,140,60,.3);}
+.lb.ON::after{background:rgba(255,255,255,.28);}
+
+/* ARENA — the click zone */
+#arena{
+  flex:1;
+  width:100%;
+  position:relative;
+  background:#0f0f0f;
+  /* grid lines via box-shadow trick — no pseudo-elements to conflict with dot */
+  background-image:
+    linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);
+  background-size:48px 48px;
+  overflow:hidden;
+  touch-action:none;
+  cursor:crosshair;
+}
+
+/* wait message - INSIDE arena, does NOT block pointer events */
+#waitMsg{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  font-family:Impact,sans-serif;
+  font-size:clamp(1.1rem,6vw,2rem);
+  letter-spacing:6px;
+  color:rgba(255,255,255,.35);
+  text-transform:uppercase;
+  text-align:center;
+  pointer-events:none;
+  z-index:1;
+  white-space:nowrap;
+}
+
+/* THE DOT — always on top */
+#dot{
+  position:absolute;
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+  display:none;
+  z-index:100;
+  cursor:pointer;
+  touch-action:none;
+  pointer-events:auto;
+}
+
+/* Time bar */
+#tbar{position:absolute;bottom:0;left:0;right:0;height:7px;background:rgba(255,255,255,.05);z-index:10;}
+#tfill{height:100%;width:100%;background:linear-gradient(90deg,#00e539,#ffd700,#e8001d);transition:none;}
+
+/* Speed bar */
+#sbar{width:100%;height:4px;background:rgba(255,255,255,.04);flex-shrink:0;}
+#sfill{height:100%;width:10%;background:linear-gradient(90deg,#00e539,#ffd700,#e8001d);transition:width .5s;}
+
+/* ── ANIMATIONS ── */
+@keyframes dotGlow{
+  0%  {filter:brightness(1)   drop-shadow(0 0 12px #ff3300);}
+  100%{filter:brightness(1.4) drop-shadow(0 0 28px #ff6600);}
+}
+@keyframes shake{
+  0%,100%{transform:translate(0)}
+  20%{transform:translate(-10px,4px)}40%{transform:translate(10px,-4px)}
+  60%{transform:translate(-6px,5px)}80%{transform:translate(6px,-3px)}
+}
+.shaking{animation:shake .3s ease-out;}
+
+/* flash */
+.rflash{position:fixed;inset:0;pointer-events:none;z-index:500;animation:rfout .4s forwards;}
+@keyframes rfout{0%{opacity:1}100%{opacity:0}}
+
+/* float labels */
+.flbl{position:fixed;pointer-events:none;z-index:600;font-family:Impact,sans-serif;font-size:clamp(1rem,5vw,1.5rem);letter-spacing:2px;transform:translate(-50%,-50%);animation:fup .7s ease-out forwards;text-shadow:0 0 10px currentColor;}
+@keyframes fup{0%{opacity:1;transform:translate(-50%,-50%) scale(1.3)}100%{opacity:0;transform:translate(-50%,-120%) scale(.8)}}
+
+/* too-slow banner */
+#tooBanner{position:fixed;top:52px;left:0;right:0;background:rgba(232,0,29,.16);border-bottom:1px solid #e8001d;font-family:Impact,sans-serif;font-size:clamp(.8rem,4vw,1.1rem);letter-spacing:5px;color:#e8001d;text-align:center;padding:10px;opacity:0;pointer-events:none;z-index:300;transition:opacity .15s;}
+
+/* level-up banner */
+#lvlBanner{position:fixed;top:52px;left:0;right:0;background:rgba(255,180,0,.12);border-bottom:1px solid #ffd700;font-family:Impact,sans-serif;font-size:clamp(.75rem,3.5vw,1rem);letter-spacing:5px;color:#ffd700;text-align:center;padding:9px;opacity:0;pointer-events:none;z-index:300;transition:opacity .15s;}
+
+/* ══ END ══ */
+#endScreen{
+  background:radial-gradient(ellipse at 50% 20%,#180000 0%,#0a0a0a 60%);
+  padding:20px;gap:11px;text-align:center;overflow-y:auto;
+}
+.et{font-family:Impact,sans-serif;font-size:clamp(2.4rem,13vw,5rem);letter-spacing:5px;line-height:.9;text-shadow:0 0 40px currentColor;}
+.ewin{color:#00e539;}.elose{color:#e8001d;}
+.etag{font-size:clamp(.58rem,2.8vw,.78rem);letter-spacing:4px;color:rgba(255,255,255,.3);text-transform:uppercase;}
+.rbadge{font-family:Impact,sans-serif;font-size:clamp(1.8rem,8vw,3rem);letter-spacing:3px;padding:9px 22px;border-radius:4px;border:2px solid currentColor;text-shadow:0 0 20px currentColor;}
+
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:320px;}
+.sbox{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:5px;padding:10px 8px;}
+.sbox .sl{font-size:.52rem;letter-spacing:3px;color:rgba(255,255,255,.27);text-transform:uppercase;margin-bottom:4px;}
+.sbox .sv{font-family:Impact,sans-serif;font-size:clamp(1.3rem,7vw,2.2rem);line-height:1;}
+
+.rmeter{width:100%;max-width:320px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:5px;padding:11px 13px;}
+.rmt{font-size:.52rem;letter-spacing:4px;color:rgba(255,255,255,.28);text-transform:uppercase;margin-bottom:9px;}
+.rmbar-wrap{height:10px;background:rgba(255,255,255,.06);border-radius:5px;overflow:hidden;margin-bottom:5px;}
+.rmbar{height:100%;border-radius:5px;width:0%;transition:width 1s ease-out;}
+.rmrow{display:flex;justify-content:space-between;font-size:.56rem;letter-spacing:2px;color:rgba(255,255,255,.28);}
+
+.nbtag{font-size:.62rem;letter-spacing:4px;color:#ffd700;text-transform:uppercase;text-shadow:0 0 10px #ffd700;}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+.ebtn{font-family:Impact,sans-serif;font-size:clamp(.85rem,4vw,1.05rem);letter-spacing:4px;border:none;border-radius:4px;padding:13px 26px;cursor:pointer;transition:transform .1s;}
+.ebtn:active{transform:scale(.94);}
+.ebtn-p{background:linear-gradient(135deg,#ff3322,#e8001d);color:#000;box-shadow:0 0 18px rgba(232,0,29,.4);}
+.ebtn-m{background:rgba(255,255,255,.04);color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.08);}
+</style>
+</head>
+<body>
+
+<!-- START -->
+<div class="screen" id="startScreen">
+  <div class="s-badge">&#127937; F1 REFLEX TEST &#127937;</div>
+  <h1 class="s-title">REACT<br><span class="s-title-red">NOW</span></h1>
+  <p class="s-sub">train like a formula one driver</p>
+  <div class="prev-lights">
+    <div class="pl"></div><div class="pl"></div><div class="pl"></div><div class="pl"></div><div class="pl"></div>
+  </div>
+  <div class="rules">
+    <div class="rtitle">// HOW IT WORKS</div>
+    <div class="rule"><span>&#128308;</span><span>5 red lights ignite one by one</span></div>
+    <div class="rule"><span>&#9889;</span><span>All lights out = a BIG RED DOT appears</span></div>
+    <div class="rule"><span>&#128073;</span><span>TAP the dot INSTANTLY — window shrinks each round</span></div>
+    <div class="rule"><span>&#9888;</span><span>Miss or too slow = lose a life. 3 lives. 10 rounds.</span></div>
+  </div>
+  <button class="go-btn" id="startBtn">&#9654;&nbsp; START ENGINE</button>
+  <div class="snd-row">
+    <div class="snd-btn" id="sndBtn">&#128266; SOUND ON</div>
+  </div>
+  <div class="hs-lbl">BEST: <b id="hsMs">—</b> &nbsp;|&nbsp; TOP SCORE: <b id="hsScore">0</b></div>
+</div>
+
+<!-- GAME -->
+<div class="screen hidden" id="gameScreen">
+  <div id="hud">
+    <div class="hc"><div class="hl">ROUND</div><div class="hv" id="hRound">1/10</div></div>
+    <div class="hc"><div class="hl">SCORE</div><div class="hv" id="hScore">0</div></div>
+    <div class="hc"><div class="hl">LIVES</div><div class="hv" id="hLives">
+      <span class="hrt" id="lv0">&#10084;</span>
+      <span class="hrt" id="lv1">&#10084;</span>
+      <span class="hrt" id="lv2">&#10084;</span>
+    </div></div>
+    <div class="hc"><div class="hl">BEST MS</div><div class="hv" id="hBest">—</div></div>
+  </div>
+
+  <div id="lightsPanel">
+    <div class="g-lbl">STARTING LIGHTS</div>
+    <div class="lights-row">
+      <div class="lb" id="lb0"></div>
+      <div class="lb" id="lb1"></div>
+      <div class="lb" id="lb2"></div>
+      <div class="lb" id="lb3"></div>
+      <div class="lb" id="lb4"></div>
+    </div>
+  </div>
+
+  <!-- ARENA: dot lives here, no pseudo-elements blocking it -->
+  <div id="arena">
+    <div id="dot"></div>
+    <div id="waitMsg">PREPARE...</div>
+    <div id="tbar"><div id="tfill"></div></div>
+  </div>
+
+  <div id="sbar"><div id="sfill"></div></div>
+</div>
+
+<!-- banners outside arena so they never block it -->
+<div id="tooBanner">&#128308; TOO SLOW! &#128308;</div>
+<div id="lvlBanner">&#9889; LEVEL UP — FASTER! &#9889;</div>
+
+<!-- END -->
+<div class="screen hidden" id="endScreen">
+  <div class="et" id="eTitle">RACE OVER</div>
+  <div class="etag" id="eTag">your brain is a turtle</div>
+  <div class="rbadge" id="eBadge" style="color:#ffd700;border-color:#ffd700;">P12</div>
+
+  <div class="rmeter">
+    <div class="rmt">AVG REACTION TIME</div>
+    <div class="rmbar-wrap"><div class="rmbar" id="rmBar"></div></div>
+    <div class="rmrow"><span id="rmL">0ms</span><span style="color:rgba(255,255,255,.15)">F1 AVG: 200ms</span><span>1000ms</span></div>
+  </div>
+
+  <div class="sgrid">
+    <div class="sbox"><div class="sl">SCORE</div><div class="sv" id="eSc" style="color:#ffd700">0</div></div>
+    <div class="sbox"><div class="sl">HITS</div><div class="sv" id="eHt" style="color:#00e539">0</div></div>
+    <div class="sbox"><div class="sl">BEST TIME</div><div class="sv" id="eBt" style="color:#e8001d">—</div></div>
+    <div class="sbox"><div class="sl">MISSES</div><div class="sv" id="eMi" style="color:#e8001d">0</div></div>
+  </div>
+
+  <div class="nbtag hidden" id="nbtag">&#9733; NEW RECORD &#9733;</div>
+  <div class="btnrow">
+    <button class="ebtn ebtn-p" id="replayBtn">&#8635;&nbsp; RACE AGAIN</button>
+    <button class="ebtn ebtn-m" id="menuBtn">PIT LANE</button>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════
+   AUDIO
+════════════════════════════════ */
+var AC = window.AudioContext || window.webkitAudioContext;
+var actx = null, muted = false;
+
+function initAC(){ if(actx||!AC) return; try{ actx=new AC(); }catch(e){} }
+function resumeAC(){ if(actx&&actx.state==='suspended') try{actx.resume();}catch(e){} }
+
+function beep(freq, fe, type, vol, dur, t0){
+  if(muted||!actx) return;
+  try{
+    var o=actx.createOscillator(), g=actx.createGain();
+    o.connect(g); g.connect(actx.destination);
+    o.type=type||'sine';
+    var t=actx.currentTime+(t0||0);
+    o.frequency.setValueAtTime(freq,t);
+    if(fe) o.frequency.exponentialRampToValueAtTime(fe,t+dur);
+    g.gain.setValueAtTime(vol||.25,t);
+    g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    o.start(t); o.stop(t+dur+.05);
+  }catch(e){}
+}
+
+function crash(dur,vol,fc){
+  if(muted||!actx) return;
+  try{
+    var sr=actx.sampleRate, buf=actx.createBuffer(1,Math.ceil(sr*dur),sr);
+    var d=buf.getChannelData(0); for(var i=0;i<d.length;i++) d[i]=Math.random()*2-1;
+    var src=actx.createBufferSource(); src.buffer=buf;
+    var f=actx.createBiquadFilter(); f.type='bandpass'; f.frequency.value=fc||300; f.Q.value=1.2;
+    var g=actx.createGain(); var t=actx.currentTime;
+    g.gain.setValueAtTime(vol||.25,t); g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    src.connect(f); f.connect(g); g.connect(actx.destination);
+    src.start(t); src.stop(t+dur+.05);
+  }catch(e){}
+}
+
+function sLightOn(n){ beep(80+n*18,130+n*22,'square',.32,.11); crash(.09,.12,180+n*25); }
+function sLightsOut(){ beep(50,900,'sawtooth',.38,.22); crash(.28,.28,600); beep(220,2200,'square',.18,.18,.06); }
+function sHit(ms){ var p=Math.max(380,1300-ms*1.6); beep(p,p*2,'square',.26,.09); beep(p*1.5,p*3,'sine',.14,.07,.05); }
+function sPerfect(){ beep(880,1760,'square',.28,.12); beep(1320,2640,'sine',.2,.1,.09); beep(1760,3520,'square',.15,.1,.18); }
+function sMiss(){ beep(180,55,'sawtooth',.38,.26); crash(.2,.28,160); }
+function sSlow(){ beep(220,70,'sawtooth',.42,.32); crash(.26,.32,140); beep(90,35,'square',.3,.38,.12); }
+function sOver(){ beep(200,45,'sawtooth',.45,.65); crash(.5,.35,110); beep(75,28,'sine',.4,.85,.18); }
+function sWin(){ var ns=[523,659,784,1047,1319]; for(var i=0;i<ns.length;i++)(function(n,d){beep(n,n*1.02,'square',.24,.18,d);})(ns[i],i*.13); }
+function sTick(){ beep(440,480,'square',.18,.09); }
+function sLvl(){ beep(200,900,'sawtooth',.26,.28); crash(.22,.12,700); }
+
+var hbiv=null;
+function startHB(){ stopHB(); hbiv=setInterval(function(){ if(muted||!actx) return; beep(58,78,'square',.3,.07); beep(52,72,'square',.24,.07,.2); },680); }
+function stopHB(){ if(hbiv){clearInterval(hbiv);hbiv=null;} }
+
+/* ════════════════════════════════
+   CONFIG
+════════════════════════════════ */
+var ROUNDS=10, MAXLIVES=3;
+var WINDOWS=[900,800,700,620,540,460,400,340,280,230]; // ms to click
+
+/* ════════════════════════════════
+   STATE
+════════════════════════════════ */
+var round,lives,score,hits,misses,bestMs,reactions,dotActive,dotShownAt,waitT,hideT,gameOn;
+
+/* ════════════════════════════════
+   DOM
+════════════════════════════════ */
+var D=function(id){return document.getElementById(id);};
+var startScreen=D('startScreen'), gameScreen=D('gameScreen'), endScreen=D('endScreen');
+var arena=D('arena'), dot=D('dot'), waitMsg=D('waitMsg');
+var tfill=D('tfill'), sfill=D('sfill');
+var tooBanner=D('tooBanner'), lvlBanner=D('lvlBanner');
+
+/* ── HS ── */
+var hsBest=Infinity, hsScore=0;
+try{ hsBest=parseFloat(localStorage.getItem('f1b')||'Infinity')||Infinity; hsScore=parseInt(localStorage.getItem('f1s')||'0')||0; }catch(e){}
+if(hsBest!==Infinity) D('hsMs').textContent=hsBest+'ms';
+D('hsScore').textContent=hsScore;
+
+/* ════════════════════════════════
+   SCREEN
+════════════════════════════════ */
+function show(el){ [startScreen,gameScreen,endScreen].forEach(function(s){ if(s===el) s.classList.remove('hidden'); else s.classList.add('hidden'); }); }
+
+/* ════════════════════════════════
+   SOUND TOGGLE
+════════════════════════════════ */
+D('sndBtn').addEventListener('click',function(){
+  muted=!muted;
+  D('sndBtn').innerHTML=muted?'&#128263; SOUND OFF':'&#128266; SOUND ON';
+  D('sndBtn').classList.toggle('off',muted);
+});
+
+/* ════════════════════════════════
+   LIGHTS
+════════════════════════════════ */
+function resetLights(){ for(var i=0;i<5;i++) D('lb'+i).className='lb'; }
+
+function doLights(cb){
+  resetLights();
+  waitMsg.textContent='LIGHTS ON...';
+  waitMsg.style.display='block';
+  var i=0;
+  var iv=setInterval(function(){
+    if(i<5){ D('lb'+i).classList.add('ON'); sLightOn(i); i++; }
+    else{
+      clearInterval(iv);
+      // random hold 500–1400ms
+      var hold=500+Math.random()*900;
+      setTimeout(function(){
+        for(var j=0;j<5;j++) D('lb'+j).classList.remove('ON');
+        sLightsOut();
+        waitMsg.textContent='GO! GO! GO!';
+        setTimeout(function(){ waitMsg.style.display='none'; cb(); },120);
+      },hold);
+    }
+  },650);
+}
+
+/* ════════════════════════════════
+   DOT
+════════════════════════════════ */
+
+// Visual size of the dot (what you SEE)
+function dotVisualSize(){
+  var sizes=[58,54,50,47,44,41,38,36,34,32];
+  var idx=Math.min(round-1,sizes.length-1);
+  // Scale with screen: on small phones keep min 30px
+  return Math.max(30, Math.min(sizes[idx], Math.floor(window.innerWidth*0.13)));
+}
+
+// Tap/click zone — always at least 56px so it's fingertip-friendly
+function dotTapSize(visual){
+  return Math.max(56, visual + 20);
+}
+
+// Grid-based placement: split arena into 3×4 zones, pick a random one
+// This guarantees the dot moves to genuinely different areas every round
+var lastZone = -1;
+function pickPosition(aw, ah, tapSz){
+  var cols=3, rows=4;
+  var zoneW=aw/cols, zoneH=ah/rows;
+  var margin=tapSz/2+6;
+
+  // pick zone different from last
+  var zone, attempts=0;
+  do {
+    zone=Math.floor(Math.random()*cols*rows);
+    attempts++;
+  } while(zone===lastZone && attempts<20);
+  lastZone=zone;
+
+  var col=zone%cols, row=Math.floor(zone/cols);
+  var zx0=col*zoneW, zy0=row*zoneH;
+
+  // random point inside that zone, clamped to arena bounds
+  var x=zx0 + margin + Math.random()*Math.max(1, zoneW-margin*2);
+  var y=zy0 + margin + Math.random()*Math.max(1, zoneH-margin*2);
+
+  x=Math.max(margin, Math.min(aw-margin, x));
+  y=Math.max(margin, Math.min(ah-margin, y));
+  return {x:x, y:y};
+}
+
+function showDot(){
+  var viz  = dotVisualSize();
+  var tap  = dotTapSize(viz);
+  var aw   = arena.offsetWidth  || window.innerWidth;
+  var ah   = arena.offsetHeight || Math.max(220, window.innerHeight-180);
+  var pos  = pickPosition(aw, ah, tap/2);
+
+  // Outer tap wrapper — invisible, large, receives all events
+  dot.style.width         = tap+'px';
+  dot.style.height        = tap+'px';
+  dot.style.left          = pos.x+'px';
+  dot.style.top           = pos.y+'px';
+  dot.style.background    = 'transparent';
+  dot.style.border        = 'none';
+  dot.style.boxShadow     = 'none';
+  dot.style.animation     = 'none';
+  dot.style.display       = 'block';
+  dot.style.zIndex        = '100';
+  dot.style.pointerEvents = 'auto';
+
+  // Inner visible dot via ::before trick — use a child div instead
+  // Remove old inner if any
+  while(dot.firstChild) dot.removeChild(dot.firstChild);
+  var inner = document.createElement('div');
+  inner.style.position     = 'absolute';
+  inner.style.top          = '50%';
+  inner.style.left         = '50%';
+  inner.style.width        = viz+'px';
+  inner.style.height       = viz+'px';
+  inner.style.marginTop    = (-viz/2)+'px';
+  inner.style.marginLeft   = (-viz/2)+'px';
+  inner.style.borderRadius = '50%';
+  inner.style.background   = 'radial-gradient(circle at 33% 28%, #ffffff 0%, #ff8800 38%, #ff1100 70%, #990000 100%)';
+  inner.style.border       = '3px solid rgba(255,210,120,0.95)';
+  inner.style.boxShadow    =
+      '0 0 '+Math.round(viz*.7)+'px rgba(255,70,0,1),'
+    + '0 0 '+Math.round(viz*1.5)+'px rgba(255,30,0,.75),'
+    + '0 0 '+Math.round(viz*3)  +'px rgba(255,0,0,.4),'
+    + '0 0 '+Math.round(viz*5)  +'px rgba(180,0,0,.18)';
+  inner.style.animation    = 'dotP .18s ease-in-out infinite alternate';
+  inner.style.pointerEvents= 'none'; // tap zone is the parent
+  dot.appendChild(inner);
+
+  dotActive=true;
+  dotShownAt=performance.now();
+
+  // time bar
+  var win=WINDOWS[Math.min(round-1,WINDOWS.length-1)];
+  tfill.style.transition='none';
+  tfill.style.width='100%';
+  void tfill.offsetWidth;
+  tfill.style.transition='width '+win+'ms linear';
+  tfill.style.width='0%';
+
+  hideT=setTimeout(function(){
+    if(!dotActive) return;
+    dotActive=false;
+    hideDot();
+    onSlow();
+  }, win);
+}
+
+function hideDot(){
+  dot.style.display='none';
+  dot.style.animation='none';
+  dot.style.pointerEvents='none';
+  while(dot.firstChild) dot.removeChild(dot.firstChild);
+  tfill.style.transition='none';
+  tfill.style.width='0%';
+}
+
+/* ════════════════════════════════
+   ROUND
+════════════════════════════════ */
+function startRound(){
+  if(!gameOn) return;
+  dotActive=false;
+  hideDot();
+  waitMsg.style.display='block';
+  waitMsg.textContent='ROUND '+round+' / '+ROUNDS;
+
+  D('hRound').textContent=round+'/'+ROUNDS;
+  D('hScore').textContent=score;
+  updateLives();
+  updateSpeed();
+  if(round>=8) startHB(); else stopHB();
+
+  // small pause then lights
+  setTimeout(function(){
+    if(!gameOn) return;
+    doLights(function(){
+      if(!gameOn) return;
+      // extra random wait 200–700ms after lights out
+      waitT=setTimeout(function(){
+        if(!gameOn) return;
+        showDot();
+      }, 200+Math.random()*500);
+    });
+  }, 600);
+}
+
+/* ════════════════════════════════
+   HIT / MISS / SLOW
+════════════════════════════════ */
+function onDotClick(e){
+  if(!gameOn||!dotActive) return;
+  e.preventDefault(); e.stopPropagation();
+
+  var rt=Math.round(performance.now()-dotShownAt);
+  dotActive=false;
+  clearTimeout(hideT);
+  hideDot();
+
+  reactions.push(rt);
+  if(rt<bestMs) bestMs=rt;
+  D('hBest').textContent=bestMs+'ms';
+
+  var win=WINDOWS[Math.min(round-1,WINDOWS.length-1)];
+  var pts=Math.max(10, Math.round(((win-rt)/win)*100*round));
+  score+=pts; hits++;
+
+  if(rt<160) sPerfect(); else sHit(rt);
+
+  var c=coords(e);
+  var col=rt<200?'#00e539':rt<380?'#ffd700':'#ffffff';
+  floatLabel(c.x,c.y,rt+'ms  +'+pts,col);
+
+  round++;
+  if(round>ROUNDS){ endGame(true); return; }
+  // show level-up on even rounds
+  if(round%2===1 && round<ROUNDS){
+    lvlBanner.style.opacity='1'; sLvl();
+    setTimeout(function(){ lvlBanner.style.opacity='0'; },1300);
+  }
+  setTimeout(startRound,900);
+}
+
+function onArenaClick(e){
+  if(!gameOn) return;
+  if(e.target===dot) return; // handled above
+  if(!dotActive) return;     // don't penalise during lights
+  e.preventDefault();
+
+  lives--; misses++;
+  sMiss();
+  var c=coords(e);
+  floatLabel(c.x,c.y,'WRONG!','#e8001d');
+  flash('rgba(255,0,0,.22)'); shake();
+  updateLives();
+  if(lives<=0){ clearTimeout(hideT); sOver(); endGame(false); }
+}
+
+function onSlow(){
+  if(!gameOn) return;
+  lives--; misses++;
+  sSlow();
+  tooBanner.style.opacity='1';
+  setTimeout(function(){ tooBanner.style.opacity='0'; },1300);
+  flash('rgba(232,0,29,.22)'); shake();
+  updateLives();
+  if(lives<=0){ sOver(); endGame(false); return; }
+  round++;
+  if(round>ROUNDS){ endGame(true); return; }
+  setTimeout(startRound,1500);
+}
+
+/* ════════════════════════════════
+   START / END
+════════════════════════════════ */
+function startGame(){
+  initAC(); resumeAC();
+  round=1; lives=MAXLIVES; score=0; hits=0; misses=0;
+  bestMs=Infinity; reactions=[];
+  gameOn=true; stopHB();
+  D('hScore').textContent='0';
+  D('hBest').textContent='—';
+  updateLives(); updateSpeed();
+  tooBanner.style.opacity='0';
+  lvlBanner.style.opacity='0';
+  hideDot();
+  waitMsg.style.display='block';
+  waitMsg.textContent='GET READY...';
+  resetLights();
+  show(gameScreen);
+  setTimeout(startRound,500);
+}
+
+function endGame(fin){
+  gameOn=false; stopHB();
+  clearTimeout(waitT); clearTimeout(hideT);
+  dotActive=false; hideDot();
+
+  var avg=0;
+  if(reactions.length){ var s=0; for(var i=0;i<reactions.length;i++) s+=reactions[i]; avg=Math.round(s/reactions.length); }
+  var best=bestMs===Infinity?null:bestMs;
+
+  var newB=false;
+  if(best!==null&&best<hsBest){ hsBest=best; newB=true; try{localStorage.setItem('f1b',hsBest);}catch(e){} }
+  if(score>hsScore){ hsScore=score; try{localStorage.setItem('f1s',hsScore);}catch(e){} }
+  D('hsMs').textContent=hsBest!==Infinity?hsBest+'ms':'—';
+  D('hsScore').textContent=hsScore;
+
+  // Rating
+  var rating,rcol,tag;
+  if(!best||best>500){ rating='DNF'; rcol='#e8001d'; tag=badInsult(score); }
+  else if(best<150){ rating='P1'; rcol='#ffd700'; tag='supernatural reflexes. barely human.'; sWin(); }
+  else if(best<200){ rating='P3'; rcol='#c0c0c0'; tag='podium. mediocre podium. sit down.'; sWin(); }
+  else if(best<280){ rating='P6'; rcol='#fff'; tag='mid-field. where careers go to die.'; }
+  else if(best<400){ rating='P12'; rcol='rgba(255,255,255,.5)'; tag=badInsult(score); }
+  else { rating='P20'; rcol='#e8001d'; tag=badInsult(0); }
+
+  function badInsult(sc){
+    var b=[
+      'lol. my nan reacts faster. she\'s 94.',
+      'bro fell asleep on the starting grid.',
+      'the dot felt SORRY for you. it didn\'t.',
+      'error 404: reflexes not found.',
+      'you missed a GIANT RED BALL. respect.',
+      'race engineer: "what the heck was that?"',
+      'your sponsors want their money back.',
+      'even the safety car is faster than you.',
+      'mate... did you blink for 10 seconds?',
+      'DNF stands for "definitely not fast".',
+    ];
+    var m=[
+      'decent. for a bicycle rider.',
+      'not terrible. just deeply average.',
+      'the team principal is disappointed.',
+      'you finished. congrats on existing.',
+    ];
+    if(sc<300) return b[Math.floor(Math.random()*b.length)];
+    return m[Math.floor(Math.random()*m.length)];
+  }
+
+  D('eTitle').textContent=fin?'CHEQUERED':'CRASHED OUT';
+  D('eTitle').className='et '+(fin?'ewin':'elose');
+  D('eTag').textContent=tag;
+  D('eBadge').textContent=rating;
+  D('eBadge').style.color=rcol;
+  D('eBadge').style.borderColor=rcol;
+  D('eBadge').style.boxShadow='0 0 20px '+rcol;
+  D('eSc').textContent=score;
+  D('eHt').textContent=hits+'/'+ROUNDS;
+  D('eBt').textContent=best?best+'ms':'—';
+  D('eMi').textContent=misses;
+  D('nbtag').classList.toggle('hidden',!newB);
+  if(avg>0){
+    var pct=Math.max(5,Math.min(100,(1-(avg-100)/900)*100));
+    var bc=avg<200?'#00e539':avg<350?'#ffd700':'#e8001d';
+    D('rmL').textContent=avg+'ms';
+    setTimeout(function(){ D('rmBar').style.background=bc; D('rmBar').style.width=pct+'%'; },300);
+  }
+  show(endScreen);
+}
+
+/* ════════════════════════════════
+   HELPERS
+════════════════════════════════ */
+function updateLives(){
+  for(var i=0;i<MAXLIVES;i++) D('lv'+i).className='hrt'+(i<lives?'':' gone');
+}
+function updateSpeed(){
+  sfill.style.width=Math.min(95,10+(round/ROUNDS)*85)+'%';
+}
+function coords(e){
+  if(e.changedTouches&&e.changedTouches.length) return {x:e.changedTouches[0].clientX,y:e.changedTouches[0].clientY};
+  return {x:e.clientX,y:e.clientY};
+}
+function floatLabel(x,y,txt,col){
+  var el=document.createElement('div');
+  el.className='flbl'; el.textContent=txt; el.style.color=col;
+  el.style.left=x+'px'; el.style.top=y+'px';
+  document.body.appendChild(el);
+  setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); },750);
+}
+function flash(col){
+  var f=document.createElement('div'); f.className='rflash'; f.style.background=col;
+  document.body.appendChild(f);
+  setTimeout(function(){ if(f.parentNode) f.parentNode.removeChild(f); },420);
+}
+function shake(){
+  document.body.classList.remove('shaking');
+  void document.body.offsetWidth;
+  document.body.classList.add('shaking');
+  setTimeout(function(){ document.body.classList.remove('shaking'); },320);
+}
+
+/* ════════════════════════════════
+   DOT PULSE KEYFRAME (injected)
+════════════════════════════════ */
+(function(){
+  var s=document.createElement('style');
+  s.textContent='@keyframes dotP{0%{filter:brightness(1) drop-shadow(0 0 10px #ff4400);}100%{filter:brightness(1.5) drop-shadow(0 0 32px #ff8800);}}';
+  document.head.appendChild(s);
+})();
+
+/* ════════════════════════════════
+   EVENTS
+════════════════════════════════ */
+D('startBtn').addEventListener('click', startGame);
+D('replayBtn').addEventListener('click', function(){ initAC(); resumeAC(); startGame(); });
+D('menuBtn').addEventListener('click', function(){ stopHB(); gameOn=false; show(startScreen); });
+
+// DOT click/touch
+dot.addEventListener('click', onDotClick);
+dot.addEventListener('touchend', function(e){ e.preventDefault(); onDotClick(e); }, {passive:false});
+
+// ARENA miss
+arena.addEventListener('click', onArenaClick);
+arena.addEventListener('touchend', function(e){ e.preventDefault(); onArenaClick(e); }, {passive:false});
+</script>
+</body>
+</html>
