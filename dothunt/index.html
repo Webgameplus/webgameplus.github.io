@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>(function(s){s.dataset.zone='10712087',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+  <script>(function(s){s.dataset.zone='10712096',s.src='https://gizokraijaw.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOT HUNT — 60 Seconds of Hell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════
+   RESET & ROOT
+══════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:     #070707;
+  --red:    #ff2020;
+  --orange: #ff6b00;
+  --cyan:   #00ffc8;
+  --yellow: #ffe500;
+  --white:  #f0f0f0;
+  --dim:    rgba(255,255,255,0.45);
+  --card:   rgba(255,255,255,0.04);
+  --border: rgba(255,255,255,0.08);
+  --font-display: 'Bebas Neue', Impact, sans-serif;
+  --font-mono:    'DM Mono', 'Courier New', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--font-mono);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── CUSTOM CURSOR ── */
+#cursor {
+  position: fixed;
+  width: 12px; height: 12px;
+  background: var(--cyan);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%,-50%);
+  transition: transform .08s, width .15s, height .15s, background .15s;
+  box-shadow: 0 0 10px var(--cyan), 0 0 24px rgba(0,255,200,0.3);
+  mix-blend-mode: screen;
+}
+#cursor.big { width: 36px; height: 36px; background: rgba(0,255,200,0.15); box-shadow: 0 0 0 1px var(--cyan); }
+
+/* ── SCANLINES ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.12) 2px, rgba(0,0,0,0.12) 4px);
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* ── NOISE GRAIN ── */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 9997;
+}
+
+/* ══════════════════════════════════════
+   NAV
+══════════════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 1000;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 clamp(20px, 5vw, 60px);
+  height: 60px;
+  background: rgba(7,7,7,0.85);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+}
+
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  letter-spacing: 4px;
+  color: var(--white);
+  text-decoration: none;
+  display: flex; align-items: center; gap: 10px;
+}
+
+.nav-dot {
+  width: 10px; height: 10px;
+  background: var(--cyan);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--cyan);
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,100% { transform: scale(1); opacity:1; }
+  50%      { transform: scale(1.5); opacity:.5; }
+}
+
+.nav-links {
+  display: flex; gap: 32px; list-style: none;
+}
+
+.nav-links a {
+  font-size: 0.65rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--dim);
+  text-decoration: none;
+  transition: color .2s;
+}
+.nav-links a:hover { color: var(--cyan); }
+
+.nav-cta {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  letter-spacing: 3px;
+  color: #000 !important;
+  background: var(--cyan);
+  padding: 8px 20px;
+  border-radius: 3px;
+  text-decoration: none;
+  transition: box-shadow .2s, transform .15s !important;
+}
+.nav-cta:hover { box-shadow: 0 0 20px rgba(0,255,200,0.4) !important; transform: translateY(-1px); }
+
+/* ══════════════════════════════════════
+   HERO
+══════════════════════════════════════ */
+#hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 80px 20px 60px;
+  text-align: center;
+}
+
+/* Animated background grid */
+.grid-bg {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,255,200,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,200,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: gridDrift 20s linear infinite;
+}
+
+@keyframes gridDrift {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(60px); }
+}
+
+/* Radial vignette */
+.hero-vignette {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, transparent 30%, #070707 80%);
+  pointer-events: none;
+}
+
+/* Floating dots BG */
+.floaters { position: absolute; inset: 0; pointer-events: none; }
+.floater {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--cyan);
+  opacity: 0;
+  animation: floatDot linear infinite;
+  box-shadow: 0 0 8px var(--cyan);
+}
+
+@keyframes floatDot {
+  0%   { opacity:0; transform: translateY(0) scale(1); }
+  10%  { opacity:.7; }
+  90%  { opacity:.4; }
+  100% { opacity:0; transform: translateY(-100vh) scale(0.3); }
+}
+
+.hero-eyebrow {
+  position: relative;
+  font-size: clamp(0.6rem, 2vw, 0.75rem);
+  letter-spacing: 6px;
+  color: var(--red);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  opacity: 0;
+  animation: fadeUp .6s .2s ease-out forwards;
+}
+
+.hero-title {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 22vw, 14rem);
+  line-height: 0.88;
+  letter-spacing: 8px;
+  color: var(--white);
+  opacity: 0;
+  animation: fadeUp .7s .35s ease-out forwards;
+}
+
+.hero-title .stroke {
+  -webkit-text-stroke: 2px var(--white);
+  color: transparent;
+}
+
+.hero-title .glow-r {
+  color: var(--red);
+  text-shadow: 0 0 40px var(--red), 0 0 100px rgba(255,32,32,0.3);
+  animation: glowPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%,100% { text-shadow: 0 0 40px var(--red), 0 0 100px rgba(255,32,32,0.3); }
+  50%      { text-shadow: 0 0 80px var(--red), 0 0 160px rgba(255,32,32,0.5); }
+}
+
+.hero-tagline {
+  position: relative;
+  font-size: clamp(0.85rem, 3vw, 1.2rem);
+  color: var(--dim);
+  letter-spacing: 2px;
+  max-width: 500px;
+  margin: 24px auto 0;
+  line-height: 1.7;
+  opacity: 0;
+  animation: fadeUp .7s .5s ease-out forwards;
+}
+
+.hero-tagline strong { color: var(--cyan); font-weight: 500; }
+
+.hero-btns {
+  position: relative;
+  display: flex; gap: 16px; flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 40px;
+  opacity: 0;
+  animation: fadeUp .7s .65s ease-out forwards;
+}
+
+.btn-primary {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 4vw, 1.3rem);
+  letter-spacing: 5px;
+  color: #000;
+  background: var(--cyan);
+  border: none; border-radius: 4px;
+  padding: 16px 44px;
+  cursor: none; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 10px;
+  box-shadow: 0 0 30px rgba(0,255,200,0.35);
+  transition: box-shadow .2s, transform .15s;
+}
+.btn-primary:hover { box-shadow: 0 0 60px rgba(0,255,200,0.6); transform: translateY(-2px) scale(1.02); }
+
+.btn-ghost {
+  font-family: var(--font-display);
+  font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+  letter-spacing: 4px;
+  color: var(--white);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px 36px;
+  cursor: none; text-decoration: none;
+  transition: border-color .2s, color .2s, transform .15s;
+}
+.btn-ghost:hover { border-color: var(--white); color: var(--white); transform: translateY(-2px); }
+
+/* Scroll indicator */
+.scroll-hint {
+  position: absolute; bottom: 32px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  font-size: 0.55rem; letter-spacing: 4px; color: rgba(255,255,255,0.25);
+  text-transform: uppercase;
+  animation: fadeUp 1s 1.2s ease-out both;
+}
+
+.scroll-arrow {
+  width: 1px; height: 40px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.3));
+  animation: scrollPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes scrollPulse { 0%,100%{opacity:.3;transform:scaleY(1)} 50%{opacity:1;transform:scaleY(1.2)} }
+
+@keyframes fadeUp {
+  0%   { opacity:0; transform: translateY(24px); }
+  100% { opacity:1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════════════
+   STATS TICKER
+══════════════════════════════════════ */
+.ticker-wrap {
+  background: var(--red);
+  overflow: hidden;
+  padding: 12px 0;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.ticker-track {
+  display: flex;
+  animation: ticker 18s linear infinite;
+  white-space: nowrap;
+}
+
+.ticker-item {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  letter-spacing: 4px;
+  color: #000;
+  padding: 0 40px;
+  flex-shrink: 0;
+}
+
+.ticker-sep { color: rgba(0,0,0,0.4); }
+
+@keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+/* ══════════════════════════════════════
+   SECTION BASE
+══════════════════════════════════════ */
+section {
+  padding: clamp(60px, 10vw, 120px) clamp(20px, 8vw, 100px);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-label {
+  font-size: 0.6rem;
+  letter-spacing: 5px;
+  color: var(--cyan);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 12px;
+}
+.section-label::before { content:''; display:block; width:24px; height:1px; background:var(--cyan); }
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  letter-spacing: 4px;
+  line-height: 1;
+  margin-bottom: 20px;
+}
+
+/* ══════════════════════════════════════
+   ABOUT / GAME PREVIEW
+══════════════════════════════════════ */
+#about {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(40px, 6vw, 80px);
+  align-items: center;
+  max-width: 1200px;
+  padding: clamp(60px, 10vw, 120px) clamp(20px, 8vw, 100px);
+  margin: 0 auto;
+}
+
+.about-left {}
+.about-right { display: flex; justify-content: center; }
+
+.about-text {
+  font-size: clamp(0.8rem, 2.2vw, 0.95rem);
+  color: rgba(255,255,255,0.55);
+  line-height: 1.9;
+  margin-bottom: 28px;
+  letter-spacing: .3px;
+}
+
+/* LIVE GAME PREVIEW */
+.game-preview {
+  width: 100%;
+  max-width: 340px;
+  aspect-ratio: 9/16;
+  background: #0c0c0c;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 0 60px rgba(0,255,200,0.08), 0 40px 80px rgba(0,0,0,0.6);
+}
+
+.preview-hud {
+  display: flex;
+  background: rgba(0,0,0,0.9);
+  border-bottom: 1px solid var(--border);
+  padding: 0;
+}
+
+.prev-cell {
+  flex: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 8px 4px;
+  border-right: 1px solid var(--border);
+}
+.prev-cell:last-child { border-right: none; }
+.prev-label { font-size: 0.45rem; letter-spacing: 3px; color: rgba(255,255,255,0.3); text-transform: uppercase; }
+.prev-val { font-family: var(--font-display); font-size: 1.2rem; }
+.pv-time { color: var(--yellow); }
+.pv-score { color: var(--cyan); }
+.pv-miss { color: var(--red); }
+.pv-lvl { color: var(--orange); }
+
+.preview-arena {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(0,255,200,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,200,0.015) 1px, transparent 1px);
+  background-size: 30px 30px;
+  background-color: #0c0c0c;
+  height: calc(100% - 50px);
+}
+
+.demo-dot {
+  position: absolute;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff, var(--cyan));
+  box-shadow: 0 0 16px rgba(0,255,200,0.8), 0 0 40px rgba(0,255,200,0.3);
+  transform: translate(-50%,-50%);
+  animation: demoBounce 3.2s linear infinite;
+}
+
+@keyframes demoBounce {
+  0%   { left:30%; top:40%; }
+  15%  { left:70%; top:20%; }
+  30%  { left:85%; top:65%; }
+  45%  { left:55%; top:80%; }
+  60%  { left:20%; top:60%; }
+  75%  { left:10%; top:25%; }
+  90%  { left:60%; top:15%; }
+  100% { left:30%; top:40%; }
+}
+
+/* ══════════════════════════════════════
+   FEATURES / HOW IT WORKS
+══════════════════════════════════════ */
+#features {
+  padding: clamp(60px, 10vw, 120px) clamp(20px, 8vw, 100px);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.features-header { text-align: center; margin-bottom: 60px; }
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.feat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: clamp(24px, 4vw, 36px);
+  position: relative;
+  overflow: hidden;
+  transition: border-color .3s, transform .3s;
+}
+.feat-card::before {
+  content:'';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(0,255,200,0.04), transparent);
+  opacity: 0;
+  transition: opacity .3s;
+}
+.feat-card:hover { border-color: rgba(0,255,200,0.25); transform: translateY(-4px); }
+.feat-card:hover::before { opacity: 1; }
+
+.feat-icon {
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  margin-bottom: 16px;
+  display: block;
+}
+
+.feat-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 4vw, 1.7rem);
+  letter-spacing: 3px;
+  color: var(--white);
+  margin-bottom: 10px;
+}
+
+.feat-desc {
+  font-size: clamp(0.72rem, 2vw, 0.82rem);
+  color: rgba(255,255,255,0.45);
+  line-height: 1.8;
+  letter-spacing: .2px;
+}
+
+.feat-accent {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px;
+}
+
+/* ══════════════════════════════════════
+   LEVELS / DIFFICULTY
+══════════════════════════════════════ */
+#levels {
+  padding: clamp(60px, 10vw, 120px) clamp(20px, 8vw, 100px);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.levels-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-top: 44px;
+}
+
+.level-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 20px 12px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform .2s;
+}
+.level-card:hover { transform: scale(1.04); }
+
+.level-card .lnum {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.level-card .lname {
+  font-size: 0.55rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 16px;
+}
+
+.level-bar {
+  height: 3px;
+  border-radius: 2px;
+  margin-bottom: 12px;
+}
+
+.ldot {
+  display: inline-block;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.8);
+  box-shadow: 0 0 8px rgba(255,255,255,0.5);
+  margin: 0 auto;
+}
+
+.level-card .lspeed {
+  font-size: 0.55rem;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.3);
+  margin-top: 8px;
+}
+
+/* ══════════════════════════════════════
+   LEADERBOARD MOCK
+══════════════════════════════════════ */
+#leaderboard {
+  padding: clamp(60px, 10vw, 120px) clamp(20px, 8vw, 100px);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.lb-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+  margin-top: 44px;
+}
+
+.lb-table {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.lb-head {
+  display: grid;
+  grid-template-columns: 40px 1fr 80px;
+  padding: 12px 20px;
+  background: rgba(255,255,255,0.04);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.55rem;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+}
+
+.lb-row {
+  display: grid;
+  grid-template-columns: 40px 1fr 80px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  align-items: center;
+  transition: background .2s;
+}
+.lb-row:last-child { border-bottom: none; }
+.lb-row:hover { background: rgba(255,255,255,0.03); }
+
+.lb-rank { font-family: var(--font-display); font-size: 1.1rem; }
+.rank-1 { color: var(--yellow); }
+.rank-2 { color: #c0c0c0; }
+.rank-3 { color: #cd7f32; }
+
+.lb-name { font-size: 0.8rem; letter-spacing: 1px; color: var(--white); }
+.lb-score { font-family: var(--font-display); font-size: 1.1rem; color: var(--cyan); text-align: right; }
+
+.lb-cta {
+  display: flex; flex-direction: column;
+  align-items: flex-start; justify-content: center;
+  gap: 20px;
+}
+
+.lb-cta-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3rem);
+  letter-spacing: 3px;
+  line-height: 1.1;
+}
+
+.lb-cta-title span { color: var(--cyan); }
+
+.lb-cta-text {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.8;
+}
+
+/* ══════════════════════════════════════
+   TESTIMONIALS
+══════════════════════════════════════ */
+#reviews {
+  padding: clamp(60px, 10vw, 120px) clamp(20px, 8vw, 100px);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin-top: 44px;
+}
+
+.review-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: clamp(20px, 3vw, 28px);
+  position: relative;
+  transition: border-color .25s, transform .25s;
+}
+.review-card:hover { border-color: rgba(255,255,255,0.15); transform: translateY(-3px); }
+
+.review-stars {
+  font-size: 0.75rem;
+  color: var(--yellow);
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+.review-text {
+  font-size: clamp(0.78rem, 2vw, 0.88rem);
+  color: rgba(255,255,255,0.6);
+  line-height: 1.8;
+  margin-bottom: 16px;
+  font-style: italic;
+}
+
+.review-author {
+  font-size: 0.6rem;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.25);
+  text-transform: uppercase;
+}
+
+.review-score {
+  position: absolute; top: 20px; right: 20px;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  color: var(--cyan);
+  letter-spacing: 2px;
+}
+
+/* ══════════════════════════════════════
+   FINAL CTA
+══════════════════════════════════════ */
+#cta-section {
+  padding: clamp(80px, 14vw, 160px) clamp(20px, 8vw, 100px);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid var(--border);
+}
+
+#cta-section::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 100%, rgba(255,32,32,0.08) 0%, transparent 65%);
+}
+
+.cta-label {
+  font-size: 0.6rem;
+  letter-spacing: 6px;
+  color: var(--red);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  animation: flicker 3s infinite;
+}
+
+.cta-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 12vw, 8rem);
+  letter-spacing: 6px;
+  line-height: 0.9;
+  margin-bottom: 28px;
+  position: relative;
+}
+
+.cta-title .line2 { color: var(--red); display: block; }
+
+.cta-sub {
+  font-size: clamp(0.8rem, 2.5vw, 1rem);
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 2px;
+  margin-bottom: 44px;
+  max-width: 480px;
+  margin-left: auto; margin-right: auto;
+  line-height: 1.7;
+}
+
+.cta-timer {
+  display: inline-flex; align-items: center; gap: 12px;
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 4vw, 1.5rem);
+  letter-spacing: 4px;
+  color: rgba(255,255,255,0.2);
+  margin-bottom: 36px;
+}
+
+.cta-timer-num {
+  color: var(--red);
+  font-size: clamp(2rem, 8vw, 4rem);
+  text-shadow: 0 0 30px var(--red);
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 28px clamp(20px, 8vw, 100px);
+  display: flex;
+  align-items: center; justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.footer-logo {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  letter-spacing: 4px;
+  color: rgba(255,255,255,0.25);
+  display: flex; align-items: center; gap: 8px;
+}
+
+.footer-links {
+  display: flex; gap: 24px; list-style: none;
+}
+
+.footer-links a {
+  font-size: 0.6rem;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.2);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color .2s;
+}
+.footer-links a:hover { color: rgba(255,255,255,0.5); }
+
+.footer-copy {
+  font-size: 0.58rem;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.15);
+}
+
+/* ══════════════════════════════════════
+   SCROLL REVEAL
+══════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity .7s ease-out, transform .7s ease-out;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+@media (max-width: 768px) {
+  #about { grid-template-columns: 1fr; }
+  .about-right { display: none; }
+  .levels-grid { grid-template-columns: repeat(3, 1fr); }
+  .lb-wrap { grid-template-columns: 1fr; }
+  .lb-cta { display: none; }
+  .nav-links { display: none; }
+  body { cursor: auto; }
+  #cursor { display: none; }
+}
+
+@media (max-width: 480px) {
+  .levels-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+
+<!-- ═══════════ NAV ═══════════ -->
+<nav>
+  <a href="#" class="nav-logo">
+    <span class="nav-dot"></span>
+    DOT HUNT
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#levels">Levels</a></li>
+    <li><a href="#leaderboard">Scores</a></li>
+    <li><a href="moving-target-mayhem.html" class="nav-cta">PLAY NOW</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section id="hero">
+  <div class="grid-bg"></div>
+  <div class="hero-vignette"></div>
+  <div class="floaters" id="floaters"></div>
+
+  <div class="hero-eyebrow">⚡ the hardest 60 seconds of your life ⚡</div>
+
+  <h1 class="hero-title">
+    <span class="stroke">DOT</span><br>
+    <span class="glow-r">HUNT</span>
+  </h1>
+
+  <p class="hero-tagline">
+    A <strong>tiny moving dot</strong>. 60 seconds. 3 lives.<br>
+    Your brain will not survive this.
+  </p>
+
+  <div class="hero-btns">
+    <a href="moving-target-mayhem.html" class="btn-primary">
+      &#9654;&nbsp; PLAY FREE
+    </a>
+    <a href="#about" class="btn-ghost">SEE HOW IT WORKS</a>
+  </div>
+
+  <div class="scroll-hint">
+    <span>scroll</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- ═══════════ TICKER ═══════════ -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span class="ticker-item">DOT HUNT <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">60 SECONDS <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">3 LIVES <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">5 LEVELS <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">NO MERCY <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">COOK YOUR BRAIN <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">FREE TO PLAY <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">MOBILE READY <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">DOT HUNT <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">60 SECONDS <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">3 LIVES <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">5 LEVELS <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">NO MERCY <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">COOK YOUR BRAIN <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">FREE TO PLAY <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">MOBILE READY <span class="ticker-sep">✦</span></span>
+  </div>
+</div>
+
+<!-- ═══════════ ABOUT ═══════════ -->
+<div id="about" class="reveal">
+  <div class="about-left">
+    <div class="section-label">// about the game</div>
+    <h2 class="section-title">WHAT IS<br>DOT HUNT?</h2>
+    <p class="about-text">
+      DOT HUNT is a 60-second reflex challenge that will genuinely cook your brain. 
+      A glowing dot bounces around the screen — your only job is to click or tap it.
+    </p>
+    <p class="about-text">
+      Simple? Sure. Until the dot gets <strong style="color:var(--cyan)">smaller</strong>, 
+      <strong style="color:var(--orange)">faster</strong>, and your hands start 
+      <strong style="color:var(--red)">shaking</strong>. Miss 3 times and it's over.
+      No checkpoints. No retry tokens. Pure, raw reflex.
+    </p>
+    <p class="about-text">
+      Chain hits to build <strong style="color:var(--yellow)">insane combos</strong> that 
+      multiply your score. Reach Level 5 and the dot is barely visible — a pixel-sized 
+      ghost mocking your existence.
+    </p>
+    <a href="moving-target-mayhem.html" class="btn-primary" style="display:inline-flex; margin-top:8px;">
+      &#9654;&nbsp; PLAY NOW — IT'S FREE
+    </a>
+  </div>
+  <div class="about-right">
+    <div class="game-preview">
+      <div class="preview-hud">
+        <div class="prev-cell"><div class="prev-label">Time</div><div class="prev-val pv-time" id="prevTimer">42</div></div>
+        <div class="prev-cell"><div class="prev-label">Score</div><div class="prev-val pv-score" id="prevScore">1840</div></div>
+        <div class="prev-cell"><div class="prev-label">Lives</div><div class="prev-val pv-miss">❤❤</div></div>
+        <div class="prev-cell"><div class="prev-label">Lvl</div><div class="prev-val pv-lvl">3</div></div>
+      </div>
+      <div class="preview-arena">
+        <div class="demo-dot"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ FEATURES ═══════════ -->
+<section id="features">
+  <div class="features-header reveal">
+    <div class="section-label" style="justify-content:center">// features</div>
+    <h2 class="section-title">WHY IT'S<br>DIABOLICAL</h2>
+  </div>
+
+  <div class="features-grid">
+    <div class="feat-card reveal">
+      <span class="feat-icon">🎯</span>
+      <div class="feat-title">ONE DOT.<br>ZERO MERCY.</div>
+      <p class="feat-desc">No distractions. No UI bloat. Just you, a dot, and your deteriorating sanity. The purest form of reflex torture.</p>
+      <div class="feat-accent" style="background:linear-gradient(90deg, var(--cyan), transparent)"></div>
+    </div>
+    <div class="feat-card reveal" style="transition-delay:.1s">
+      <span class="feat-icon">💀</span>
+      <div class="feat-title">5 LEVELS<br>OF HELL</div>
+      <p class="feat-desc">Every 10 seconds the dot shrinks and accelerates. By Level 5, you're chasing a 22px nightmare at max velocity.</p>
+      <div class="feat-accent" style="background:linear-gradient(90deg, var(--red), transparent)"></div>
+    </div>
+    <div class="feat-card reveal" style="transition-delay:.2s">
+      <span class="feat-icon">🔥</span>
+      <div class="feat-title">COMBO<br>SYSTEM</div>
+      <p class="feat-desc">Chain consecutive hits for multiplied points. TRIPLE, QUAD, PENTA, GODLIKE — each combo makes the dot faster. Risk vs reward.</p>
+      <div class="feat-accent" style="background:linear-gradient(90deg, var(--orange), transparent)"></div>
+    </div>
+    <div class="feat-card reveal" style="transition-delay:.3s">
+      <span class="feat-icon">📱</span>
+      <div class="feat-title">ANY<br>DEVICE</div>
+      <p class="feat-desc">Engineered for both fat-finger mobile tapping and precision desktop clicking. Works on 2010 Android phones. No excuses.</p>
+      <div class="feat-accent" style="background:linear-gradient(90deg, var(--yellow), transparent)"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ LEVELS ═══════════ -->
+<section id="levels">
+  <div class="reveal">
+    <div class="section-label">// difficulty curve</div>
+    <h2 class="section-title">THE 5 CIRCLES<br>OF DOT HELL</h2>
+  </div>
+
+  <div class="levels-grid">
+    <div class="level-card reveal" style="border-color:rgba(0,255,200,0.2)">
+      <div class="lnum" style="color:var(--cyan)">01</div>
+      <div class="lname">Warm Up</div>
+      <div class="level-bar" style="background:var(--cyan)"></div>
+      <div class="ldot" style="width:22px;height:22px;box-shadow:0 0 12px var(--cyan)"></div>
+      <div class="lspeed">SPEED: ▮░░░░</div>
+    </div>
+    <div class="level-card reveal" style="border-color:rgba(100,255,100,0.2); transition-delay:.08s">
+      <div class="lnum" style="color:#80ff80">02</div>
+      <div class="lname">Getting Real</div>
+      <div class="level-bar" style="background:#80ff80"></div>
+      <div class="ldot" style="width:18px;height:18px;box-shadow:0 0 10px #80ff80"></div>
+      <div class="lspeed">SPEED: ▮▮░░░</div>
+    </div>
+    <div class="level-card reveal" style="border-color:rgba(255,230,0,0.2); transition-delay:.16s">
+      <div class="lnum" style="color:var(--yellow)">03</div>
+      <div class="lname">Panic Mode</div>
+      <div class="level-bar" style="background:var(--yellow)"></div>
+      <div class="ldot" style="width:15px;height:15px;box-shadow:0 0 10px var(--yellow)"></div>
+      <div class="lspeed">SPEED: ▮▮▮░░</div>
+    </div>
+    <div class="level-card reveal" style="border-color:rgba(255,107,0,0.2); transition-delay:.24s">
+      <div class="lnum" style="color:var(--orange)">04</div>
+      <div class="lname">Brain Melt</div>
+      <div class="level-bar" style="background:var(--orange)"></div>
+      <div class="ldot" style="width:12px;height:12px;box-shadow:0 0 10px var(--orange)"></div>
+      <div class="lspeed">SPEED: ▮▮▮▮░</div>
+    </div>
+    <div class="level-card reveal" style="border-color:rgba(255,32,32,0.3); transition-delay:.32s">
+      <div class="lnum" style="color:var(--red)">05</div>
+      <div class="lname">Pure Hell</div>
+      <div class="level-bar" style="background:var(--red)"></div>
+      <div class="ldot" style="width:9px;height:9px;box-shadow:0 0 10px var(--red)"></div>
+      <div class="lspeed">SPEED: ▮▮▮▮▮</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ LEADERBOARD ═══════════ -->
+<section id="leaderboard">
+  <div class="reveal">
+    <div class="section-label">// hall of pain</div>
+    <h2 class="section-title">TOP<br>SURVIVORS</h2>
+  </div>
+
+  <div class="lb-wrap">
+    <div class="lb-table reveal">
+      <div class="lb-head">
+        <span>#</span><span>PLAYER</span><span style="text-align:right">SCORE</span>
+      </div>
+      <div class="lb-row">
+        <span class="lb-rank rank-1">01</span>
+        <span class="lb-name">xXDotSlayer99Xx</span>
+        <span class="lb-score">48,200</span>
+      </div>
+      <div class="lb-row">
+        <span class="lb-rank rank-2">02</span>
+        <span class="lb-name">ReflexGod_2077</span>
+        <span class="lb-score">41,750</span>
+      </div>
+      <div class="lb-row">
+        <span class="lb-rank rank-3">03</span>
+        <span class="lb-name">brainCookedBro</span>
+        <span class="lb-score">38,400</span>
+      </div>
+      <div class="lb-row">
+        <span class="lb-rank" style="color:var(--dim)">04</span>
+        <span class="lb-name">clickmaster_pro</span>
+        <span class="lb-score">32,100</span>
+      </div>
+      <div class="lb-row">
+        <span class="lb-rank" style="color:var(--dim)">05</span>
+        <span class="lb-name">notfast_enuf</span>
+        <span class="lb-score">29,850</span>
+      </div>
+      <div class="lb-row">
+        <span class="lb-rank" style="color:var(--dim)">06</span>
+        <span class="lb-name">DotWhisperer</span>
+        <span class="lb-score">27,400</span>
+      </div>
+      <div class="lb-row">
+        <span class="lb-rank" style="color:var(--dim)">07</span>
+        <span class="lb-name">panic_in_pixels</span>
+        <span class="lb-score">24,900</span>
+      </div>
+    </div>
+
+    <div class="lb-cta reveal">
+      <div class="lb-cta-title">THINK YOU<br>CAN <span>BEAT</span><br>THEM?</div>
+      <p class="lb-cta-text">
+        The top score is 48,200.<br>
+        Most people don't survive Level 3.<br>
+        Most people aren't you.
+      </p>
+      <a href="moving-target-mayhem.html" class="btn-primary">
+        &#9654;&nbsp; CLAIM YOUR SPOT
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ REVIEWS ═══════════ -->
+<section id="reviews">
+  <div class="reveal" style="text-align:center">
+    <div class="section-label" style="justify-content:center">// player reviews</div>
+    <h2 class="section-title">WHAT PLAYERS<br>ARE SAYING</h2>
+  </div>
+
+  <div class="reviews-grid">
+    <div class="review-card reveal">
+      <div class="review-score">12,400 PTS</div>
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"I missed the dot on level 4 and threw my phone. 10/10 would cook brain again."</p>
+      <div class="review-author">— shadman_k, mobile player</div>
+    </div>
+    <div class="review-card reveal" style="transition-delay:.1s">
+      <div class="review-score">31,200 PTS</div>
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"My hand was literally shaking at the 10-second mark. The red flash when I missed gave me a heart attack. I love it."</p>
+      <div class="review-author">— priya_r, desktop player</div>
+    </div>
+    <div class="review-card reveal" style="transition-delay:.2s">
+      <div class="review-score">8,900 PTS</div>
+      <div class="review-stars">★★★★☆</div>
+      <p class="review-text">"Level 5 should be illegal. The dot is literally invisible. I've played 47 times. Send help."</p>
+      <div class="review-author">— noorbek_t, mobile player</div>
+    </div>
+    <div class="review-card reveal" style="transition-delay:.3s">
+      <div class="review-score">22,550 PTS</div>
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Showed this to my friends. We lost 3 hours. Someone cried. No one survived Level 5. Best game of the year."</p>
+      <div class="review-author">— fatima_z, tablet player</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FINAL CTA ═══════════ -->
+<section id="cta-section">
+  <div class="cta-label reveal">⚠ WARNING: HIGHLY ADDICTIVE ⚠</div>
+
+  <h2 class="cta-title reveal">
+    ARE YOU<br>
+    <span class="line2">READY?</span>
+  </h2>
+
+  <div class="cta-timer reveal">
+    <span>YOU HAVE</span>
+    <span class="cta-timer-num" id="ctaCount">60</span>
+    <span>SECONDS</span>
+  </div>
+
+  <p class="cta-sub reveal">
+    Free to play. No download. No signup.<br>
+    Just you, a dot, and your impending doom.
+  </p>
+
+  <div class="reveal">
+    <a href="moving-target-mayhem.html" class="btn-primary" style="font-size:clamp(1.1rem,5vw,1.6rem); padding:18px 56px; box-shadow:0 0 50px rgba(0,255,200,0.4)">
+      &#9654;&nbsp;&nbsp; START THE HUNT
+    </a>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <div class="footer-logo">
+    <span style="width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan);display:inline-block"></span>
+    DOT HUNT
+  </div>
+  <ul class="footer-links">
+    <li><a href="#">Privacy</a></li>
+    <li><a href="#">Terms</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+  <div class="footer-copy">&copy; 2025 DOT HUNT. All reflexes reserved.</div>
+</footer>
+
+<script>
+// ── CURSOR ──
+var cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', function(e){
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top  = e.clientY + 'px';
+});
+document.querySelectorAll('a, button').forEach(function(el){
+  el.addEventListener('mouseenter', function(){ cursor.classList.add('big'); });
+  el.addEventListener('mouseleave', function(){ cursor.classList.remove('big'); });
+});
+
+// ── FLOATING DOTS (hero) ──
+var floaterContainer = document.getElementById('floaters');
+for(var i=0; i<18; i++){
+  (function(){
+    var f = document.createElement('div');
+    f.className = 'floater';
+    var sz = Math.random()*6+3;
+    f.style.width  = sz+'px';
+    f.style.height = sz+'px';
+    f.style.left   = (Math.random()*100)+'%';
+    f.style.top    = (Math.random()*100+100)+'%';
+    var dur = Math.random()*10+8;
+    var del = Math.random()*8;
+    f.style.animation = 'floatDot '+dur+'s '+del+'s linear infinite';
+    floaterContainer.appendChild(f);
+  })();
+}
+
+// ── SCROLL REVEAL ──
+var reveals = document.querySelectorAll('.reveal');
+var observer = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){ e.target.classList.add('visible'); }
+  });
+}, { threshold: 0.12 });
+reveals.forEach(function(r){ observer.observe(r); });
+
+// ── PREVIEW TIMER ──
+var pt = 42;
+setInterval(function(){
+  pt--;
+  if(pt < 0) pt = 42;
+  var el = document.getElementById('prevTimer');
+  if(el) el.textContent = pt;
+}, 1000);
+
+// Animate preview score
+var ps = 1840;
+setInterval(function(){
+  if(Math.random() > 0.5){
+    ps += Math.floor(Math.random()*150+50);
+    var sel = document.getElementById('prevScore');
+    if(sel) sel.textContent = ps.toLocaleString();
+  }
+}, 2200);
+
+// ── CTA COUNTDOWN ──
+var ctaCount = 60;
+var ctaEl = document.getElementById('ctaCount');
+setInterval(function(){
+  ctaCount--;
+  if(ctaCount < 0) ctaCount = 60;
+  if(ctaEl) ctaEl.textContent = ctaCount;
+}, 1000);
+</script>
+</body>
+</html>
