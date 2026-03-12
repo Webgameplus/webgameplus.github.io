@@ -1,0 +1,41 @@
+# robots.txt for WebGame Plus
+# https://webgameplus.github.io/webgamelplus/
+
+# Allow all search engine crawlers
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://webgameplus.github.io/webgamelplus/sitemap.xml
+
+# Allow Google
+User-agent: Googlebot
+Allow: /
+
+# Allow Bing
+User-agent: Bingbot
+Allow: /
+
+# Allow Google Image crawler
+User-agent: Googlebot-Image
+Allow: /
+
+# Allow Google Mobile crawler
+User-agent: Googlebot-Mobile
+Allow: /
+
+# Block bad bots and scrapers
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
