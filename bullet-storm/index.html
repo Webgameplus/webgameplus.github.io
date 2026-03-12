@@ -279,43 +279,101 @@ html,body{
 #pauseBtn.hidden{display:none!important;}
 
 /* ══════════════════════════════════════
-   MOBILE CONTROLS
+   MOBILE CONTROLS — MULTI-MODE
 ══════════════════════════════════════ */
 
-/* ── JOYSTICK (LEFT THUMB) ── */
+/* ── CONTROL MODE SWITCHER ── */
+#ctrlModeSwitcher{
+  position:fixed;
+  bottom:calc(env(safe-area-inset-bottom,0px) + 6px);
+  left:50%;transform:translateX(-50%);
+  z-index:60;
+  display:none;
+  gap:0;
+  background:rgba(0,8,24,0.92);
+  border:1.5px solid rgba(0,200,255,0.3);
+  border-radius:20px;
+  overflow:hidden;
+}
+.ctrl-mode-btn{
+  padding:5px 12px;
+  font-size:10px;letter-spacing:1px;
+  color:#446;font-family:'Courier New',monospace;
+  cursor:pointer;border:none;background:transparent;
+  -webkit-tap-highlight-color:transparent;
+  transition:background .12s,color .12s;
+  white-space:nowrap;
+}
+.ctrl-mode-btn.active{background:rgba(0,200,255,0.2);color:#0ff;}
+
+/* ══ MODE 1: FLOATING JOYSTICK ══ */
+/* The joystick renders on canvas via JS — no HTML element needed */
+/* Left half of screen = joystick zone */
 #joystickZone{
   position:fixed;
   left:0;bottom:0;
-  width:48vw;
-  height:200px;
-  z-index:55;
+  width:50vw;
+  height:55vh;
+  z-index:54;
   display:none;
-  align-items:flex-end;
-  justify-content:flex-start;
-  padding:0 0 calc(env(safe-area-inset-bottom,0px) + 12px) 18px;
+  /* invisible touch zone */
+  background:transparent;
 }
-#joystickBase{
-  width:110px;height:110px;
-  border-radius:50%;
-  background:rgba(0,180,255,0.08);
-  border:2px solid rgba(0,180,255,0.35);
-  position:relative;
-  flex-shrink:0;
-}
-#joystickKnob{
-  position:absolute;
-  width:48px;height:48px;
-  border-radius:50%;
-  background:radial-gradient(circle at 35% 35%,rgba(100,230,255,0.9),rgba(0,120,200,0.7));
-  border:2px solid rgba(0,200,255,0.8);
-  box-shadow:0 0 18px rgba(0,200,255,0.5);
-  top:50%;left:50%;
-  transform:translate(-50%,-50%);
+/* The visual joystick base & knob are drawn on an overlay canvas */
+#joyCanvas{
+  position:fixed;
+  left:0;bottom:0;
+  width:50vw;height:55vh;
+  z-index:54;
   pointer-events:none;
-  transition:box-shadow .1s;
+  display:none;
 }
 
-/* ── RIGHT SIDE BUTTONS ── */
+/* ══ MODE 2: D-PAD ══ */
+#dpadWrap{
+  position:fixed;
+  left:10px;
+  bottom:calc(env(safe-area-inset-bottom,0px) + 28px);
+  z-index:55;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  gap:3px;
+}
+.dp-row{display:flex;align-items:center;gap:3px;}
+.dp-btn{
+  width:58px;height:58px;
+  border-radius:12px;
+  background:rgba(0,20,50,0.85);
+  border:2px solid rgba(0,200,255,0.4);
+  color:#0cf;font-size:22px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  transition:background .07s,transform .07s;
+  user-select:none;-webkit-user-select:none;
+}
+.dp-btn:active,.dp-btn.on{
+  background:rgba(0,160,255,0.35);
+  transform:scale(0.91);
+  box-shadow:0 0 12px rgba(0,200,255,0.5);
+}
+.dp-center{width:58px;height:58px;}/* spacer */
+
+/* ══ MODE 3: TAP-TO-MOVE ══ */
+/* Full canvas tap — handled in JS, no extra HTML */
+#tapHint{
+  position:fixed;
+  bottom:calc(env(safe-area-inset-bottom,0px) + 32px);
+  left:14px;
+  z-index:54;
+  display:none;
+  font-size:10px;color:rgba(0,200,255,0.45);
+  letter-spacing:1px;
+  pointer-events:none;
+}
+
+/* ── RIGHT SIDE — FIRE + AUTO (shared across all modes) ── */
 #rightControls{
   position:fixed;
   right:0;bottom:0;
@@ -327,48 +385,39 @@ html,body{
   align-items:flex-end;
   justify-content:flex-end;
   gap:10px;
-  padding:0 18px calc(env(safe-area-inset-bottom,0px) + 14px) 0;
+  padding:0 16px calc(env(safe-area-inset-bottom,0px) + 28px) 0;
 }
-
-/* FIRE button */
 #fireBtn{
-  width:84px;height:84px;
+  width:90px;height:90px;
   border-radius:50%;
-  background:radial-gradient(circle at 35% 35%,#ff6600,#cc1100);
-  border:3px solid rgba(255,120,60,0.9);
-  color:#fff;
-  font-size:28px;
+  background:radial-gradient(circle at 35% 35%,#ff7700,#cc1100);
+  border:3px solid rgba(255,130,60,0.95);
+  color:#fff;font-size:30px;
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
   cursor:pointer;
-  box-shadow:0 0 24px rgba(255,60,0,0.5);
+  box-shadow:0 0 26px rgba(255,60,0,0.55);
   -webkit-tap-highlight-color:transparent;
-  transition:transform .08s,box-shadow .08s;
+  transition:transform .07s,box-shadow .07s;
   flex-shrink:0;
+  user-select:none;-webkit-user-select:none;
 }
-#fireBtn:active,#fireBtn.pressed{
-  transform:scale(0.88);
-  box-shadow:0 0 36px rgba(255,60,0,0.8);
-}
-#fireBtnLabel{font-size:9px;letter-spacing:1px;margin-top:2px;opacity:0.8;}
-
-/* AUTO button beside fire */
+#fireBtn.pressed{transform:scale(0.87);box-shadow:0 0 38px rgba(255,60,0,0.85);}
+#fireBtnLabel{font-size:9px;letter-spacing:1px;margin-top:2px;opacity:0.75;}
 #autoMobileBtn{
-  width:54px;height:54px;
+  width:56px;height:56px;
   border-radius:50%;
-  background:rgba(0,30,60,0.88);
+  background:rgba(0,25,55,0.9);
   border:2px solid #0af;
-  color:#0af;
-  font-size:10px;
-  letter-spacing:1px;
+  color:#0af;font-size:10px;letter-spacing:1px;
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
-  transition:all .1s;
-  flex-shrink:0;
+  transition:all .1s;flex-shrink:0;
+  user-select:none;-webkit-user-select:none;
 }
-#autoMobileBtn.on{background:rgba(255,200,0,0.2);color:#ff0;border-color:#ff0;}
+#autoMobileBtn.on{background:rgba(255,200,0,0.22);color:#ff0;border-color:#ff0;}
 #autoMobileRow{display:flex;align-items:center;gap:10px;}
 
 /* ── SKIN CARDS ── */
@@ -496,12 +545,37 @@ html,body{
 <button id="pauseBtn" class="hidden">⏸</button>
 
 <!-- ══ MOBILE CONTROLS ══ -->
-<div id="joystickZone">
-  <div id="joystickBase">
-    <div id="joystickKnob"></div>
+
+<!-- MODE SWITCHER (shown during gameplay) -->
+<div id="ctrlModeSwitcher">
+  <button class="ctrl-mode-btn active" data-mode="joystick">🕹 STICK</button>
+  <button class="ctrl-mode-btn" data-mode="dpad">✚ D-PAD</button>
+  <button class="ctrl-mode-btn" data-mode="tap">👆 TAP</button>
+</div>
+
+<!-- MODE 1: Floating joystick touch zone (left half screen) -->
+<div id="joystickZone"></div>
+<canvas id="joyCanvas"></canvas>
+
+<!-- MODE 2: D-Pad -->
+<div id="dpadWrap">
+  <div class="dp-row">
+    <div class="dp-btn" id="dp-up">▲</div>
+  </div>
+  <div class="dp-row">
+    <div class="dp-btn" id="dp-left">◀</div>
+    <div class="dp-center"></div>
+    <div class="dp-btn" id="dp-right">▶</div>
+  </div>
+  <div class="dp-row">
+    <div class="dp-btn" id="dp-down">▼</div>
   </div>
 </div>
 
+<!-- MODE 3: Tap hint label -->
+<div id="tapHint">TAP LEFT SIDE · DRAG TO MOVE</div>
+
+<!-- RIGHT SIDE: Fire + Auto (always visible during play) -->
 <div id="rightControls">
   <div id="autoMobileRow">
     <div id="autoMobileBtn">🔫<br>AUTO</div>
@@ -586,80 +660,346 @@ const SFX={
   bossSpawn:()=>playTone(110,'sawtooth',0.5,0.1,80,200),
 };
 
-// ─── JOYSTICK STATE ──
-const joy={active:false,id:-1,baseX:0,baseY:0,dx:0,dy:0,MAX_R:46};
-let fireTouching=false;
-let autoFire=false;
+// ═══════════════════════════════════════════════════════
+//  MULTI-MODE CONTROL SYSTEM
+//  Modes: 'joystick' | 'dpad' | 'tap'
+// ═══════════════════════════════════════════════════════
 
-function setupJoystick(){
-  const zone=document.getElementById('joystickZone');
-  const base=document.getElementById('joystickBase');
-  const knob=document.getElementById('joystickKnob');
+let ctrlMode = localStorage.getItem('bss_ctrl') || 'joystick';
+let fireTouching = false;
+let autoFire = false;
 
-  function joyStart(e){
-    e.preventDefault();
-    const t=e.changedTouches?e.changedTouches[0]:e;
-    joy.active=true;joy.id=t.identifier||-1;
-    const r=base.getBoundingClientRect();
-    joy.baseX=r.left+r.width/2;
-    joy.baseY=r.top+r.height/2;
-    joyMove(e);
-    if(!audioCtx)getAC();
-  }
-  function joyMove(e){
-    e.preventDefault();
-    if(!joy.active)return;
-    let t=null;
-    if(e.changedTouches){for(const ct of e.changedTouches){if(ct.identifier===joy.id){t=ct;break;}}if(!t)return;}
-    else t=e;
-    let dx=t.clientX-joy.baseX,dy=t.clientY-joy.baseY;
-    const d=Math.hypot(dx,dy);
-    if(d>joy.MAX_R){dx=dx/d*joy.MAX_R;dy=dy/d*joy.MAX_R;}
-    joy.dx=dx/joy.MAX_R;joy.dy=dy/joy.MAX_R;
-    knob.style.transform=`translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
-  }
-  function joyEnd(e){
-    e.preventDefault();
-    let found=false;
-    if(e.changedTouches){for(const ct of e.changedTouches){if(ct.identifier===joy.id){found=true;break;}}if(!found)return;}
-    joy.active=false;joy.dx=0;joy.dy=0;
-    knob.style.transform='translate(-50%,-50%)';
-  }
+// Unified input vector — read by updatePlayer
+const input = { ix:0, iy:0 };
 
-  zone.addEventListener('touchstart',joyStart,{passive:false});
-  zone.addEventListener('touchmove',joyMove,{passive:false});
-  zone.addEventListener('touchend',joyEnd,{passive:false});
-  zone.addEventListener('touchcancel',joyEnd,{passive:false});
+// ── JOYSTICK STATE ──────────────────────────────────────
+const joy = {
+  active: false, touchId: -1,
+  originX: 0, originY: 0,   // where finger first touched
+  currX: 0, currY: 0,
+  dx: 0, dy: 0,             // normalized -1..1
+  MAX_R: 52,                 // pixels on screen
+};
+
+const joyCanvas = document.getElementById('joyCanvas');
+const joyCtx = joyCanvas.getContext('2d');
+
+function resizeJoyCanvas(){
+  joyCanvas.width  = window.innerWidth * 0.5;
+  joyCanvas.height = window.innerHeight * 0.55;
+  joyCanvas.style.width  = (window.innerWidth * 0.5)+'px';
+  joyCanvas.style.height = (window.innerHeight * 0.55)+'px';
+}
+resizeJoyCanvas();
+window.addEventListener('resize', resizeJoyCanvas);
+
+function drawJoystick(){
+  const jc = joyCtx;
+  jc.clearRect(0, 0, joyCanvas.width, joyCanvas.height);
+  if(!joy.active) return;
+
+  const ox = joy.originX, oy = joy.originY;
+  const MAX = joy.MAX_R;
+
+  // Base ring
+  jc.save();
+  jc.beginPath();
+  jc.arc(ox, oy, MAX, 0, Math.PI*2);
+  jc.strokeStyle = 'rgba(0,200,255,0.25)';
+  jc.lineWidth = 2;
+  jc.stroke();
+  jc.fillStyle = 'rgba(0,100,200,0.08)';
+  jc.fill();
+
+  // Inner guide ring
+  jc.beginPath();
+  jc.arc(ox, oy, MAX*0.45, 0, Math.PI*2);
+  jc.strokeStyle = 'rgba(0,200,255,0.12)';
+  jc.lineWidth = 1;
+  jc.stroke();
+
+  // Knob position
+  const kx = ox + joy.dx * MAX;
+  const ky = oy + joy.dy * MAX;
+
+  // Knob glow
+  const grad = jc.createRadialGradient(kx-4,ky-4,2,kx,ky,24);
+  grad.addColorStop(0,'rgba(180,240,255,0.95)');
+  grad.addColorStop(0.4,'rgba(0,160,255,0.85)');
+  grad.addColorStop(1,'rgba(0,80,200,0)');
+  jc.beginPath();
+  jc.arc(kx, ky, 24, 0, Math.PI*2);
+  jc.fillStyle = grad;
+  jc.fill();
+
+  // Knob border
+  jc.beginPath();
+  jc.arc(kx, ky, 24, 0, Math.PI*2);
+  jc.strokeStyle = 'rgba(0,220,255,0.8)';
+  jc.lineWidth = 2;
+  jc.stroke();
+
+  jc.restore();
 }
 
+function joyTouchStart(e){
+  e.preventDefault();
+  if(!gameRunning || gamePaused) return;
+  const t = e.changedTouches[0];
+  // Convert to joyCanvas-local coords
+  const rect = joyCanvas.getBoundingClientRect();
+  const lx = t.clientX - rect.left;
+  const ly = t.clientY - rect.top;
+  joy.active = true;
+  joy.touchId = t.identifier;
+  joy.originX = lx;
+  joy.originY = ly;
+  joy.currX = lx;
+  joy.currY = ly;
+  joy.dx = 0;
+  joy.dy = 0;
+  if(!audioCtx) getAC();
+}
+function joyTouchMove(e){
+  e.preventDefault();
+  if(!joy.active) return;
+  let t = null;
+  for(const ct of e.changedTouches){ if(ct.identifier===joy.touchId){t=ct;break;} }
+  if(!t) return;
+  const rect = joyCanvas.getBoundingClientRect();
+  const lx = t.clientX - rect.left;
+  const ly = t.clientY - rect.top;
+  joy.currX = lx;
+  joy.currY = ly;
+  let dx = lx - joy.originX;
+  let dy = ly - joy.originY;
+  const d = Math.hypot(dx,dy);
+  if(d > joy.MAX_R){ dx = dx/d*joy.MAX_R; dy = dy/d*joy.MAX_R; }
+  joy.dx = dx / joy.MAX_R;
+  joy.dy = dy / joy.MAX_R;
+}
+function joyTouchEnd(e){
+  e.preventDefault();
+  for(const ct of e.changedTouches){
+    if(ct.identifier===joy.touchId){
+      joy.active=false; joy.touchId=-1; joy.dx=0; joy.dy=0;
+      break;
+    }
+  }
+}
+
+// ── D-PAD STATE ──────────────────────────────────────────
+const dpad = { up:false, down:false, left:false, right:false };
+
+function setupDpad(){
+  function bindDpBtn(id, key){
+    const el = document.getElementById(id);
+    if(!el) return;
+    function press(e){ e.preventDefault(); dpad[key]=true; el.classList.add('on'); if(!audioCtx)getAC(); }
+    function release(e){ e.preventDefault(); dpad[key]=false; el.classList.remove('on'); }
+    el.addEventListener('touchstart', press, {passive:false});
+    el.addEventListener('touchend', release, {passive:false});
+    el.addEventListener('touchcancel', release, {passive:false});
+    el.addEventListener('mousedown', press);
+    el.addEventListener('mouseup', release);
+    el.addEventListener('mouseleave', release);
+  }
+  bindDpBtn('dp-up','up');
+  bindDpBtn('dp-down','down');
+  bindDpBtn('dp-left','left');
+  bindDpBtn('dp-right','right');
+}
+
+// ── TAP-TO-MOVE STATE ────────────────────────────────────
+const tapMove = { active:false, touchId:-1, tx:0, ty:0 };
+
+function tapTouchStart(e){
+  e.preventDefault();
+  if(!gameRunning||gamePaused) return;
+  const t = e.changedTouches[0];
+  // only left half of screen
+  if(t.clientX > window.innerWidth*0.52) return;
+  tapMove.active = true;
+  tapMove.touchId = t.identifier;
+  tapMove.tx = t.clientX / scale;
+  tapMove.ty = t.clientY / scale;
+  if(!audioCtx)getAC();
+}
+function tapTouchMove(e){
+  e.preventDefault();
+  if(!tapMove.active) return;
+  for(const ct of e.changedTouches){
+    if(ct.identifier===tapMove.touchId){
+      tapMove.tx = ct.clientX / scale;
+      tapMove.ty = ct.clientY / scale;
+      break;
+    }
+  }
+}
+function tapTouchEnd(e){
+  e.preventDefault();
+  for(const ct of e.changedTouches){
+    if(ct.identifier===tapMove.touchId){
+      tapMove.active=false; tapMove.touchId=-1;
+      break;
+    }
+  }
+}
+
+// ── FIRE BUTTON ─────────────────────────────────────────
 function setupFireBtn(){
-  const btn=document.getElementById('fireBtn');
-  btn.addEventListener('touchstart',e=>{e.preventDefault();fireTouching=true;btn.classList.add('pressed');if(!audioCtx)getAC();},{passive:false});
-  btn.addEventListener('touchend',e=>{e.preventDefault();fireTouching=false;btn.classList.remove('pressed');},{passive:false});
-  btn.addEventListener('touchcancel',e=>{e.preventDefault();fireTouching=false;btn.classList.remove('pressed');},{passive:false});
-  // mouse support for testing on desktop
-  btn.addEventListener('mousedown',()=>{fireTouching=true;btn.classList.add('pressed');if(!audioCtx)getAC();});
-  btn.addEventListener('mouseup',()=>{fireTouching=false;btn.classList.remove('pressed');});
-  btn.addEventListener('mouseleave',()=>{fireTouching=false;btn.classList.remove('pressed');});
+  const btn = document.getElementById('fireBtn');
+  function press(e){ e.preventDefault(); fireTouching=true; btn.classList.add('pressed'); if(!audioCtx)getAC(); }
+  function release(e){ e.preventDefault(); fireTouching=false; btn.classList.remove('pressed'); }
+  btn.addEventListener('touchstart', press, {passive:false});
+  btn.addEventListener('touchend',   release, {passive:false});
+  btn.addEventListener('touchcancel',release, {passive:false});
+  btn.addEventListener('mousedown', ()=>{ fireTouching=true;  btn.classList.add('pressed'); if(!audioCtx)getAC(); });
+  btn.addEventListener('mouseup',   ()=>{ fireTouching=false; btn.classList.remove('pressed'); });
+  btn.addEventListener('mouseleave',()=>{ fireTouching=false; btn.classList.remove('pressed'); });
 }
 
+// ── AUTO FIRE TOGGLE ─────────────────────────────────────
 function setupAutoBtn(){
-  const btn=document.getElementById('autoMobileBtn');
-  const hBtn=document.getElementById('autoFireBtn');
-  btn.addEventListener('touchend',e=>{e.preventDefault();toggleAutoFire();},{passive:false});
-  btn.addEventListener('click',()=>toggleAutoFire());
-  hBtn.addEventListener('click',()=>toggleAutoFire());
+  document.getElementById('autoMobileBtn').addEventListener('touchend',e=>{e.preventDefault();toggleAutoFire();},{passive:false});
+  document.getElementById('autoMobileBtn').addEventListener('click',()=>toggleAutoFire());
+  document.getElementById('autoFireBtn').addEventListener('click',()=>toggleAutoFire());
 }
 
-// ─── KEYBOARD (desktop fallback) ──
+// ── CONTROL MODE SWITCHER ────────────────────────────────
+function setupCtrlModeSwitcher(){
+  document.querySelectorAll('.ctrl-mode-btn').forEach(btn=>{
+    function activate(e){
+      e.preventDefault();
+      setCtrlMode(btn.dataset.mode);
+    }
+    btn.addEventListener('touchend', activate, {passive:false});
+    btn.addEventListener('click', activate);
+  });
+}
+
+function setCtrlMode(mode){
+  ctrlMode = mode;
+  localStorage.setItem('bss_ctrl', mode);
+
+  // reset all input
+  joy.active=false; joy.dx=0; joy.dy=0;
+  dpad.up=false; dpad.down=false; dpad.left=false; dpad.right=false;
+  tapMove.active=false;
+
+  // update switcher buttons
+  document.querySelectorAll('.ctrl-mode-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.mode===mode);
+  });
+
+  const jz   = document.getElementById('joystickZone');
+  const jcEl = document.getElementById('joyCanvas');
+  const dpEl = document.getElementById('dpadWrap');
+  const thEl = document.getElementById('tapHint');
+
+  // hide all
+  jz.style.display='none'; jcEl.style.display='none';
+  dpEl.style.display='none'; thEl.style.display='none';
+
+  if(mode==='joystick'){
+    jz.style.display='block';
+    jcEl.style.display='block';
+    // bind joystick events
+    jz.removeEventListener('touchstart', joyTouchStart);
+    jz.removeEventListener('touchmove',  joyTouchMove);
+    jz.removeEventListener('touchend',   joyTouchEnd);
+    jz.removeEventListener('touchcancel',joyTouchEnd);
+    jz.addEventListener('touchstart', joyTouchStart, {passive:false});
+    jz.addEventListener('touchmove',  joyTouchMove,  {passive:false});
+    jz.addEventListener('touchend',   joyTouchEnd,   {passive:false});
+    jz.addEventListener('touchcancel',joyTouchEnd,   {passive:false});
+  } else if(mode==='dpad'){
+    dpEl.style.display='flex';
+  } else if(mode==='tap'){
+    thEl.style.display='block';
+    // bind tap events to canvas
+    canvas.removeEventListener('touchstart', tapTouchStart);
+    canvas.removeEventListener('touchmove',  tapTouchMove);
+    canvas.removeEventListener('touchend',   tapTouchEnd);
+    canvas.removeEventListener('touchcancel',tapTouchEnd);
+    canvas.addEventListener('touchstart', tapTouchStart, {passive:false});
+    canvas.addEventListener('touchmove',  tapTouchMove,  {passive:false});
+    canvas.addEventListener('touchend',   tapTouchEnd,   {passive:false});
+    canvas.addEventListener('touchcancel',tapTouchEnd,   {passive:false});
+  }
+}
+
+// Compute input.ix / input.iy from whichever mode is active
+function computeInput(){
+  input.ix = 0; input.iy = 0;
+
+  if(ctrlMode==='joystick'){
+    input.ix = joy.dx;
+    input.iy = joy.dy;
+  } else if(ctrlMode==='dpad'){
+    if(dpad.left  || keys['KeyA']||keys['ArrowLeft'])  input.ix -= 1;
+    if(dpad.right || keys['KeyD']||keys['ArrowRight']) input.ix += 1;
+    if(dpad.up    || keys['KeyW']||keys['ArrowUp'])    input.iy -= 1;
+    if(dpad.down  || keys['KeyS']||keys['ArrowDown'])  input.iy += 1;
+  } else if(ctrlMode==='tap'){
+    if(tapMove.active){
+      const dx = tapMove.tx - player.x;
+      const dy = tapMove.ty - player.y;
+      const d  = Math.hypot(dx,dy);
+      if(d > 12){ input.ix = dx/d; input.iy = dy/d; }
+    }
+    // keyboard still works in tap mode
+    if(keys['KeyA']||keys['ArrowLeft'])  input.ix -= 1;
+    if(keys['KeyD']||keys['ArrowRight']) input.ix += 1;
+    if(keys['KeyW']||keys['ArrowUp'])    input.iy -= 1;
+    if(keys['KeyS']||keys['ArrowDown'])  input.iy += 1;
+  }
+
+  // Keyboard always works in joystick mode too
+  if(ctrlMode==='joystick'){
+    if(keys['KeyA']||keys['ArrowLeft'])  input.ix -= 1;
+    if(keys['KeyD']||keys['ArrowRight']) input.ix += 1;
+    if(keys['KeyW']||keys['ArrowUp'])    input.iy -= 1;
+    if(keys['KeyS']||keys['ArrowDown'])  input.iy += 1;
+  }
+
+  // Normalize if magnitude > 1
+  const mag = Math.hypot(input.ix, input.iy);
+  if(mag > 1){ input.ix /= mag; input.iy /= mag; }
+}
+
+// ── KEYBOARD ─────────────────────────────────────────────
 const keys={};
-window.addEventListener('keydown',e=>{keys[e.code]=true;if(e.code==='Escape'||e.code==='KeyP')togglePause();});
-window.addEventListener('keyup',e=>{keys[e.code]=false;});
 window.addEventListener('keydown',e=>{
-  if(!gameRunning||gamePaused)return;
-  if(e.code==='KeyB')inventoryUse('bomb');
-  if(e.code==='KeyQ'&&inventory.length>0)inventoryUse(inventory[0].id);
+  keys[e.code]=true;
+  if(e.code==='Escape'||e.code==='KeyP') togglePause();
+  if(gameRunning&&!gamePaused){
+    if(e.code==='KeyB') inventoryUse('bomb');
+    if(e.code==='KeyQ'&&inventory.length>0) inventoryUse(inventory[0].id);
+  }
 });
+window.addEventListener('keyup',e=>{ keys[e.code]=false; });
+
+// ── SHOW/HIDE CONTROLS ───────────────────────────────────
+function showControls(){
+  document.getElementById('rightControls').style.display='flex';
+  document.getElementById('ctrlModeSwitcher').style.display='flex';
+  setCtrlMode(ctrlMode); // show correct mode elements
+}
+function hideControls(){
+  document.getElementById('rightControls').style.display='none';
+  document.getElementById('ctrlModeSwitcher').style.display='none';
+  document.getElementById('joystickZone').style.display='none';
+  document.getElementById('joyCanvas').style.display='none';
+  document.getElementById('dpadWrap').style.display='none';
+  document.getElementById('tapHint').style.display='none';
+  joy.active=false; joy.dx=0; joy.dy=0;
+  dpad.up=false;dpad.down=false;dpad.left=false;dpad.right=false;
+  tapMove.active=false;
+  joyCtx.clearRect(0,0,joyCanvas.width,joyCanvas.height);
+}
+
+
 
 // ─── SKINS ──────────────────────────────────────────────────
 const SKINS=[
@@ -966,13 +1306,9 @@ function updatePlayer(dt){
   if(player.hitFlash>0)player.hitFlash-=dt;
   player.enginePulse+=dt*9;
 
-  // Input: joystick (mobile) + keyboard (desktop)
-  let ix=joy.dx,iy=joy.dy;
-  if(keys['KeyA']||keys['ArrowLeft'])ix-=1;
-  if(keys['KeyD']||keys['ArrowRight'])ix+=1;
-  if(keys['KeyW']||keys['ArrowUp'])iy-=1;
-  if(keys['KeyS']||keys['ArrowDown'])iy+=1;
-  const il=Math.hypot(ix,iy);if(il>1){ix/=il;iy/=il;}
+  // Compute unified input from whichever control mode is active
+  computeInput();
+  let ix=input.ix, iy=input.iy;
   const topSpd=player.speed*(player.slowMotion?0.55:1);
   player.vx=(player.vx+ix*topSpd*dt*CFG.PLAYER_ACCEL)*Math.pow(CFG.PLAYER_FRICTION,dt*60);
   player.vy=(player.vy+iy*topSpd*dt*CFG.PLAYER_ACCEL)*Math.pow(CFG.PLAYER_FRICTION,dt*60);
@@ -1339,9 +1675,7 @@ function startGame(){
   showScreen(null);
   document.getElementById('hud').classList.remove('hidden');
   document.getElementById('pauseBtn').classList.remove('hidden');
-  // Show mobile controls
-  document.getElementById('joystickZone').style.display='flex';
-  document.getElementById('rightControls').style.display='flex';
+  showControls();
   requestAnimationFrame(gameLoop);
 }
 function restartGame(){if(gameMode==='levels')startLevel(currentLevel);else if(gameMode==='teaching')startTeaching();else startEndless();}
@@ -1366,8 +1700,7 @@ function showMenu(){
   document.getElementById('hud').classList.add('hidden');
   document.getElementById('pauseBtn').classList.add('hidden');
   document.getElementById('inventoryBar').style.display='none';
-  document.getElementById('joystickZone').style.display='none';
-  document.getElementById('rightControls').style.display='none';
+  hideControls();
   showScreen('mainMenu');
 }
 function showScreen(id){
@@ -1392,6 +1725,8 @@ function gameLoop(ts){
   ctx.save();ctx.translate(shake.x*scale,shake.y*scale);
   drawBackground();drawStars();drawPowerups();drawEBullets();drawPBullets();drawEnemies();drawPlayer();drawParticles();
   ctx.restore();
+  // Draw floating joystick overlay
+  if(ctrlMode==='joystick') drawJoystick();
   requestAnimationFrame(gameLoop);
 }
 
@@ -1421,9 +1756,10 @@ document.getElementById('btnWinMenu').addEventListener('click',()=>showMenu());
 document.getElementById('pauseBtn').addEventListener('touchend',e=>{e.preventDefault();togglePause();},{passive:false});
 document.getElementById('pauseBtn').addEventListener('click',()=>togglePause());
 
-setupJoystick();
+setupDpad();
 setupFireBtn();
 setupAutoBtn();
+setupCtrlModeSwitcher();
 showMenu();
 </script>
 </body>
