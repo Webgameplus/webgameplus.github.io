@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<script>(function(s){s.dataset.zone='10710419',s.src='https://gizokraijaw.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+  <script>(function(s){s.dataset.zone='10712087',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Play UNO online free — battle a real AI opponent in the classic card game. No download, no sign-up. Works on any device instantly.">
+<meta name="keywords" content="play uno online, uno card game, uno free, uno vs ai, uno browser game">
+<meta name="theme-color" content="#080810">
+<meta property="og:title" content="Play UNO Online Free — vs AI Opponent">
+<meta property="og:description" content="Classic UNO rules. Real AI opponent. Instant play on any device.">
+<meta property="og:type" content="website">
+<title>Play UNO Online Free — Classic Card Game vs AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --r:#e63946;--b:#2196f3;--g:#43a047;--y:#fdd835;
+  --bg:#080810;--s1:#111120;--s2:#191928;--s3:#21213a;
+  --bdr:rgba(255,255,255,.07);--bdr2:rgba(255,255,255,.14);
+  --txt:#eeeef8;--muted:rgba(238,238,248,.55);
+  --disp:'Boogaloo',cursive;--body:'DM Sans',sans-serif;
+  --max:1160px;--rad:16px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--body);background:var(--bg);color:var(--txt);overflow-x:hidden;line-height:1.65;-webkit-tap-highlight-color:transparent}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--s3);border-radius:3px}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+
+/* Noise grain */
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.03;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='f'%3E%3CfeTurbulence baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23f)'/%3E%3C/svg%3E")}
+
+.w{max-width:var(--max);margin-inline:auto;padding-inline:clamp(18px,5vw,56px);position:relative;z-index:2}
+
+/* ─── NAV ─── */
+nav{position:fixed;inset:0 0 auto;z-index:200;padding:14px 0;border-bottom:1px solid transparent;transition:background .4s,border-color .4s}
+nav.stuck{background:rgba(8,8,16,.9);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-color:var(--bdr)}
+.nav-i{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{font-family:var(--disp);font-size:26px;background:linear-gradient(120deg,var(--r),var(--y));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-links{display:flex;gap:26px;align-items:center}
+.nav-links a{font-size:14px;font-weight:500;color:var(--muted);transition:color .2s}
+.nav-links a:hover{color:var(--txt)}
+.nav-cta{font-family:var(--disp);font-size:18px;padding:9px 26px;border-radius:50px;background:linear-gradient(135deg,var(--r),#9b1c26);color:#fff;box-shadow:0 0 22px rgba(230,57,70,.38);transition:transform .15s,box-shadow .15s;border:none;cursor:pointer;white-space:nowrap}
+.nav-cta:hover{transform:scale(1.05);box-shadow:0 0 36px rgba(230,57,70,.6)}
+.nav-cta:active{transform:scale(.97)}
+.ham{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
+.ham span{display:block;width:22px;height:2px;background:var(--txt);border-radius:2px;transition:all .3s}
+.ham.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.ham.open span:nth-child(2){opacity:0}
+.ham.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mob-menu{display:none;position:fixed;inset:0;z-index:190;background:rgba(8,8,16,.97);backdrop-filter:blur(20px);flex-direction:column;align-items:center;justify-content:center;gap:30px}
+.mob-menu.open{display:flex}
+.mob-menu a{font-family:var(--disp);font-size:30px;color:var(--muted);transition:color .2s}
+.mob-menu a:hover{color:var(--txt)}
+.mob-menu .nav-cta{font-size:22px;padding:13px 40px}
+
+/* ─── HERO ─── */
+#hero{min-height:100dvh;min-height:100vh;display:flex;align-items:center;padding-top:80px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(100px);animation:drift 13s ease-in-out infinite alternate}
+.orb-r{width:580px;height:580px;background:var(--r);opacity:.14;top:-120px;left:-140px}
+.orb-b{width:480px;height:480px;background:var(--b);opacity:.12;bottom:-80px;right:-100px;animation-delay:-5s}
+.orb-g{width:320px;height:320px;background:var(--g);opacity:.1;top:45%;left:55%;animation-delay:-9s}
+@keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(35px,25px) scale(1.1)}}
+.float-cards{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.fc{position:absolute;width:64px;height:96px;border-radius:9px;border:2px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-size:24px;box-shadow:0 8px 28px rgba(0,0,0,.4);animation:floatUp linear infinite;opacity:0}
+.fc[data-c="r"]{background:linear-gradient(145deg,#b71c1c,#ef5350)}
+.fc[data-c="b"]{background:linear-gradient(145deg,#0d47a1,#42a5f5)}
+.fc[data-c="g"]{background:linear-gradient(145deg,#1b5e20,#66bb6a)}
+.fc[data-c="y"]{background:linear-gradient(145deg,#e65100,#ffee58);color:#222}
+.fc[data-c="w"]{background:conic-gradient(#ef5350 0 90deg,#42a5f5 90deg 180deg,#66bb6a 180deg 270deg,#ffee58 270deg 360deg)}
+@keyframes floatUp{0%{transform:translateY(110vh) rotate(var(--rot));opacity:0}8%{opacity:.5}92%{opacity:.5}100%{transform:translateY(-20vh) rotate(calc(var(--rot) + var(--spin)));opacity:0}}
+
+.hero-content{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;width:100%}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--y);margin-bottom:20px;padding:5px 14px;border-radius:50px;background:rgba(253,216,53,.08);border:1px solid rgba(253,216,53,.18)}
+.hero-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--y);flex-shrink:0;animation:blk 1.4s infinite}
+@keyframes blk{0%,100%{opacity:1}50%{opacity:.15}}
+h1{font-family:var(--disp);font-size:clamp(44px,6.5vw,90px);line-height:.98;letter-spacing:-1px;margin-bottom:24px}
+.w-play{color:var(--r)}
+.w-uno{background:linear-gradient(135deg,var(--r) 0%,var(--y) 55%,var(--g) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:inline-block}
+.w-online{color:var(--b)}
+.hero-sub{font-size:clamp(15px,2vw,18px);color:var(--muted);max-width:460px;margin-bottom:34px;line-height:1.75}
+.hero-sub strong{color:var(--txt);font-weight:700}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:36px}
+.btn-primary{font-family:var(--disp);font-size:21px;padding:15px 42px;border-radius:50px;background:linear-gradient(135deg,var(--r),#9b1c26);color:#fff;border:none;cursor:pointer;box-shadow:0 0 40px rgba(230,57,70,.42),0 4px 20px rgba(0,0,0,.4);transition:transform .15s,box-shadow .15s;position:relative}
+.btn-primary:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 0 60px rgba(230,57,70,.65),0 8px 30px rgba(0,0,0,.5)}
+.btn-primary:active{transform:scale(.97)}
+.btn-ghost{font-family:var(--disp);font-size:19px;padding:14px 34px;border-radius:50px;background:transparent;color:var(--txt);border:2px solid var(--bdr2);cursor:pointer;transition:background .2s,border-color .2s,transform .15s}
+.btn-ghost:hover{background:var(--s2);border-color:rgba(255,255,255,.24);transform:translateY(-1px)}
+.btn-ghost:active{transform:scale(.97)}
+.hero-badges{display:flex;flex-wrap:wrap;gap:9px}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:var(--muted);padding:5px 12px;border-radius:50px;background:var(--s2);border:1px solid var(--bdr)}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.dot.g{background:var(--g);box-shadow:0 0 6px var(--g)}
+.dot.b{background:var(--b);box-shadow:0 0 6px var(--b)}
+.dot.y{background:var(--y);box-shadow:0 0 6px var(--y)}
+
+/* Card stack */
+.hero-right{display:flex;align-items:center;justify-content:center;position:relative;min-height:400px}
+.card-stack{position:relative;width:200px;height:300px}
+.cs{position:absolute;top:0;left:0;width:174px;height:260px;border-radius:16px;border:3px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-size:40px;box-shadow:0 20px 56px rgba(0,0,0,.55)}
+.cs .ov{position:absolute;width:110px;height:166px;background:rgba(255,255,255,.13);border-radius:50%;transform:rotate(-30deg)}
+.cs .nv{position:relative;z-index:2}
+.cs-bk{background:linear-gradient(145deg,#8b0000,#c62828);transform:rotate(-8deg) translate(-28px,10px)}
+.cs-bk::before{content:'UNO';font-family:var(--disp);font-size:26px;letter-spacing:3px;color:rgba(255,255,255,.65)}
+.cs-bk .ov,.cs-bk .nv{display:none}
+.cs-md{background:linear-gradient(145deg,#0d47a1,#42a5f5);transform:rotate(-3deg) translate(-10px,5px)}
+.cs-tp{background:linear-gradient(145deg,#b71c1c,#ef5350);transform:rotate(4deg);animation:pulseR 3.5s ease-in-out infinite}
+.cs-ft{background:linear-gradient(145deg,#1b5e20,#66bb6a);transform:rotate(13deg) translate(30px,-22px);animation:floatIt 4.2s ease-in-out infinite}
+@keyframes pulseR{0%,100%{box-shadow:0 0 0 0 rgba(230,57,70,0),0 20px 56px rgba(0,0,0,.55)}50%{box-shadow:0 0 30px 8px rgba(230,57,70,.28),0 20px 56px rgba(0,0,0,.55)}}
+@keyframes floatIt{0%,100%{transform:rotate(13deg) translate(30px,-22px)}50%{transform:rotate(15deg) translate(30px,-32px)}}
+.card-stack::after{content:'';position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);width:150px;height:26px;background:radial-gradient(ellipse,rgba(230,57,70,.45) 0%,transparent 70%);filter:blur(8px);animation:gp 3s ease-in-out infinite}
+@keyframes gp{0%,100%{opacity:.55;transform:translateX(-50%) scaleX(1)}50%{opacity:.9;transform:translateX(-50%) scaleX(1.15)}}
+
+/* ─── STATS ─── */
+#stats{padding:26px 0;border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr);background:var(--s1);position:relative;z-index:1}
+.stats-row{display:flex;justify-content:space-around;gap:16px;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-family:var(--disp);font-size:clamp(28px,4vw,44px);line-height:1;margin-bottom:4px}
+.stat-num.r{color:var(--r)}.stat-num.b{color:var(--b)}.stat-num.g{color:var(--g)}.stat-num.y{color:var(--y)}
+.stat-lbl{font-size:12px;color:var(--muted);font-weight:500;letter-spacing:.4px}
+
+/* ─── SECTIONS ─── */
+section{padding:clamp(64px,10vw,120px) 0;position:relative;overflow:hidden}
+.stag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.stitle{font-family:var(--disp);font-size:clamp(30px,4.5vw,56px);line-height:1.05;letter-spacing:-.4px;margin-bottom:14px}
+.ssub{font-size:clamp(14px,1.8vw,17px);color:var(--muted);max-width:540px;line-height:1.75}
+.shead{margin-bottom:52px}
+.center{text-align:center}.center .ssub{margin-inline:auto}
+
+/* ─── HOW TO PLAY ─── */
+#how{background:var(--bg)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:20px}
+.step{padding:28px 24px;background:var(--s1);border:1px solid var(--bdr);border-radius:var(--rad);position:relative;overflow:hidden;transition:border-color .2s,transform .25s}
+.step:hover{border-color:var(--bdr2);transform:translateY(-5px)}
+.step::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 55% at 50% 0%,var(--ac,rgba(255,255,255,.04)) 0%,transparent 70%);pointer-events:none}
+.snum{font-family:var(--disp);font-size:48px;line-height:1;color:rgba(255,255,255,.06);margin-bottom:14px;transition:color .2s}
+.step:hover .snum{color:rgba(255,255,255,.12)}
+.sico{font-size:30px;margin-bottom:10px}
+.step h3{font-family:var(--disp);font-size:21px;margin-bottom:7px}
+.step p{font-size:13px;color:var(--muted);line-height:1.65}
+
+/* ─── FEATURES ─── */
+#features{background:var(--s1)}
+.feats{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}
+.feat{padding:26px;background:var(--s2);border:1px solid var(--bdr);border-radius:var(--rad);transition:border-color .2s,transform .22s,box-shadow .22s}
+.feat:hover{border-color:rgba(255,255,255,.16);transform:translateY(-4px);box-shadow:0 14px 44px rgba(0,0,0,.28)}
+.fico{width:50px;height:50px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px}
+.fico.r{background:rgba(230,57,70,.14);border:1px solid rgba(230,57,70,.24)}
+.fico.b{background:rgba(33,150,243,.14);border:1px solid rgba(33,150,243,.24)}
+.fico.g{background:rgba(67,160,71,.14);border:1px solid rgba(67,160,71,.24)}
+.fico.y{background:rgba(253,216,53,.14);border:1px solid rgba(253,216,53,.24)}
+.fico.p{background:rgba(180,0,255,.12);border:1px solid rgba(180,0,255,.22)}
+.fico.c{background:rgba(0,220,190,.12);border:1px solid rgba(0,220,190,.22)}
+.feat h3{font-family:var(--disp);font-size:19px;margin-bottom:7px}
+.feat p{font-size:13px;color:var(--muted);line-height:1.65}
+
+/* ─── RULES ─── */
+#rules{background:var(--bg)}
+.rl{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.rv{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.rc{padding:18px 16px;border-radius:13px;border:1px solid var(--bdr);background:var(--s1);transition:transform .2s}
+.rc:hover{transform:scale(1.03)}
+.rc:nth-child(1){border-left:3px solid var(--r)}
+.rc:nth-child(2){border-left:3px solid var(--b)}
+.rc:nth-child(3){border-left:3px solid var(--g)}
+.rc:nth-child(4){border-left:3px solid var(--y)}
+.rc:nth-child(5){border-left:3px solid #aa00ff;grid-column:1/-1}
+.re{font-size:26px;margin-bottom:7px}
+.rc h4{font-family:var(--disp);font-size:16px;margin-bottom:3px}
+.rc p{font-size:12px;color:var(--muted);line-height:1.5}
+.rlist{list-style:none;display:flex;flex-direction:column;gap:16px}
+.rlist li{display:flex;align-items:flex-start;gap:14px;padding:18px;background:var(--s1);border-radius:13px;border:1px solid var(--bdr)}
+.ri2{font-size:20px;width:44px;height:44px;flex-shrink:0;border-radius:11px;background:var(--s2);display:flex;align-items:center;justify-content:center}
+.rlist h4{font-weight:700;margin-bottom:3px;font-size:14px}
+.rlist p{font-size:12px;color:var(--muted);line-height:1.55}
+
+/* ─── AI ─── */
+#ai{background:var(--s1);position:relative}
+.ai-bg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 55% 75% at 80% 50%,rgba(33,150,243,.07) 0%,transparent 70%)}
+.al{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.abox{background:var(--s2);border:1px solid var(--bdr);border-radius:var(--rad);padding:24px;position:relative;overflow:hidden}
+.abox::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(33,150,243,.07);filter:blur(40px)}
+.achat{display:flex;flex-direction:column;gap:11px}
+.amsg{display:flex;gap:9px;align-items:flex-start}
+.amsg.you{flex-direction:row-reverse}
+.aav{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.aav.bot{background:linear-gradient(135deg,var(--b),#0d47a1)}
+.aav.you{background:linear-gradient(135deg,var(--r),#9b1c26)}
+.abub{max-width:78%;padding:9px 13px;border-radius:13px;font-size:12px;line-height:1.55}
+.abub.bot{background:var(--s3);border:1px solid var(--bdr)}
+.abub.you{background:rgba(230,57,70,.13);border:1px solid rgba(230,57,70,.2);text-align:right}
+.ct{display:inline-block;padding:1px 7px;border-radius:5px;font-family:var(--disp);font-size:12px;margin:1px 2px}
+.ct-r{background:rgba(230,57,70,.22);border:1px solid rgba(230,57,70,.35)}
+.ct-b{background:rgba(33,150,243,.22);border:1px solid rgba(33,150,243,.35)}
+.ct-g{background:rgba(67,160,71,.22);border:1px solid rgba(67,160,71,.35)}
+.ct-y{background:rgba(253,216,53,.22);border:1px solid rgba(253,216,53,.35);color:#222}
+.think{display:flex;gap:4px;align-items:center;padding:9px 13px;background:var(--s3);border-radius:13px;border:1px solid var(--bdr);width:fit-content}
+.think span{width:4px;height:4px;border-radius:50%;background:var(--b);animation:th 1.2s infinite}
+.think span:nth-child(2){animation-delay:.2s}.think span:nth-child(3){animation-delay:.4s}
+@keyframes th{0%,80%,100%{transform:scale(.5);opacity:.3}40%{transform:scale(1);opacity:1}}
+
+/* ─── CTA ─── */
+#cta{padding:clamp(80px,12vw,140px) 0;background:var(--bg);text-align:center;position:relative;overflow:hidden}
+.co1,.co2{position:absolute;border-radius:50%;filter:blur(110px);pointer-events:none}
+.co1{width:500px;height:500px;background:var(--r);opacity:.1;top:-150px;left:-100px}
+.co2{width:400px;height:400px;background:var(--b);opacity:.09;bottom:-100px;right:-80px}
+.ctitle{font-family:var(--disp);font-size:clamp(38px,6vw,78px);line-height:1.0;letter-spacing:-1px;margin-bottom:18px}
+.csub{font-size:clamp(14px,1.8vw,17px);color:var(--muted);max-width:440px;margin:0 auto 32px;line-height:1.75}
+.cbtns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.cnote{margin-top:18px;font-size:12px;color:var(--muted)}
+.cnote span{color:var(--g)}
+
+/* ─── FOOTER ─── */
+footer{background:var(--s1);border-top:1px solid var(--bdr);padding:36px 0}
+.fi{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px}
+.flogo{font-family:var(--disp);font-size:20px;background:linear-gradient(120deg,var(--r),var(--y));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.flinks{display:flex;gap:20px;flex-wrap:wrap}
+.flinks a{font-size:13px;color:var(--muted);transition:color .2s}.flinks a:hover{color:var(--txt)}
+.fcopy{font-size:11px;color:var(--muted);width:100%;text-align:center;margin-top:8px;padding-top:18px;border-top:1px solid var(--bdr)}
+
+/* ─── REVEAL ─── */
+.rv-el{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
+.rv-el.in{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="w nav-i">
+    <div class="logo">🎴 PlayUNO</div>
+    <div class="nav-links">
+      <a href="#how">How to Play</a>
+      <a href="#features">Features</a>
+      <a href="#rules">Rules</a>
+      <a href="#ai">AI Opponent</a>
+      <button class="nav-cta" onclick="window.location.href='uno-ai.html'">Play Now</button>
+    </div>
+    <button class="ham" id="ham" onclick="toggleMenu()" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mob-menu" id="mob">
+  <a href="#how" onclick="toggleMenu()">How to Play</a>
+  <a href="#features" onclick="toggleMenu()">Features</a>
+  <a href="#rules" onclick="toggleMenu()">Rules</a>
+  <a href="#ai" onclick="toggleMenu()">AI Opponent</a>
+  <button class="nav-cta" onclick="toggleMenu(); window.location.href='uno-ai.html'">Play Now</button>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg">
+    <div class="orb orb-r"></div>
+    <div class="orb orb-b"></div>
+    <div class="orb orb-g"></div>
+  </div>
+  <div class="float-cards" id="fc"></div>
+  <div class="w">
+    <div class="hero-content">
+      <div>
+        <div class="hero-eyebrow">✦ Free &nbsp;·&nbsp; No Download &nbsp;·&nbsp; No Sign-Up</div>
+        <h1><span class="w-play">Play</span><br><span class="w-uno">UNO</span><br><span class="w-online">Online</span></h1>
+        <p class="hero-sub">The classic card game — now in your browser. Challenge a <strong>real AI opponent</strong>, play by full official rules, and enjoy it instantly on any device.</p>
+        <div class="hero-btns">
+          <button class="btn-primary" id="play-btn" onclick="window.location.href='uno-ai.html'">🎴 Play Now — It's Free</button>
+          <a href="#how"><button class="btn-ghost">How to Play →</button></a>
+        </div>
+        <div class="hero-badges">
+          <span class="badge"><span class="dot g"></span>No download needed</span>
+          <span class="badge"><span class="dot b"></span>Works on mobile</span>
+          <span class="badge"><span class="dot y"></span>Real AI opponent</span>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="card-stack" id="cstack">
+          <div class="cs cs-bk"></div>
+          <div class="cs cs-md"><div class="ov"></div><div class="nv">7</div></div>
+          <div class="cs cs-tp"><div class="ov"></div><div class="nv">⊘</div></div>
+          <div class="cs cs-ft"><div class="ov"></div><div class="nv">+2</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div id="stats">
+  <div class="w">
+    <div class="stats-row">
+      <div class="stat"><div class="stat-num r" data-n="108">0</div><div class="stat-lbl">Cards in Deck</div></div>
+      <div class="stat"><div class="stat-num b" data-n="4">0</div><div class="stat-lbl">Card Colors</div></div>
+      <div class="stat"><div class="stat-num g" data-n="8">0</div><div class="stat-lbl">Action Card Types</div></div>
+      <div class="stat"><div class="stat-num y">∞</div><div class="stat-lbl">Rounds to Play</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW TO PLAY -->
+<section id="how">
+  <div class="w">
+    <div class="shead center rv-el">
+      <div class="stag">Getting Started</div>
+      <h2 class="stitle">How to Play UNO Online</h2>
+      <p class="ssub">UNO is easy to pick up, endlessly fun. Here's all you need in 4 steps.</p>
+    </div>
+    <div class="steps">
+      <div class="step rv-el" style="--ac:rgba(230,57,70,.06)">
+        <div class="snum">01</div><div class="sico">🃏</div>
+        <h3>Deal 7 Cards</h3>
+        <p>Both you and the AI start with 7 cards from a full 108-card deck. One card is flipped to start the discard pile.</p>
+      </div>
+      <div class="step rv-el" style="--ac:rgba(33,150,243,.06);transition-delay:.1s">
+        <div class="snum">02</div><div class="sico">🎯</div>
+        <h3>Match &amp; Play</h3>
+        <p>Play a card matching the top card's color or value. Can't go? Draw exactly one card — then play it or pass.</p>
+      </div>
+      <div class="step rv-el" style="--ac:rgba(67,160,71,.06);transition-delay:.2s">
+        <div class="snum">03</div><div class="sico">📣</div>
+        <h3>Call UNO!</h3>
+        <p>Hit the UNO button the moment you're down to 1 card. Forget and the AI catches you — 2 penalty cards!</p>
+      </div>
+      <div class="step rv-el" style="--ac:rgba(253,216,53,.06);transition-delay:.3s">
+        <div class="snum">04</div><div class="sico">🏆</div>
+        <h3>Empty Your Hand</h3>
+        <p>First to play all their cards wins. Score points from your opponent's remaining cards and play another round.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="w">
+    <div class="shead center rv-el">
+      <div class="stag">What's Included</div>
+      <h2 class="stitle">Everything You'd Expect.<br>Plus a Real AI.</h2>
+      <p class="ssub">Built to the official UNO standard. Every rule, every card type, nothing left out.</p>
+    </div>
+    <div class="feats">
+      <div class="feat rv-el">
+        <div class="fico r">🃏</div>
+        <h3>Full 108-Card Deck</h3>
+        <p>All number cards 0–9, Skip, Reverse, Draw 2, Wild, and Wild Draw 4. Complete standard deck, every time.</p>
+      </div>
+      <div class="feat rv-el" style="transition-delay:.08s">
+        <div class="fico b">🤖</div>
+        <h3>Real AI Opponent</h3>
+        <p>Powered by Claude. Your opponent reasons about strategy, hand size, and game state — not just playing cards at random.</p>
+      </div>
+      <div class="feat rv-el" style="transition-delay:.16s">
+        <div class="fico g">📱</div>
+        <h3>Mobile-First</h3>
+        <p>Optimized for touch. Tap to select, tap again to play. Safe area insets, dynamic viewport height, landscape support.</p>
+      </div>
+      <div class="feat rv-el" style="transition-delay:.24s">
+        <div class="fico y">⚡</div>
+        <h3>Wild +4 Challenge</h3>
+        <p>If the AI plays Wild +4 illegally, challenge it. Succeed and it draws 4. Fail and you draw 6. High stakes!</p>
+      </div>
+      <div class="feat rv-el" style="transition-delay:.32s">
+        <div class="fico p">🔢</div>
+        <h3>Score Tracking</h3>
+        <p>Points from your opponent's cards accumulate across rounds. Compete for the highest session score.</p>
+      </div>
+      <div class="feat rv-el" style="transition-delay:.4s">
+        <div class="fico c">📋</div>
+        <h3>Live Game Log</h3>
+        <p>Every card played, draw made, and UNO called appears in a real-time feed so you always know what's happening.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RULES -->
+<section id="rules">
+  <div class="w">
+    <div class="rl">
+      <div>
+        <div class="shead rv-el">
+          <div class="stag">Official Rules</div>
+          <h2 class="stitle">All Official Rules.<br>Faithfully Implemented.</h2>
+          <p class="ssub">No house rules. No shortcuts. Every official UNO ruling is in the game exactly as intended.</p>
+        </div>
+        <ul class="rlist">
+          <li class="rv-el">
+            <div class="ri2">⊘</div>
+            <div><h4>Skip — Lose a Turn</h4><p>In a 2-player game, Skip works just like Reverse — the same player goes again immediately.</p></div>
+          </li>
+          <li class="rv-el" style="transition-delay:.1s">
+            <div class="ri2">⇄</div>
+            <div><h4>Reverse = Skip in 2-Player</h4><p>Official ruling: Reverse causes the current player to take another turn, effectively a self-skip.</p></div>
+          </li>
+          <li class="rv-el" style="transition-delay:.2s">
+            <div class="ri2">+2</div>
+            <div><h4>Draw Stack Rule</h4><p>Stack Draw 2 on Draw 2, or Wild +4 on Wild +4 to pass the penalty to your opponent instead of taking it.</p></div>
+          </li>
+          <li class="rv-el" style="transition-delay:.3s">
+            <div class="ri2">1</div>
+            <div><h4>Draw One Per Turn</h4><p>Standard rules: draw exactly 1 card when you can't play. You may play the drawn card or pass your turn.</p></div>
+          </li>
+        </ul>
+      </div>
+      <div class="rv rv-el">
+        <div class="rc"><div class="re">🔴</div><h4>Skip</h4><p>Opponent loses their next turn completely.</p></div>
+        <div class="rc"><div class="re">🔵</div><h4>Reverse</h4><p>Flip direction (acts as Skip in 2-player).</p></div>
+        <div class="rc"><div class="re">🟢</div><h4>Draw 2</h4><p>Opponent draws 2 and skips their turn.</p></div>
+        <div class="rc"><div class="re">🟡</div><h4>Wild</h4><p>Play anytime. Pick the new active color.</p></div>
+        <div class="rc"><div class="re">🌈</div><h4>Wild Draw 4</h4><p>Choose color + opponent draws 4. Only legal if you have no other playable card. Challengeable!</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI -->
+<section id="ai">
+  <div class="ai-bg"></div>
+  <div class="w">
+    <div class="al">
+      <div>
+        <div class="shead rv-el">
+          <div class="stag">Your Opponent</div>
+          <h2 class="stitle">An AI That Actually Thinks.</h2>
+          <p class="ssub">Not a random bot. The AI opponent is powered by Claude — it reads the full game state and plays a considered strategy every single turn.</p>
+        </div>
+        <ul class="rlist">
+          <li class="rv-el">
+            <div class="ri2">🧠</div>
+            <div><h4>Genuine Strategy</h4><p>Given your card count, the active color, and its full hand, the AI reasons like a real player — targeting action cards when you're near winning.</p></div>
+          </li>
+          <li class="rv-el" style="transition-delay:.1s">
+            <div class="ri2">⚖️</div>
+            <div><h4>Plays Wild +4 Legally</h4><p>The AI knows the rules: Wild +4 is only played when it has no legal alternative. Otherwise you can challenge and make it draw 4.</p></div>
+          </li>
+          <li class="rv-el" style="transition-delay:.2s">
+            <div class="ri2">📣</div>
+            <div><h4>Calls UNO Instantly</h4><p>The AI calls UNO the moment it drops to one card — and watches to catch you if you forget yours.</p></div>
+          </li>
+        </ul>
+      </div>
+      <div class="abox rv-el">
+        <div class="achat">
+          <div class="amsg">
+            <div class="aav bot">🤖</div>
+            <div class="abub bot">I see you have 3 cards. Playing <span class="ct ct-r">Skip Red</span> to block your turn.</div>
+          </div>
+          <div class="amsg you">
+            <div class="aav you">🧑</div>
+            <div class="abub you">Playing <span class="ct ct-b">Wild +4</span> — I choose Blue!</div>
+          </div>
+          <div class="amsg">
+            <div class="aav bot">🤖</div>
+            <div class="think"><span></span><span></span><span></span></div>
+          </div>
+          <div class="amsg">
+            <div class="aav bot">🤖</div>
+            <div class="abub bot">Stacking <span class="ct ct-b">Wild +4</span> — you draw 8 total! <strong>UNO!</strong> 😈</div>
+          </div>
+          <div class="amsg you">
+            <div class="aav you">🧑</div>
+            <div class="abub you">⚡ I challenge your Wild +4!</div>
+          </div>
+          <div class="amsg">
+            <div class="aav bot">🤖</div>
+            <div class="abub bot">Challenge failed — I had no <span class="ct ct-b">Blue</span> cards. You draw 6. 😏</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="co1"></div><div class="co2"></div>
+  <div class="w">
+    <div class="rv-el">
+      <h2 class="ctitle">Ready to<br><span style="background:linear-gradient(135deg,var(--r),var(--y));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Play?</span></h2>
+      <p class="csub">No sign-up. No download. Pure UNO — in your browser, right now, free forever.</p>
+      <div class="cbtns">
+        <button class="btn-primary" onclick="window.location.href='uno-ai.html'">🎴 Play UNO Online — Free</button>
+        <a href="#how"><button class="btn-ghost">Learn the Rules</button></a>
+      </div>
+      <p class="cnote"><span>✓</span> Free forever &nbsp;·&nbsp; <span>✓</span> Any device &nbsp;·&nbsp; <span>✓</span> No account needed</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="w">
+    <div class="fi">
+      <div class="flogo">🎴 PlayUNO Online</div>
+      <div class="flinks">
+        <a href="#how">How to Play</a>
+        <a href="#features">Features</a>
+        <a href="#rules">Rules</a>
+        <a href="#ai">AI Opponent</a>
+        <a href="uno-ai.html">Play Now</a>
+      </div>
+    </div>
+    <p class="fcopy">© 2026 PlayUNO Online · UNO is a trademark of Mattel, Inc. This is an unofficial fan project for entertainment only.</p>
+  </div>
+</footer>
+
+<script>
+/* ── NAV SCROLL ── */
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('stuck',scrollY>40),{passive:true});
+
+/* ── HAMBURGER ── */
+function toggleMenu(){
+  document.getElementById('ham').classList.toggle('open');
+  document.getElementById('mob').classList.toggle('open');
+  document.body.style.overflow=document.getElementById('mob').classList.contains('open')?'hidden':'';
+}
+
+/* ── FLOATING CARDS ── */
+(()=>{
+  const cfg=[
+    {c:'r',v:'7'},{c:'b',v:'⊘'},{c:'g',v:'+2'},{c:'y',v:'4'},
+    {c:'w',v:'★'},{c:'r',v:'⇄'},{c:'b',v:'9'},{c:'g',v:'W4'},
+    {c:'y',v:'1'},{c:'r',v:'3'},{c:'b',v:'+2'},{c:'g',v:'5'},
+    {c:'w',v:'★'},{c:'r',v:'⊘'},{c:'y',v:'8'},{c:'b',v:'2'},
+  ];
+  const wrap=document.getElementById('fc');
+  cfg.forEach(cd=>{
+    const el=document.createElement('div');
+    el.className='fc';el.dataset.c=cd.c;el.textContent=cd.v;
+    const left=4+Math.random()*92;
+    const dur=15+Math.random()*18;
+    const del=-Math.random()*dur;
+    const rot=(-28+Math.random()*56)+'deg';
+    const spin=(-35+Math.random()*70)+'deg';
+    el.style.cssText=`left:${left}%;--rot:${rot};--spin:${spin};animation-duration:${dur}s;animation-delay:${del}s`;
+    wrap.appendChild(el);
+  });
+})();
+
+/* ── COUNTER ANIMATION ── */
+function countUp(el,target,ms=1400){
+  let start=null;
+  const step=t=>{
+    if(!start)start=t;
+    const p=Math.min((t-start)/ms,1);
+    const e=1-Math.pow(1-p,3);
+    el.textContent=Math.floor(e*target);
+    if(p<1)requestAnimationFrame(step);
+    else el.textContent=target;
+  };
+  requestAnimationFrame(step);
+}
+
+/* ── INTERSECTION OBSERVER ── */
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    e.target.classList.add('in');
+    io.unobserve(e.target);
+  });
+},{threshold:.12});
+document.querySelectorAll('.rv-el').forEach(el=>io.observe(el));
+
+/* Stats counter */
+const statsIo=new IntersectionObserver(entries=>{
+  if(!entries[0].isIntersecting)return;
+  document.querySelectorAll('[data-n]').forEach(el=>countUp(el,+el.dataset.n));
+  statsIo.disconnect();
+},{threshold:.3});
+statsIo.observe(document.getElementById('stats'));
+
+/* ── PARALLAX ON HERO CARD STACK (pointer only) ── */
+if(window.matchMedia('(hover:hover)').matches){
+  const stk=document.getElementById('cstack');
+  if(stk){
+    document.addEventListener('mousemove',e=>{
+      const dx=(e.clientX/innerWidth-.5)*14;
+      const dy=(e.clientY/innerHeight-.5)*9;
+      stk.style.transform=`translate(${dx}px,${dy}px)`;
+    },{passive:true});
+  }
+}
+</script>
+</body>
+</html>
