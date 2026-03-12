@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<script>(function(s){s.dataset.zone='10710419',s.src='https://gizokraijaw.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+  <script>(function(s){s.dataset.zone='10712087',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us — WebGame Plus</title>
+  <meta name="description" content="Contact WebGame Plus for game suggestions, bug reports, business inquiries or general feedback. We read every message.">
+  <meta name="keywords" content="contact webgame plus, game suggestion, bug report, feedback, webgame support">
+  <link rel="canonical" href="https://webgameplus.github.io/webgamelplus/contact.html">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta name="google-site-verification" content="pjHuIU6B9-uHR5KasdiEYqKmLd0UEFEiP4z8rXOOMts" />
+  <script src="https://quge5.com/88/tag.min.js" data-zone="218154" async data-cfasync="false"></script>
+  <script async="async" data-cfasync="false" src="https://pl28886100.effectivegatecpm.com/eafb5bad2b9d31fcdbe34ac28a2fae06/invoke.js"></script>
+  <div id="container-eafb5bad2b9d31fcdbe34ac28a2fae06"></div>
+<style>
+:root{--bg:#060610;--surface:#0d0d1f;--border:#1a1a3a;--cyan:#00e5ff;--yellow:#ffe600;--red:#ff2255;--green:#00ff88;--text:#dde4ff;--muted:#4a4a7a;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Exo 2',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.07) 2px,rgba(0,0,0,0.07) 4px);pointer-events:none;z-index:1000;}
+.ambient{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 60% 40% at 15% 10%,#00e5ff0d 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 85% 80%,#ff22550d 0%,transparent 60%);}
+nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 32px;background:rgba(6,6,16,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(14px,2.5vw,20px);color:var(--cyan);text-shadow:0 0 15px var(--cyan);letter-spacing:2px;text-decoration:none;}
+.nav-logo span{color:var(--yellow);}
+.nav-home{color:var(--muted);text-decoration:none;font-size:13px;letter-spacing:2px;text-transform:uppercase;font-weight:600;transition:color 0.2s;}
+.nav-home:hover{color:var(--cyan);}
+.page-wrap{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:60px 24px 80px;}
+.page-title{font-family:'Orbitron',monospace;font-size:clamp(24px,5vw,48px);font-weight:900;color:var(--cyan);text-shadow:0 0 30px var(--cyan);margin-bottom:8px;}
+.page-sub{color:var(--muted);font-size:14px;letter-spacing:3px;text-transform:uppercase;margin-bottom:48px;}
+.divider{height:1px;background:linear-gradient(90deg,var(--cyan),transparent);margin-bottom:48px;opacity:0.3;}
+.section{margin-bottom:48px;}
+.section-title{font-family:'Orbitron',monospace;font-size:clamp(14px,2.5vw,18px);font-weight:700;color:var(--yellow);letter-spacing:2px;margin-bottom:16px;}
+.section p{font-size:15px;line-height:1.9;color:var(--text);font-weight:300;margin-bottom:14px;}
+.contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:24px 0;}
+.contact-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;transition:border-color 0.2s;}
+.contact-card:hover{border-color:var(--cyan);}
+.contact-icon{font-size:32px;margin-bottom:12px;}
+.contact-type{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;color:var(--cyan);letter-spacing:2px;margin-bottom:6px;}
+.contact-value{font-size:14px;color:var(--text);word-break:break-all;}
+.contact-value a{color:var(--text);text-decoration:none;}
+.contact-value a:hover{color:var(--cyan);}
+.contact-note{font-size:11px;color:var(--muted);margin-top:6px;letter-spacing:1px;}
+.reason-list{list-style:none;margin:12px 0;}
+.reason-list li{padding:10px 0;border-bottom:1px solid var(--border);font-size:15px;color:var(--text);font-weight:300;display:flex;align-items:center;gap:12px;}
+.reason-list li:last-child{border-bottom:none;}
+.reason-list li::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--yellow);flex-shrink:0;}
+.highlight-box{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--yellow);border-radius:8px;padding:20px 24px;margin:20px 0;}
+.highlight-box p{margin:0;font-size:15px;color:var(--text);font-weight:300;line-height:1.8;}
+.btn-home{display:inline-block;margin-top:32px;font-family:'Orbitron',monospace;font-size:11px;padding:12px 28px;border:2px solid var(--cyan);color:var(--cyan);text-decoration:none;letter-spacing:2px;border-radius:6px;transition:all 0.2s;}
+.btn-home:hover{background:var(--cyan);color:var(--bg);}
+footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:28px 20px;text-align:center;}
+.footer-text{font-size:12px;color:var(--muted);letter-spacing:1px;line-height:2;}
+.footer-text a{color:var(--muted);text-decoration:none;margin:0 8px;}
+.footer-text a:hover{color:var(--cyan);}
+@media(max-width:600px){nav{padding:12px 16px;}.page-wrap{padding:40px 16px 60px;}}
+</style>
+</head>
+<body>
+<div class="ambient"></div>
+
+<nav>
+  <a class="nav-logo" href="index.html">WEB<span>GAME</span>+</a>
+  <a class="nav-home" href="index.html">← Back to Games</a>
+</nav>
+
+<div class="page-wrap">
+  <div class="page-title">Contact Us</div>
+  <div class="page-sub">We'd love to hear from you</div>
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-title">Get In Touch</div>
+    <p>Have a question, suggestion, or found a bug? We read every single message and do our best to respond as quickly as possible. Your feedback directly helps us improve WebGame Plus.</p>
+
+    <div class="contact-grid">
+      <div class="contact-card">
+        <div class="contact-icon">📧</div>
+        <div class="contact-type">Email</div>
+        <div class="contact-value"><a href="mailto:webgameplus.contact@gmail.com">webgameplus.contact@gmail.com</a></div>
+        <div class="contact-note">Best for detailed inquiries. We reply within 48 hours.</div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-icon">🌍</div>
+        <div class="contact-type">Location</div>
+        <div class="contact-value">Barisal, Bangladesh</div>
+        <div class="contact-note">Independent project — global audience.</div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-icon">⏰</div>
+        <div class="contact-type">Response Time</div>
+        <div class="contact-value">Within 24–48 hours</div>
+        <div class="contact-note">We aim to reply to all messages promptly.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Why Contact Us?</div>
+    <p>Here are the most common reasons people reach out to us:</p>
+    <ul class="reason-list">
+      <li>Report a bug or broken game on a specific browser/device</li>
+      <li>Suggest a new game you'd like to see on the platform</li>
+      <li>Ask about business partnerships or advertising opportunities</li>
+      <li>Report inappropriate content or copyright concerns</li>
+      <li>Ask general questions about the website or games</li>
+      <li>Submit feedback about your gaming experience</li>
+      <li>Request removal of personal data (GDPR/privacy requests)</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Business & Advertising</div>
+    <p>Interested in advertising on WebGame Plus or discussing a business partnership? We welcome collaboration opportunities with brands that align with our gaming community.</p>
+    <div class="highlight-box">
+      <p>For business inquiries, please email us with the subject line <strong>"Business Inquiry — WebGame Plus"</strong> and include details about your proposal. We will respond within 2 business days.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Before You Contact Us</div>
+    <p>Please check the following before sending a message — it might save you time:</p>
+    <ul class="reason-list">
+      <li>Try refreshing the page if a game is not loading</li>
+      <li>Make sure your browser is up to date (we support Chrome, Firefox, Safari, Edge)</li>
+      <li>Disable browser extensions that might block game scripts</li>
+      <li>Check your internet connection for smooth gameplay</li>
+    </ul>
+  </div>
+
+  <a class="btn-home" href="index.html">▶ Play Games Now</a>
+</div>
+
+<footer>
+  <div class="footer-text">
+    © 2026 WebGame Plus. All rights reserved.<br>
+    <a href="index.html">Home</a> ·
+    <a href="about.html">About</a> ·
+    <a href="contact.html">Contact</a> ·
+    <a href="privacy.html">Privacy Policy</a> ·
+    <a href="terms.html">Terms of Service</a>
+  </div>
+</footer>
+</body>
+</html>
