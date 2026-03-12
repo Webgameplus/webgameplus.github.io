@@ -6,7 +6,6 @@
 <link rel="shortcut icon" href="/favicon.ico" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 <link rel="manifest" href="/site.webmanifest" />
-  <!-- Favicon -->
 
 <title>WebGame Plus — Free Online Arcade Games</title>
 <meta name="description" content="Play free online arcade games instantly in your browser. No download, no login. Bullet Storm, Snake, and more classic games!">
@@ -510,7 +509,7 @@ footer {
 <div class="stats-strip">
   <div class="stats-inner">
     <div class="stat-item">
-      <span class="stat-num" id="cGames">10</span>
+      <span class="stat-num" id="cGames">13</span>
       <span class="stat-label">Games Available</span>
     </div>
     <div class="stat-item">
@@ -694,6 +693,54 @@ footer {
       </div>
     </a>
 
+    <!-- UNO — LIVE -->
+    <a class="game-card red reveal" href="uno/index.html">
+      <div class="card-thumb">
+        <span>🃏</span>
+        <span class="card-tag tag-new">NEW</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">UNO</div>
+        <div class="card-desc">Play the classic UNO card game in your browser. Match colors and numbers, use action cards, and be first to empty your hand!</div>
+        <div class="card-meta">
+          <span class="card-genre">Card</span>
+          <span class="card-play">PLAY NOW</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- COLOR MIXER LAB — LIVE -->
+    <a class="game-card cyan reveal" href="colormixerlab/index.html">
+      <div class="card-thumb">
+        <span>🔬</span>
+        <span class="card-tag tag-new">NEW</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">COLOR MIXER LAB</div>
+        <div class="card-desc">What color do you get when red meets blue? Mix colors and discover how they combine. Fun, visual and educational!</div>
+        <div class="card-meta">
+          <span class="card-genre">Educational</span>
+          <span class="card-play">PLAY NOW</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- FLAPPY BIRD — LIVE -->
+    <a class="game-card green reveal" href="flappybird/index.html">
+      <div class="card-thumb">
+        <span>🐦</span>
+        <span class="card-tag tag-hot">HOT</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">FLAPPY BIRD</div>
+        <div class="card-desc">Tap to flap through pipes without crashing. The legendary one-tap game that took the world by storm — how far can you go?</div>
+        <div class="card-meta">
+          <span class="card-genre">Classic</span>
+          <span class="card-play">PLAY NOW</span>
+        </div>
+      </div>
+    </a>
+
   </div>
 </section>
 
@@ -762,7 +809,7 @@ const observer = new IntersectionObserver(entries => {
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
 // ── GAME COUNT ──
-document.getElementById('cGames').textContent = '10';
+document.getElementById('cGames').textContent = '13';
 </script>
 </body>
 </html>
