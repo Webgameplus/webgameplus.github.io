@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Homepage -->
+  <url>
+    <loc>https://webgameplus.github.io/webgamelplus/</loc>
+    <lastmod>2026-03-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Bullet Storm -->
+  <url>
+    <loc>https://webgameplus.github.io/webgamelplus/bullet-storm/</loc>
+    <lastmod>2026-03-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Snake -->
+  <url>
+    <loc>https://webgameplus.github.io/webgamelplus/snake/</loc>
+    <lastmod>2026-03-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Memory Match -->
+  <url>
+    <loc>https://webgameplus.github.io/webgamelplus/memory-match/</loc>
+    <lastmod>2026-03-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Color Sort -->
+  <url>
+    <loc>https://webgameplus.github.io/webgamelplus/color-sort/</loc>
+    <lastmod>2026-03-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Typing Speed -->
+  <url>
+    <loc>https://webgameplus.github.io/webgamelplus/typing-speed/</loc>
+    <lastmod>2026-03-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Card Flip -->
+  <url>
+    <loc>https://webgameplus.github.io/webgamelplus/cardflip/</loc>
+    <lastmod>2026-03-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Color Panic -->
+  <url>
+    <loc>https://webgameplus.github.io/webgamelplus/challenge/</loc>
+    <lastmod>2026-03-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Dot Hunt -->
+  <url>
+    <loc>https://webgameplus.github.io/webgamelplus/dothunt/</loc>
+    <lastmod>2026-03-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- F1 Reaction -->
+  <url>
+    <loc>https://webgameplus.github.io/webgamelplus/f1reaction/</loc>
+    <lastmod>2026-03-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Jigsaw -->
+  <url>
+    <loc>https://webgameplus.github.io/webgamelplus/jigsaw/</loc>
+    <lastmod>2026-03-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- UNO -->
+  <url>
+    <loc>https://webgameplus.github.io/webgamelplus/uno/</loc>
+    <lastmod>2026-03-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Color Mixer Lab -->
+  <url>
+    <loc>https://webgameplus.github.io/webgamelplus/colormixerlab/</loc>
+    <lastmod>2026-03-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Flappy Bird -->
+  <url>
+    <loc>https://webgameplus.github.io/webgamelplus/flappybird/</loc>
+    <lastmod>2026-03-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+</urlset>
